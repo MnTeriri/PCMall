@@ -6,18 +6,23 @@
         <groupId>com.example</groupId>
         <artifactId>PCMall</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+
     </parent>
 
-    <artifactId>pcmall-gataway</artifactId>
+    <artifactId>pcmall-user-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>pcmall-gataway</name>
-    <description>pcmall-gataway</description>
-
+    <name>pcmall-user-service</name>
+    <description>pcmall-user-service</description>
     <properties>
         <java.version>17</java.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <!--SpringCloud ailibaba nacos -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -25,20 +30,23 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.3.1</version>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+            <groupId>com.example</groupId>
+            <artifactId>pcmall-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-security</artifactId>-->
-<!--        </dependency>-->
-
     </dependencies>
 
     <build>
