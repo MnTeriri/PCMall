@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>pcmall-common</module>
-        <module>pcmall-gataway</module>
+        <module>pcmall-gateway</module>
         <module>pcmall-user-service</module>
         <module>pcmall-consumer</module>
         <module>pcmall-provider</module>

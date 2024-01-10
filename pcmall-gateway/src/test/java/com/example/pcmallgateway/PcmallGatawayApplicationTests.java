@@ -1,4 +1,4 @@
-package com.example.pcmallgataway;
+package com.example.pcmallgateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

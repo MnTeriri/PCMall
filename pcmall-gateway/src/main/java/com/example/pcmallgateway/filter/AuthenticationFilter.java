@@ -1,4 +1,4 @@
-package com.example.pcmallgataway.filter;
+package com.example.pcmallgateway.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -18,6 +18,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
         log.debug("{}",request.getURI());
+        log.debug("token:{}",request.getHeaders().get("token"));
         return chain.filter(exchange);
     }
 
