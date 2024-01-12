@@ -2,10 +2,6 @@ package com.example.pcmallcommon.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Base64;
 
 public class ImageUtils {
