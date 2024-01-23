@@ -1,12 +1,14 @@
 package com.example.pcmalluserservice.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface IUserRoleDao extends BaseMapper<String> {
-
+public interface IUserRoleDao {
+    @Select("SELECT role.name FROM role INNER JOIN user_role " +
+            "ON role.id = user_role.rid " +
+            "WHERE user_role.uid=#{uid}")
+    List<String> findUserRole(String uid);
 }
