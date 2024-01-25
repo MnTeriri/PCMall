@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Slf4j
 @Component
 public class RedisUtils {
@@ -19,6 +21,7 @@ public class RedisUtils {
 
     public static void setCacheObject(String key, Object value) {
         stringRedisTemplate.opsForValue().set(key, JSON.toJSONString(value));
+        stringRedisTemplate.expire(key, 1, TimeUnit.DAYS);//设置过期时间1天
     }
 
 
