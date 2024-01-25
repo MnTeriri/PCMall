@@ -1,8 +1,11 @@
 package com.example.pcmalluserservice.filter;
 
 import cn.hutool.jwt.JWT;
-import cn.hutool.jwt.JWTUtil;
+import com.alibaba.fastjson2.JSON;
 import com.example.pcmallcommon.model.LoginUser;
+import com.example.pcmallcommon.response.ResponseResult;
+import com.example.pcmallcommon.response.ResponseStatus;
+import com.example.pcmallcommon.utils.JwtUtils;
 import com.example.pcmalluserservice.utils.RedisUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,7 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -24,6 +26,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.debug("进入JwtAuthenticationTokenFilter");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
         String requestURI = request.getRequestURI();
         if ("/api/login".equals(requestURI)
                 || "/api/register".equals(requestURI)
@@ -34,14 +38,26 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
         String token = request.getHeader("token");
         if (token == null) {
-            log.debug("没token，拦截");
+            //没有token
+            ResponseResult<String> message = ResponseResult.error(ResponseStatus.NO_TOKEN_ERROR);
+            log.error(message.toString());
             PrintWriter writer = response.getWriter();
-            writer.write("没token，拦截");
+            writer.write(JSON.toJSONString(message));
             //filterChain.doFilter(request, response);
             return;
         }
-        JWT jwt = JWTUtil.parseToken(token);
-        String uid = (String) jwt.getPayload("uid");
+        //解析并验证token
+        JWT jwt = JwtUtils.parseToken(token);
+        if (JwtUtils.verify(jwt)) {
+            //验证结果为真代表token失效
+            ResponseResult<String> message = ResponseResult.error(ResponseStatus.TOKEN_EXPIRE_ERROR);
+            log.error(message.toString());
+            PrintWriter writer = response.getWriter();
+            writer.write(JSON.toJSONString(message));
+            return;
+        }
+        //获取uid
+        String uid = JwtUtils.getPayload(jwt, "uid");
         log.debug("登录用户uid：{}", uid);
         LoginUser loginUser = RedisUtils.getCacheObject(uid, LoginUser.class);
         log.debug("登录用户信息：{}", loginUser);
