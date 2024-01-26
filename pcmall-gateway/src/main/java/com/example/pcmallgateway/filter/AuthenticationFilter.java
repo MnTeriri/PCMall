@@ -33,7 +33,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         String path = request.getURI().getPath();
         if ("/api/login".equals(path)
                 || "/api/register".equals(path)
-                || "/api/captcha.jpg".equals(path)) {
+                || "/api/captcha.jpg".equals(path)
+                || path.startsWith("/api/image")) {
             log.debug("是{}，放行", path);
             return chain.filter(exchange);
         }
