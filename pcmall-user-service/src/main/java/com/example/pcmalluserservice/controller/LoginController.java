@@ -1,7 +1,9 @@
 package com.example.pcmalluserservice.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.example.pcmallcommon.model.User;
 import com.example.pcmallcommon.response.ResponseResult;
+import com.example.pcmallcommon.response.ResponseStatus;
 import com.example.pcmalluserservice.service.IUserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -20,15 +22,13 @@ public class LoginController {
     @Autowired
     private IUserService userService;
 
-//    @RequestMapping(value = "/api/login", method = {RequestMethod.GET, RequestMethod.POST})
-//    public String login() {
-//        return "这是登录接口,token:" + userService.login("000000000", "123456");
-//    }
-
-    @RequestMapping(value = "/api/login", method = {RequestMethod.GET, RequestMethod.POST})
-    public ResponseResult<User> login(String uid, String password) {
+    @PostMapping(value = "/api/login")
+    public ResponseResult<User> login(String uid, String password, String code) {
         //判定验证码
-
+//        String captchaCode = (String) session.getAttribute("captchaCode");
+//        if (!captchaCode.equals(code)) {
+//            return ResponseResult.error(ResponseStatus.CAPTCHA_ERROR);
+//        }
         return userService.login(uid, password);
     }
 }
