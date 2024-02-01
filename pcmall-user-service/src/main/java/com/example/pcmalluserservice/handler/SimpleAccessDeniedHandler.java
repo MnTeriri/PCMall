@@ -1,4 +1,4 @@
-package com.example.pcmalluserservice.exception;
+package com.example.pcmalluserservice.handler;
 
 import com.alibaba.fastjson2.JSON;
 import com.example.pcmallcommon.response.ResponseResult;
