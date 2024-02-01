@@ -3,10 +3,12 @@ package com.example.pcmalluserservice.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.jwt.JWT;
+import com.alibaba.fastjson2.JSON;
 import com.example.pcmallcommon.model.LoginUser;
 import com.example.pcmallcommon.model.User;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallcommon.utils.JwtUtils;
+import com.example.pcmalluserservice.dao.IUserDao;
 import com.example.pcmalluserservice.service.IUserService;
 import com.example.pcmalluserservice.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,8 @@ import java.util.HashMap;
 public class UserServiceImpl implements IUserService {
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private IUserDao userDao;
 
 //    @Override
 //    public String login(String uid, String password) {
