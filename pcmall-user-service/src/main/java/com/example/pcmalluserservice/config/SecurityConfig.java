@@ -1,7 +1,7 @@
 package com.example.pcmalluserservice.config;
 
-import com.example.pcmalluserservice.exception.SimpleAccessDeniedHandler;
-import com.example.pcmalluserservice.exception.SimpleAuthenticationEntryPoint;
+import com.example.pcmalluserservice.handler.SimpleAccessDeniedHandler;
+import com.example.pcmalluserservice.handler.SimpleAuthenticationEntryPoint;
 import com.example.pcmalluserservice.filter.JwtAuthenticationTokenFilter;
 import com.example.pcmalluserservice.service.impl.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -12,13 +12,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
-import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -54,11 +51,11 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(config -> {
-                    config.authenticationEntryPoint(authenticationEntryPoint);
-                    config.accessDeniedHandler(accessDeniedHandler);
-                });
+                .csrf(AbstractHttpConfigurer::disable);
+//                .exceptionHandling(config -> {
+//                    config.authenticationEntryPoint(authenticationEntryPoint);
+//                    config.accessDeniedHandler(accessDeniedHandler);
+//                });
         return http.build();
     }
 
