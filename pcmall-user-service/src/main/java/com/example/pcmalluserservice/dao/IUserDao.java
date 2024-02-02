@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface IUserDao extends BaseMapper<User> {
-    @Select("SELECT * FROM user_role WHERE uid=#{uid}")
-    List<String> findUserRole(String uid);
+
 }
