@@ -1,5 +1,6 @@
 package com.example.pcmallgateway.filter;
 
+import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallcommon.response.ResponseStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,13 +41,15 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         }
         List<String> token = request.getHeaders().get("token");
         if (token == null) {
-            ResponseResult<String> message = ResponseResult.error(ResponseStatus.NO_TOKEN_ERROR);
-            log.error(message.toString());
-            response.setStatusCode(HttpStatus.FORBIDDEN);
-            DataBufferFactory bufferFactory = response.bufferFactory();
-            ObjectMapper objectMapper = new ObjectMapper();
-            DataBuffer wrap = bufferFactory.wrap(objectMapper.writeValueAsBytes(message));
-            return response.writeWith(Mono.fromSupplier(() -> wrap));
+//            ResponseResult<String> message = ResponseResult.error(ResponseStatus.NO_TOKEN_ERROR);
+//            log.error(message.toString());
+//            response.setStatusCode(HttpStatus.FORBIDDEN);
+//            DataBufferFactory bufferFactory = response.bufferFactory();
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            DataBuffer wrap = bufferFactory.wrap(objectMapper.writeValueAsBytes(message));
+//            return response.writeWith(Mono.fromSupplier(() -> wrap));
+            log.error(ResponseStatus.NO_TOKEN_ERROR.toString());
+            throw new SystemException(ResponseStatus.NO_TOKEN_ERROR);
         }
         log.debug("token:{}", request.getHeaders().get("token"));
         return chain.filter(exchange);
