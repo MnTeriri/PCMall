@@ -1,14 +1,15 @@
 package com.example.pcmalluserservice.service.impl;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import cn.hutool.jwt.JWT;
-import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.LoginUser;
 import com.example.pcmallcommon.model.User;
 import com.example.pcmallcommon.response.ResponseResult;
+import com.example.pcmallcommon.response.ResponseStatus;
 import com.example.pcmallcommon.utils.JwtUtils;
 import com.example.pcmalluserservice.dao.IUserDao;
+import com.example.pcmalluserservice.dao.IUserRoleDao;
 import com.example.pcmalluserservice.service.IUserService;
 import com.example.pcmalluserservice.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +18,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.HashMap;
 
 @Slf4j
@@ -28,21 +29,8 @@ public class UserServiceImpl implements IUserService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private IUserDao userDao;
-
-//    @Override
-//    public String login(String uid, String password) {
-//        //查询权限信息
-//        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(uid, "123456");
-//        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-//        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
-//        User user = loginUser.getUser();
-//        RedisUtils.setCacheObject(user.getUid(), loginUser);
-//        String token = JWT.create()
-//                .setPayload("uid", user.getUid())
-//                .setKey("Teriri".getBytes())
-//                .sign();
-//        return token;
-//    }
+    @Autowired
+    private IUserRoleDao userRoleDao;
 
     @Override
     public ResponseResult<User> login(String uid, String password) {
@@ -61,8 +49,26 @@ public class UserServiceImpl implements IUserService {
         return new ResponseResult<>(200, token, user);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public String register() {
-        return null;
+    public ResponseResult<String> register(String uid, String password) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>()
+                .eq("uid", uid);
+        User user = userDao.selectOne(queryWrapper);
+        if (user != null) {
+            //用户存在
+            throw new SystemException(ResponseStatus.USER_EXIST_ERROR);
+        }
+        user = new User().setUid(uid).setUname("未设置用户名").setPassword(password);
+        if (userDao.insert(user) != 1) {
+            //插入用户失败，未知错误
+            throw new SystemException(ResponseStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (userRoleDao.insertUserRole(uid, 2) != 1) {
+            //插入权限失败，未知错误
+            throw new SystemException(ResponseStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ResponseResult.ok("用户注册成功！");
     }
+
 }
