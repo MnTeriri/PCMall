@@ -28,11 +28,11 @@ public class ResponseResult<T> {
         return result;
     }
 
-    public static ResponseResult error(ResponseStatus status) {
+    public static ResponseResult<String> error(ResponseStatus status) {
         return new ResponseResult<>(status.getCode(), status.getMessage(), null);
     }
 
-    public static ResponseResult error(Integer code, String msg) {
+    public static ResponseResult<String> error(Integer code, String msg) {
         return new ResponseResult<>(code, msg, null);
     }
 }
