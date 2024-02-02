@@ -11,8 +11,10 @@ public enum ResponseStatus {
     TOKEN_EXPIRE_ERROR(500001, "token过期"),
     CAPTCHA_ERROR(500002, "验证码错误"),
     ACCOUNT_ERROR(500003, "账号或密码错误"),
+    USER_EXIST_ERROR(500004, "账号存在"),
     AUTHORIZED_ERROR(401, "没有权限，需要登录"),
-    FORBIDDEN_ERROR(403, "权限不够，被拒绝");
+    FORBIDDEN_ERROR(403, "权限不够，被拒绝"),
+    INTERNAL_SERVER_ERROR(500, "服务器内部错误");
 
     private final Integer code;
     private final String message;
