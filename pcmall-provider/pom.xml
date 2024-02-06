@@ -15,9 +15,9 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>pcmall-provider-user</module>
         <module>pcmall-provider-goods</module>
-        <module>pcmall-provider-order</module>
+        <module>pcmall-provider-payment</module>
+        <module>pcmall-provider-user</module>
     </modules>
 
     <properties>
