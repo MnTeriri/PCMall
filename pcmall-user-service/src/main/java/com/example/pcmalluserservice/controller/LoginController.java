@@ -23,10 +23,10 @@ public class LoginController {
     @PostMapping(value = "/api/login")
     public ResponseResult<User> login(String uid, String password, String code) {
         //判定验证码
-        String captchaCode = (String) session.getAttribute("captchaCode");
-        if (!captchaCode.equals(code)) {
-            throw new SystemException(ResponseStatus.CAPTCHA_ERROR);
-        }
+//        String captchaCode = (String) session.getAttribute("captchaCode");
+//        if (!captchaCode.equals(code)) {
+//            throw new SystemException(ResponseStatus.CAPTCHA_ERROR);
+//        }
         return userService.login(uid, password);
     }
 }
