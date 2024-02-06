@@ -59,7 +59,7 @@ public class UserServiceImpl implements IUserService {
             //用户存在
             throw new SystemException(ResponseStatus.USER_EXIST_ERROR);
         }
-        user = new User().setUid(uid).setUname("未设置用户名").setPassword(password);
+        user = new User().setUid(uid).setUname("未设置用户名").setPassword(DigestUtil.md5Hex(password));
         if (userDao.insert(user) != 1) {
             //插入用户失败，未知错误
             throw new SystemException(ResponseStatus.INTERNAL_SERVER_ERROR);
