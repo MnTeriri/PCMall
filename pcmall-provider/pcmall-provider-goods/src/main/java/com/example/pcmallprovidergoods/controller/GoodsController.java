@@ -21,6 +21,6 @@ public class GoodsController {
 
     @RequestMapping("/getGoodsList")
     public ResponseResult<String> getGoodsList() {
-        return ResponseResult.ok("alksdhjaksljd");
+        return ResponseResult.ok(null,"kalsjhsfkjahsfasf");
     }
 }

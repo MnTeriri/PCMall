@@ -1,5 +1,6 @@
 package com.example.pcmallconsumeradmin.controller;
 
+import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallconsumeradmin.client.GoodsClient;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ public class GoodsController {
     }
 
     @RequestMapping("/getGoodsList")
-    public ResponseResult<String> getGoodsList() {
-        return ResponseResult.ok("alksdhjaksljd");
+    public ResponseResult<Goods> getGoodsList() {
+        return goodsClient.getGoodsList();
     }
 }

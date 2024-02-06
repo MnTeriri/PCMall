@@ -1,4 +1,4 @@
-package com.example.pcmallconsumeradmin.client;
+package com.example.pcmallconsumermobile.client;
 
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseResult;
