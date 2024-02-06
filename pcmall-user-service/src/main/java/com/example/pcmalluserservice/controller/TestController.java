@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
     @RequestMapping("/api/test")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('TTTTT')")
     public String test() {
         return "akshfkjahsfjasf";
     }
