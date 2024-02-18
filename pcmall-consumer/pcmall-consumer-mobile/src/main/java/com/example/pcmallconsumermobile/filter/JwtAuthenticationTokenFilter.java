@@ -3,7 +3,7 @@ package com.example.pcmallconsumermobile.filter;
 import cn.hutool.jwt.JWT;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.LoginUser;
-import com.example.pcmallcommon.response.ResponseStatus;
+import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.utils.JwtUtils;
 import com.example.pcmallconsumermobile.utils.RedisUtils;
 import jakarta.servlet.FilterChain;
@@ -34,16 +34,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String token = request.getHeader("token");
         if (token == null) {
             //没有token
-            log.error(ResponseStatus.NO_TOKEN_ERROR.toString());
-            resolver.resolveException(request, response, null, new SystemException(ResponseStatus.NO_TOKEN_ERROR));
+            log.error(ResponseCode.NO_TOKEN_ERROR.toString());
+            resolver.resolveException(request, response, null, new SystemException(ResponseCode.NO_TOKEN_ERROR));
             return;
         }
         //解析并验证token
         JWT jwt = JwtUtils.parseToken(token);
         if (JwtUtils.verify(jwt)) {
             //验证结果为真代表token失效
-            log.error(ResponseStatus.TOKEN_EXPIRE_ERROR.toString());
-            resolver.resolveException(request, response, null, new SystemException(ResponseStatus.TOKEN_EXPIRE_ERROR));
+            log.error(ResponseCode.TOKEN_EXPIRE_ERROR.toString());
+            resolver.resolveException(request, response, null, new SystemException(ResponseCode.TOKEN_EXPIRE_ERROR));
             return;
         }
         //获取uid
