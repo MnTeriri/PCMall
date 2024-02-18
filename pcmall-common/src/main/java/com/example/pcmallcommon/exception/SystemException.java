@@ -1,15 +1,15 @@
 package com.example.pcmallcommon.exception;
 
-import com.example.pcmallcommon.response.ResponseStatus;
+import com.example.pcmallcommon.response.ResponseCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class SystemException extends RuntimeException {
-    private ResponseStatus responseStatus;
+    private ResponseCode responseStatus;
 
-    public SystemException(ResponseStatus responseStatus) {
+    public SystemException(ResponseCode responseStatus) {
         super(responseStatus.toString());
         this.responseStatus = responseStatus;
     }
