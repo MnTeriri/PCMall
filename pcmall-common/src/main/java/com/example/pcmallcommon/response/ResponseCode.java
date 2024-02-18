@@ -5,8 +5,9 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public enum ResponseStatus {
+public enum ResponseCode {
     OK(200, "操作成功"),
+    ERROR(100000, "操作失败"),
     NO_TOKEN_ERROR(500000, "没有token"),
     TOKEN_EXPIRE_ERROR(500001, "token过期"),
     CAPTCHA_ERROR(500002, "验证码错误"),
@@ -19,7 +20,7 @@ public enum ResponseStatus {
     private final Integer code;
     private final String message;
 
-    ResponseStatus(Integer code, String message) {
+    ResponseCode(Integer code, String message) {
         this.code = code;
         this.message = message;
     }
