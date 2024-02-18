@@ -3,21 +3,17 @@ package com.example.pcmallgateway.handler;
 import com.alibaba.fastjson2.JSON;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.response.ResponseResult;
-import com.example.pcmallcommon.response.ResponseStatus;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.constraints.NotNull;
+import com.example.pcmallcommon.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufMono;
-import reactor.util.annotation.NonNullApi;
 
 @Slf4j
 @RestControllerAdvice
@@ -35,7 +31,7 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         } else {
             log.error("发生Throwable异常：{}", ex.toString());
             log.error("Class：{}", ex.getClass());
-            message = ResponseResult.error(ResponseStatus.INTERNAL_SERVER_ERROR);
+            message = ResponseResult.error(ResponseCode.INTERNAL_SERVER_ERROR);
         }
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.BAD_REQUEST);
