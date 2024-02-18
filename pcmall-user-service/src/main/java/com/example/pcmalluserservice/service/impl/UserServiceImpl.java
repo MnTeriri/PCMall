@@ -6,7 +6,7 @@ import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.LoginUser;
 import com.example.pcmallcommon.model.User;
 import com.example.pcmallcommon.response.ResponseResult;
-import com.example.pcmallcommon.response.ResponseStatus;
+import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.utils.JwtUtils;
 import com.example.pcmalluserservice.dao.IUserDao;
 import com.example.pcmalluserservice.dao.IUserRoleDao;
@@ -57,16 +57,16 @@ public class UserServiceImpl implements IUserService {
         User user = userDao.selectOne(queryWrapper);
         if (user != null) {
             //用户存在
-            throw new SystemException(ResponseStatus.USER_EXIST_ERROR);
+            throw new SystemException(ResponseCode.USER_EXIST_ERROR);
         }
         user = new User().setUid(uid).setUname("未设置用户名").setPassword(DigestUtil.md5Hex(password));
         if (userDao.insert(user) != 1) {
             //插入用户失败，未知错误
-            throw new SystemException(ResponseStatus.INTERNAL_SERVER_ERROR);
+            throw new SystemException(ResponseCode.INTERNAL_SERVER_ERROR);
         }
         if (userRoleDao.insertUserRole(uid, 2) != 1) {
             //插入权限失败，未知错误
-            throw new SystemException(ResponseStatus.INTERNAL_SERVER_ERROR);
+            throw new SystemException(ResponseCode.INTERNAL_SERVER_ERROR);
         }
         return ResponseResult.ok("用户注册成功！");
     }
