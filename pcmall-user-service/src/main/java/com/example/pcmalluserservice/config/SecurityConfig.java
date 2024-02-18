@@ -1,7 +1,5 @@
 package com.example.pcmalluserservice.config;
 
-import com.example.pcmalluserservice.handler.SimpleAccessDeniedHandler;
-import com.example.pcmalluserservice.handler.SimpleAuthenticationEntryPoint;
 import com.example.pcmalluserservice.filter.JwtAuthenticationTokenFilter;
 import com.example.pcmalluserservice.service.impl.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -30,10 +28,10 @@ public class SecurityConfig {
     private UserDetailsServiceImpl userService;
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
-    @Autowired
-    private SimpleAuthenticationEntryPoint authenticationEntryPoint;
-    @Autowired
-    private SimpleAccessDeniedHandler accessDeniedHandler;
+//    @Autowired
+//    private SimpleAuthenticationEntryPoint authenticationEntryPoint;
+//    @Autowired
+//    private SimpleAccessDeniedHandler accessDeniedHandler;
 
     public SecurityConfig() {
         log.debug("创建配置类对象：SecurityConfig");
