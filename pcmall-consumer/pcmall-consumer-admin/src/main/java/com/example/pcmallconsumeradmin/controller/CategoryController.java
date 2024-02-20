@@ -29,6 +29,11 @@ public class CategoryController {
         return categoryClient.getCategoryList(currentPage, pageSize);
     }
 
+    @PostMapping("/getNotDeleteCategoryList")
+    public ResponseResult<List<Category>> getNotDeleteCategoryList(){
+        return categoryClient.getNotDeleteCategoryList();
+    }
+
     @PostMapping("/getTotalCount")
     public ResponseResult<Long> getTotalCount(){
         return categoryClient.getTotalCount();
