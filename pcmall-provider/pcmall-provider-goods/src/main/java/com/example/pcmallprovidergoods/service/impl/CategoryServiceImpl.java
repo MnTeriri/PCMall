@@ -1,5 +1,6 @@
 package com.example.pcmallprovidergoods.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.pcmallcommon.model.Category;
 import com.example.pcmallprovidergoods.dao.ICategoryDao;
@@ -25,6 +26,12 @@ public class CategoryServiceImpl implements ICategoryService {
     public List<Category> getCategoryList(Integer currentPage, Integer pageSize) {
         Page<Category> page = new Page<>(currentPage, pageSize);
         return categoryDao.selectPage(page,null).getRecords();
+    }
+
+    @Override
+    public List<Category> getNotDeleteCategoryList() {
+        QueryWrapper<Category> queryWrapper=new QueryWrapper<Category>().eq("is_delete",0);
+        return categoryDao.selectList(queryWrapper);
     }
 
     @Override
