@@ -6,8 +6,12 @@ import com.example.pcmallconsumeradmin.client.GoodsClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -22,7 +26,26 @@ public class GoodsController {
     }
 
     @RequestMapping("/getGoodsList")
-    public ResponseResult<Goods> getGoodsList() {
-        return goodsClient.getGoodsList();
+    public ResponseResult<List<Goods>> getGoodsList(
+            @RequestParam(defaultValue = "1") Integer currentPage,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        return goodsClient.getGoodsList(currentPage, pageSize);
     }
+
+    @PostMapping("/getTotalCount")
+    public ResponseResult<Long> getTotalCount() {
+        return goodsClient.getTotalCount();
+    }
+
+    @RequestMapping("/addGoods")
+    public ResponseResult<String> addGoods(Goods goods){
+        return goodsClient.addGoods(goods);
+    }
+
+    @RequestMapping("/updateGoods")
+    public ResponseResult<String> updateGoods(Goods goods){
+        return goodsClient.updateGoods(goods);
+    }
+
+
 }
