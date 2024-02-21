@@ -32,13 +32,18 @@ public class BrandController {
         return brandClient.getBrandList(currentPage, pageSize);
     }
 
+    @PostMapping("/getBrandListByCid")
+    public ResponseResult<List<Brand>> getBrandListByCid(Integer cid) {
+        return brandClient.getBrandListByCid(cid);
+    }
+
     @PostMapping("/getSelectedCategoryIdList")
     public ResponseResult<List<Integer>> getSelectedCategoryIdList(Integer bid) {
         return brandClient.getSelectedCategoryIdList(bid);
     }
 
     @PostMapping("/getTotalCount")
-    public ResponseResult<Long> getTotalCount(){
+    public ResponseResult<Long> getTotalCount() {
         return brandClient.getTotalCount();
     }
 

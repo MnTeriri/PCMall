@@ -29,6 +29,12 @@ public class BrandController {
         return ResponseResult.ok(brandList);
     }
 
+    @PostMapping("/getBrandListByCid")
+    public ResponseResult<List<Brand>> getBrandListByCid(Integer cid) {
+        List<Brand> brandList = brandService.getBrandListByCid(cid);
+        return ResponseResult.ok(brandList);
+    }
+
     @PostMapping("/getSelectedCategoryIdList")
     public ResponseResult<List<Integer>> getSelectedCategoryIdList(Integer bid) {
         List<Integer> categoryList = brandService.getSelectedCategoryIdList(bid);
