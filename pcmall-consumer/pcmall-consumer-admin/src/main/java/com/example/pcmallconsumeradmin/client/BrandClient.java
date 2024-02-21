@@ -16,11 +16,15 @@ public interface BrandClient {
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
 
-    @PostMapping("/brand/getTotalCount")
-    public ResponseResult<Long> getTotalCount();
+
+    @PostMapping("/brand/getBrandListByCid")
+    public ResponseResult<List<Brand>> getBrandListByCid(@RequestParam("cid") Integer cid);
 
     @PostMapping("/brand/getSelectedCategoryIdList")
     public ResponseResult<List<Integer>> getSelectedCategoryIdList(@RequestParam("bid") Integer bid);
+
+    @PostMapping("/brand/getTotalCount")
+    public ResponseResult<Long> getTotalCount();
 
     @PostMapping("/brand/addBrand")
     public ResponseResult<String> addBrand(@RequestBody Brand brand);
