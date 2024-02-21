@@ -32,6 +32,11 @@ public class BrandServiceImpl implements IBrandService {
     }
 
     @Override
+    public List<Brand> getBrandListByCid(Integer cid) {
+        return brandDao.searchBrandByCid(cid);
+    }
+
+    @Override
     public List<Integer> getSelectedCategoryIdList(Integer bid) {
         return brandDao.getSelectedCategoryIdList(bid);
     }
