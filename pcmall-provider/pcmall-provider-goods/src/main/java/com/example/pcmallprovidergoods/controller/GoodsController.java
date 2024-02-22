@@ -24,10 +24,15 @@ public class GoodsController {
         log.debug("创建Controller对象：GoodsController");
     }
 
-    @RequestMapping("/getGoodsList")
+    @PostMapping("/getGoodsList")
     public ResponseResult<List<Goods>> getGoodsList(Integer currentPage, Integer pageSize) {
         List<Goods> goodsList = goodsService.getGoodsList(currentPage, pageSize);
         return ResponseResult.ok(goodsList);
+    }
+
+    @PostMapping("/searchGoodsById")
+    public ResponseResult<Goods> searchGoodsById(Integer id) {
+        return ResponseResult.ok(goodsService.searchGoodsById(id));
     }
 
     @PostMapping("/getTotalCount")
@@ -35,19 +40,35 @@ public class GoodsController {
         return ResponseResult.ok(goodsService.getTotalCount());
     }
 
-    @RequestMapping("/addGoods")
-    public ResponseResult<String> addGoods(@RequestBody Goods goods){
-        if (goodsService.addGoods(goods) == 1) {
-            return ResponseResult.ok("添加成功");
-        }
-        return ResponseResult.error("添加失败");
+    @PostMapping("/addGoods")
+    public ResponseResult<String> addGoods(@RequestBody Goods goods) {
+        goodsService.addGoods(goods);
+        return ResponseResult.ok("添加成功");
     }
 
-    @RequestMapping("/updateGoods")
-    public ResponseResult<String> updateGoods(@RequestBody Goods goods){
-        if (goodsService.updateGoods(goods) == 1) {
-            return ResponseResult.ok("修改成功");
-        }
-        return ResponseResult.error("修改失败");
+    @PostMapping("/updateGoods")
+    public ResponseResult<String> updateGoods(@RequestBody Goods goods) {
+        goodsService.updateGoods(goods);
+        return ResponseResult.ok("修改成功");
+    }
+
+    @PostMapping("/deleteGoods")
+    public ResponseResult<String> deleteGoods(@RequestBody Goods goods) {
+        goods.setIsDelete(1);
+        goodsService.updateGoods(goods);
+        return ResponseResult.ok("修改成功");
+    }
+
+    @PostMapping("/recoverGoods")
+    public ResponseResult<String> recoverGoods(@RequestBody Goods goods) {
+        goods.setIsDelete(0);
+        goodsService.updateGoods(goods);
+        return ResponseResult.ok("修改成功");
+    }
+
+    @PostMapping("/updateGoodsStatus")
+    public ResponseResult<String> updateGoodsStatus(@RequestBody Goods goods) {
+        goodsService.updateGoodsStatus(goods);
+        return ResponseResult.ok("修改成功");
     }
 }

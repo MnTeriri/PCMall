@@ -6,10 +6,7 @@ import com.example.pcmallconsumeradmin.client.GoodsClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,20 +29,38 @@ public class GoodsController {
         return goodsClient.getGoodsList(currentPage, pageSize);
     }
 
+    @PostMapping("/searchGoodsById")
+    public ResponseResult<Goods> searchGoodsById(Integer id) {
+        return goodsClient.searchGoodsById(id);
+    }
+
     @PostMapping("/getTotalCount")
     public ResponseResult<Long> getTotalCount() {
         return goodsClient.getTotalCount();
     }
 
     @RequestMapping("/addGoods")
-    public ResponseResult<String> addGoods(Goods goods){
+    public ResponseResult<String> addGoods(Goods goods) {
         return goodsClient.addGoods(goods);
     }
 
     @RequestMapping("/updateGoods")
-    public ResponseResult<String> updateGoods(Goods goods){
+    public ResponseResult<String> updateGoods(Goods goods) {
         return goodsClient.updateGoods(goods);
     }
 
+    @PostMapping("/deleteGoods")
+    public ResponseResult<String> deleteGoods(Goods goods) {
+        return goodsClient.deleteGoods(goods);
+    }
 
+    @PostMapping("/recoverGoods")
+    public ResponseResult<String> recoverGoods(Goods goods) {
+        return goodsClient.recoverGoods(goods);
+    }
+
+    @PostMapping("/updateGoodsStatus")
+    public ResponseResult<String> updateGoodsStatus(Goods goods) {
+        return goodsClient.updateGoodsStatus(goods);
+    }
 }
