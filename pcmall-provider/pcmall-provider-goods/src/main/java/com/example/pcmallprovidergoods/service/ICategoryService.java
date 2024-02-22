@@ -7,9 +7,9 @@ import java.util.List;
 public interface ICategoryService {
     public List<Category> getCategoryList(Integer currentPage, Integer pageSize);
 
-    public List<Category> getNotDeleteCategoryList();
-
     public Long getTotalCount();
+
+    public List<Category> searchCategory();
 
     public Integer addCategory(Category category);
 

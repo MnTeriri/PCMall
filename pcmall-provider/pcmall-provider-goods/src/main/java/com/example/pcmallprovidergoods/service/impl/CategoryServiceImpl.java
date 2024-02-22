@@ -25,18 +25,18 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public List<Category> getCategoryList(Integer currentPage, Integer pageSize) {
         Page<Category> page = new Page<>(currentPage, pageSize);
-        return categoryDao.selectPage(page,null).getRecords();
-    }
-
-    @Override
-    public List<Category> getNotDeleteCategoryList() {
-        QueryWrapper<Category> queryWrapper=new QueryWrapper<Category>().eq("is_delete",0);
-        return categoryDao.selectList(queryWrapper);
+        return categoryDao.selectPage(page, null).getRecords();
     }
 
     @Override
     public Long getTotalCount() {
         return categoryDao.selectCount(null);
+    }
+
+    @Override
+    public List<Category> searchCategory() {
+        QueryWrapper<Category> queryWrapper = new QueryWrapper<Category>().eq("is_delete", 0);
+        return categoryDao.selectList(queryWrapper);
     }
 
     @Override
