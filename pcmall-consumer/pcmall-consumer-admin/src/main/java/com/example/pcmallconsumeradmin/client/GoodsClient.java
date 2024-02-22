@@ -12,17 +12,29 @@ import java.util.List;
 
 @FeignClient(contextId = "goodsClient", value = "pcmall-provider-goods")
 public interface GoodsClient {
-    @RequestMapping("/goods/getGoodsList")
+    @PostMapping("/goods/getGoodsList")
     public ResponseResult<List<Goods>> getGoodsList(
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
 
+    @PostMapping("/goods/searchGoodsById")
+    public ResponseResult<Goods> searchGoodsById(@RequestParam("id") Integer id);
+
     @PostMapping("/goods/getTotalCount")
     public ResponseResult<Long> getTotalCount();
 
-    @RequestMapping("/goods/addGoods")
+    @PostMapping("/goods/addGoods")
     public ResponseResult<String> addGoods(@RequestBody Goods goods);
 
-    @RequestMapping("/goods/updateGoods")
+    @PostMapping("/goods/updateGoods")
     public ResponseResult<String> updateGoods(@RequestBody Goods goods);
+
+    @PostMapping("/goods/deleteGoods")
+    public ResponseResult<String> deleteGoods(@RequestBody Goods goods) ;
+
+    @PostMapping("/goods/recoverGoods")
+    public ResponseResult<String> recoverGoods(@RequestBody Goods goods);
+
+    @PostMapping("/goods/updateGoodsStatus")
+    public ResponseResult<String> updateGoodsStatus(@RequestBody Goods goods);
 }
