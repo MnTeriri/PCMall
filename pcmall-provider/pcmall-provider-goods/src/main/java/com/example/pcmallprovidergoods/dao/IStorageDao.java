@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IStorageDao extends BaseMapper<Storage> {
+
 }
