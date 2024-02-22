@@ -29,15 +29,15 @@ public class BrandController {
         return ResponseResult.ok(brandList);
     }
 
-    @PostMapping("/getBrandListByCid")
-    public ResponseResult<List<Brand>> getBrandListByCid(Integer cid) {
-        List<Brand> brandList = brandService.getBrandListByCid(cid);
+    @PostMapping("/searchBrandByCid")
+    public ResponseResult<List<Brand>> searchBrandByCid(Integer cid) {
+        List<Brand> brandList = brandService.searchBrandByCid(cid);
         return ResponseResult.ok(brandList);
     }
 
-    @PostMapping("/getSelectedCategoryIdList")
-    public ResponseResult<List<Integer>> getSelectedCategoryIdList(Integer bid) {
-        List<Integer> categoryList = brandService.getSelectedCategoryIdList(bid);
+    @PostMapping("/searchSelectedCategoryId")
+    public ResponseResult<List<Integer>> searchSelectedCategoryId(Integer bid) {
+        List<Integer> categoryList = brandService.searchSelectedCategoryId(bid);
         return ResponseResult.ok(categoryList);
     }
 
