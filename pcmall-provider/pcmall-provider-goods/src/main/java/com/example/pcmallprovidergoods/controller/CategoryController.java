@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -27,9 +26,9 @@ public class CategoryController {
         return ResponseResult.ok(categoryList);
     }
 
-    @PostMapping("/getNotDeleteCategoryList")
-    public ResponseResult<List<Category>> getNotDeleteCategoryList(Integer currentPage, Integer pageSize) {
-        List<Category> categoryList = categoryService.getNotDeleteCategoryList();
+    @PostMapping("/searchCategory")
+    public ResponseResult<List<Category>> searchCategory() {
+        List<Category> categoryList = categoryService.searchCategory();
         return ResponseResult.ok(categoryList);
     }
 
