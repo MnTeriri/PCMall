@@ -17,8 +17,8 @@ public interface CategoryClient {
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
 
-    @PostMapping("/category/getNotDeleteCategoryList")
-    public ResponseResult<List<Category>> getNotDeleteCategoryList();
+    @PostMapping("/category/searchCategory")
+    public ResponseResult<List<Category>> searchCategory();
 
     @PostMapping("/category/getTotalCount")
     public ResponseResult<Long> getTotalCount();
