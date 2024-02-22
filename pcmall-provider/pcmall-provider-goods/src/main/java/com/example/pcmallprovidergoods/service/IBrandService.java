@@ -8,11 +8,11 @@ public interface IBrandService {
 
     public List<Brand> getBrandList(Integer currentPage, Integer pageSize);
 
-    public List<Brand> getBrandListByCid(Integer cid);
-
-    public List<Integer> getSelectedCategoryIdList(Integer bid);
-
     public Long getTotalCount();
+
+    public List<Brand> searchBrandByCid(Integer cid);
+
+    public List<Integer> searchSelectedCategoryId(Integer bid);
 
     public Integer brandCategoryChange(Integer bid, Integer cid, Boolean selected);
 

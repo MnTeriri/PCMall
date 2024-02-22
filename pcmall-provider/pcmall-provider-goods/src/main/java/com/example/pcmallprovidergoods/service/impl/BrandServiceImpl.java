@@ -32,13 +32,18 @@ public class BrandServiceImpl implements IBrandService {
     }
 
     @Override
-    public List<Brand> getBrandListByCid(Integer cid) {
+    public Long getTotalCount() {
+        return brandDao.selectCount(null);
+    }
+
+    @Override
+    public List<Brand> searchBrandByCid(Integer cid) {
         return brandDao.searchBrandByCid(cid);
     }
 
     @Override
-    public List<Integer> getSelectedCategoryIdList(Integer bid) {
-        return brandDao.getSelectedCategoryIdList(bid);
+    public List<Integer> searchSelectedCategoryId(Integer bid) {
+        return brandDao.searchSelectedCategoryId(bid);
     }
 
     @Override
@@ -47,11 +52,6 @@ public class BrandServiceImpl implements IBrandService {
             return brandDao.insertCategoryBrand(bid, cid);
         }
         return brandDao.deleteCategoryBrand(bid, cid);
-    }
-
-    @Override
-    public Long getTotalCount() {
-        return brandDao.selectCount(null);
     }
 
     @Override
