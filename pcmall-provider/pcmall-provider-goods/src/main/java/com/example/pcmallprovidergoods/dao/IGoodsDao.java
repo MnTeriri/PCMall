@@ -17,8 +17,8 @@ public interface IGoodsDao extends BaseMapper<Goods> {
     @Results({
             @Result(property = "cid", column = "cid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
             @Result(property = "bid", column = "bid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
-            @Result(property = "category",column = "cid",one = @One(select = "com.example.pcmallprovidergoods.dao.ICategoryDao.selectCategoryById")),
-            @Result(property = "brand",column = "bid",one = @One(select = "com.example.pcmallprovidergoods.dao.IBrandDao.searchBrandById"))
+            @Result(property = "category",column = "cid",one = @One(select = "com.example.pcmallprovidergoods.dao.ICategoryDao.getCategoryById")),
+            @Result(property = "brand",column = "bid",one = @One(select = "com.example.pcmallprovidergoods.dao.IBrandDao.getBrandById"))
     })
     public List<Goods> getGoodsList(Integer start, Integer pageSize);
 }
