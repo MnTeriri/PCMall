@@ -15,6 +15,6 @@ public interface GoodsClient {
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
 
-    @PostMapping("/goods/getTotalCount")
-    public ResponseResult<Long> getTotalCount();
+    @PostMapping("/goods/searchTotalCount")
+    public ResponseResult<Long> searchTotalCount();
 }
