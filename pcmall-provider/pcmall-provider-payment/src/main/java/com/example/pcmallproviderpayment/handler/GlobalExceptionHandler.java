@@ -1,4 +1,4 @@
-package com.example.pcmallprovidergoods.handler;
+package com.example.pcmallproviderpayment.handler;
 
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.response.ResponseCode;

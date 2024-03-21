@@ -48,14 +48,14 @@ public class GlobalExceptionHandler {
         return message;
     }
 
-    //处理Exception异常
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseResult<String> handlerException(Exception e) {
-        log.error("发生Exception异常：{}", e.getMessage());
-        log.error("Class：{}", e.getClass());
-        ResponseResult<String> message = ResponseResult.error(ResponseCode.INTERNAL_SERVER_ERROR);
-        log.error(message.toString());
-        return message;
-    }
+//    //处理Exception异常
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ResponseResult<String> handlerException(Exception e) {
+//        log.error("发生Exception异常：{}", e.getMessage());
+//        log.error("Class：{}", e.getClass());
+//        ResponseResult<String> message = ResponseResult.error(ResponseCode.INTERNAL_SERVER_ERROR);
+//        log.error(message.toString());
+//        return message;
+//    }
 }
