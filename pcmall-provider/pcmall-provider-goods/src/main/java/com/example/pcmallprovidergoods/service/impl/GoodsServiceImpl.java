@@ -1,6 +1,5 @@
 package com.example.pcmallprovidergoods.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseCode;
@@ -29,8 +28,13 @@ public class GoodsServiceImpl implements IGoodsService {
     }
 
     @Override
-    public Goods searchGoodsById(Integer id) {
-        return goodsDao.searchGoodsById(id);
+    public List<Goods> searchGoodsList(Integer currentPage, Integer pageSize) {
+        return goodsDao.searchGoodsList((currentPage - 1) * pageSize, pageSize);
+    }
+
+    @Override
+    public Goods searchGoods(Integer id) {
+        return goodsDao.searchGoods(id);
     }
 
     @Override
@@ -56,7 +60,7 @@ public class GoodsServiceImpl implements IGoodsService {
     @Override
     public void updateGoodsStatus(Goods goods) {
         goods.setUpdateTime(LocalDateTime.now());
-        Goods searched = searchGoodsById(goods.getId());
+        Goods searched = searchGoods(goods.getId());
         if (goods.getStatus() == 0 && searched.getCount() == 0) {
             //上架操作如果商品没货，设置为缺货
             goods.setStatus(1);

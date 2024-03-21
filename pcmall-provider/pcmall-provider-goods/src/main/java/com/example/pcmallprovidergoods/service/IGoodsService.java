@@ -7,9 +7,11 @@ import java.util.List;
 public interface IGoodsService {
     public List<Goods> getGoodsList(Integer currentPage, Integer pageSize);
 
-    public Goods searchGoodsById(Integer id);
+    public List<Goods> searchGoodsList(Integer currentPage, Integer pageSize);
 
     public Long getTotalCount();
+
+    public Goods searchGoods(Integer id);
 
     public void addGoods(Goods goods);
 
