@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ICategoryDao extends BaseMapper<Category> {
     @Select("SELECT * FROM category WHERE id=#{id}")
-    public Category getCategoryById(Integer id);
+    public Category searchCategory(Integer id);
 }

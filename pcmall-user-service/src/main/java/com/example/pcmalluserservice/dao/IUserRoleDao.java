@@ -11,8 +11,8 @@ public interface IUserRoleDao {
     @Select("SELECT role.name FROM role INNER JOIN user_role " +
             "ON role.id = user_role.rid " +
             "WHERE user_role.uid=#{uid}")
-    public List<String> findUserRole(String uid);
+    List<String> findUserRole(String uid);
 
     @Insert("INSERT INTO user_role(uid, rid) VALUE (#{uid},#{rid})")
-    public Integer insertUserRole(String uid, Integer rid);
+    Integer insertUserRole(String uid, Integer rid);
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface IBrandDao extends BaseMapper<Brand> {
     @Select("SELECT * FROM brand WHERE id=#{id}")
-    public Brand getBrandById(Integer id);
+    public Brand searchBrand(Integer id);
 
     @Select("SELECT brand.id,bname,created_time,update_time,image,is_delete " +
             "FROM brand INNER JOIN category_brand " +

@@ -17,17 +17,26 @@ public interface IGoodsDao extends BaseMapper<Goods> {
     @Results({
             @Result(property = "cid", column = "cid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
             @Result(property = "bid", column = "bid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
-            @Result(property = "category", column = "cid", one = @One(select = "com.example.pcmallprovidergoods.dao.ICategoryDao.getCategoryById")),
-            @Result(property = "brand", column = "bid", one = @One(select = "com.example.pcmallprovidergoods.dao.IBrandDao.getBrandById"))
+            @Result(property = "category", column = "cid", one = @One(select = "com.example.pcmallprovidergoods.dao.ICategoryDao.searchCategory")),
+            @Result(property = "brand", column = "bid", one = @One(select = "com.example.pcmallprovidergoods.dao.IBrandDao.searchBrand"))
     })
     public List<Goods> getGoodsList(Integer start, Integer pageSize);
+
+    @Select("SELECT * FROM goods WHERE status=0 AND is_delete=0 LIMIT #{start},#{pageSize};")
+    @Results({
+            @Result(property = "cid", column = "cid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
+            @Result(property = "bid", column = "bid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
+            @Result(property = "category", column = "cid", one = @One(select = "com.example.pcmallprovidergoods.dao.ICategoryDao.searchCategory")),
+            @Result(property = "brand", column = "bid", one = @One(select = "com.example.pcmallprovidergoods.dao.IBrandDao.searchBrand"))
+    })
+    public List<Goods> searchGoodsList(Integer start, Integer pageSize);
 
     @Select("SELECT * FROM goods WHERE id=#{id};")
     @Results({
             @Result(property = "cid", column = "cid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
             @Result(property = "bid", column = "bid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
-            @Result(property = "category", column = "cid", one = @One(select = "com.example.pcmallprovidergoods.dao.ICategoryDao.getCategoryById")),
-            @Result(property = "brand", column = "bid", one = @One(select = "com.example.pcmallprovidergoods.dao.IBrandDao.getBrandById"))
+            @Result(property = "category", column = "cid", one = @One(select = "com.example.pcmallprovidergoods.dao.ICategoryDao.searchCategory")),
+            @Result(property = "brand", column = "bid", one = @One(select = "com.example.pcmallprovidergoods.dao.IBrandDao.searchBrand"))
     })
-    public Goods searchGoodsById(Integer id);
+    public Goods searchGoods(Integer id);
 }
