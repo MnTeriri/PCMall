@@ -12,18 +12,18 @@ import java.util.List;
 @FeignClient(contextId = "storageClient", value = "pcmall-provider-goods")
 public interface StorageClient {
     @PostMapping("/storage/getStorageList")
-    public ResponseResult<List<Storage>> getStorageList(
+    ResponseResult<List<Storage>> getStorageList(
             @RequestParam("gid") Integer gid,
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
 
     @PostMapping("/storage/getTotalCount")
-    public ResponseResult<Long> getTotalCount(@RequestParam("gid") Integer gid);
+    ResponseResult<Long> getTotalCount(@RequestParam("gid") Integer gid);
 
     @PostMapping("/storage/inboundDelivery")
-    public ResponseResult<String> inboundDelivery(@RequestBody Storage storage);
+    ResponseResult<String> inboundDelivery(@RequestBody Storage storage);
 
     @PostMapping("/storage/outboundDelivery")
-    public ResponseResult<String> outboundDelivery(@RequestBody Storage storage);
+    ResponseResult<String> outboundDelivery(@RequestBody Storage storage);
 
 }
