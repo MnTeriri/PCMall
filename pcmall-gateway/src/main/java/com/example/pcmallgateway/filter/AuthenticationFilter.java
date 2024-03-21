@@ -2,7 +2,6 @@ package com.example.pcmallgateway.filter;
 
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.response.ResponseCode;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -30,7 +29,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         if ("/api/login".equals(path)
                 || "/api/register".equals(path)
                 || "/api/captcha.jpg".equals(path)
-                || path.startsWith("/api/image")) {
+                || path.startsWith("/api/image")
+                || "/api/mobile/goods/searchGoodsList".equals(path)) {
             log.debug("是{}，放行", path);
             return chain.filter(exchange);
         }

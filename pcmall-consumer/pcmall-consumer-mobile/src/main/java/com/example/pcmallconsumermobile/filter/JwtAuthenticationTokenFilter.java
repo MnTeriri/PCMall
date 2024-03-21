@@ -6,13 +6,12 @@ import com.example.pcmallcommon.model.LoginUser;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.utils.JwtUtils;
 import com.example.pcmallconsumermobile.utils.RedisUtils;
+import com.example.pcmallconsumermobile.utils.SpringContextUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -22,17 +21,18 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import java.io.IOException;
 
 @Slf4j
-@Component
+//@Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
-    @Autowired
-    @Qualifier("handlerExceptionResolver")
-    private HandlerExceptionResolver resolver;
+//    @Autowired
+//    @Qualifier("handlerExceptionResolver")
+//    private HandlerExceptionResolver resolver;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.debug("进入JwtAuthenticationTokenFilter");
+        HandlerExceptionResolver resolver= SpringContextUtils.getBean("handlerExceptionResolver");
         String token = request.getHeader("token");
-        if (token == null) {
+        if (token == null|| token.isEmpty()) {
             //没有token
             log.error(ResponseCode.NO_TOKEN_ERROR.toString());
             resolver.resolveException(request, response, null, new SystemException(ResponseCode.NO_TOKEN_ERROR));
