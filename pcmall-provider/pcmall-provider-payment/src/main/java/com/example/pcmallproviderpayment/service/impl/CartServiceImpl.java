@@ -49,8 +49,9 @@ public class CartServiceImpl implements ICartService {
         if (data.getCount() >= goods.getCount()) {
             throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
         }
-        data.setCount(data.getCount() + 1);
-        if (cartDao.updateById(data) != 1) {
+        cart.setCount(data.getCount() + 1);
+        if (cartDao.updateById(cart
+        ) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
     }
@@ -64,15 +65,25 @@ public class CartServiceImpl implements ICartService {
         if (data.getCount() <= 1) {
             throw new SystemException(ResponseCode.CART_MIN_COUNT_ERROR);
         }
-        data.setCount(data.getCount() - 1);
-        if (cartDao.updateById(data) != 1) {
+        cart.setCount(data.getCount() - 1);
+        if (cartDao.updateById(cart) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
     }
 
     @Override
     public void selectCart(Cart cart) {
-
+        Cart data = cartDao.searchCart(cart.getId());
+        if (data == null) {
+            throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
+        }
+        Goods goods = data.getGoods();
+        if (goods.getStatus() != 0 || goods.getIsDelete() == 1) {
+            throw new SystemException(ResponseCode.CART_GOODS_ERROR);
+        }
+        if (cartDao.updateById(cart) != 1) {
+            throw new SystemException(ResponseCode.ERROR);
+        }
     }
 
     @Override

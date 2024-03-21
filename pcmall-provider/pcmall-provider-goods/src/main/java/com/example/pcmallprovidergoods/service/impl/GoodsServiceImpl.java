@@ -1,5 +1,6 @@
 package com.example.pcmallprovidergoods.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseCode;
@@ -40,6 +41,14 @@ public class GoodsServiceImpl implements IGoodsService {
     @Override
     public Long getTotalCount() {
         return goodsDao.selectCount(null);
+    }
+
+    @Override
+    public Long searchTotalCount() {
+        QueryWrapper<Goods> queryWrapper = new QueryWrapper<Goods>()
+                .eq("status", 0)
+                .eq("is_delete", 0);
+        return goodsDao.selectCount(queryWrapper);
     }
 
     @Override

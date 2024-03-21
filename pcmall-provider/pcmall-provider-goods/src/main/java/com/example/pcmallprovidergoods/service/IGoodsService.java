@@ -9,7 +9,9 @@ public interface IGoodsService {
 
     public List<Goods> searchGoodsList(Integer currentPage, Integer pageSize);
 
-    public Long getTotalCount();
+    public Long getTotalCount();//所有
+
+    public Long searchTotalCount();//状态正常的数量
 
     public Goods searchGoods(Integer id);
 
