@@ -6,7 +6,6 @@ import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.model.Storage;
 import com.example.pcmallcommon.response.ResponseCode;
-import com.example.pcmallprovidergoods.dao.IGoodsDao;
 import com.example.pcmallprovidergoods.dao.IStorageDao;
 import com.example.pcmallprovidergoods.service.IGoodsService;
 import com.example.pcmallprovidergoods.service.IStorageService;
@@ -44,7 +43,7 @@ public class StorageServiceImpl implements IStorageService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void inboundDelivery(Storage storage) {
-        Goods goods = goodsService.searchGoodsById(storage.getGid());
+        Goods goods = goodsService.searchGoods(storage.getGid());
         if (goods == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
         }
@@ -61,12 +60,12 @@ public class StorageServiceImpl implements IStorageService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void outboundDelivery(Storage storage) {
-        Goods goods = goodsService.searchGoodsById(storage.getGid());
+        Goods goods = goodsService.searchGoods(storage.getGid());
         if (goods == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
         }
         if (goods.getCount() < storage.getCount()) {
-            throw new SystemException(ResponseCode.STORAGE_NOT_ENOUGH_ERROR);//库存不足
+            throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);//库存不足
         }
         goods.setCount(goods.getCount() - storage.getCount());
         if (goods.getCount() == 0) {
