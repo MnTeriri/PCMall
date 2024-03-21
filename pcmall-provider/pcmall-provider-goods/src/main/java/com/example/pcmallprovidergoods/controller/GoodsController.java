@@ -5,7 +5,6 @@ import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallprovidergoods.service.IGoodsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,9 +29,14 @@ public class GoodsController {
         return ResponseResult.ok(goodsList);
     }
 
+    @PostMapping("/searchGoodsList")
+    public ResponseResult<List<Goods>> searchGoodsList(Integer currentPage, Integer pageSize) {
+        return ResponseResult.ok(goodsService.searchGoodsList(currentPage, pageSize));
+    }
+
     @PostMapping("/searchGoodsById")
     public ResponseResult<Goods> searchGoodsById(Integer id) {
-        return ResponseResult.ok(goodsService.searchGoodsById(id));
+        return ResponseResult.ok(goodsService.searchGoods(id));
     }
 
     @PostMapping("/getTotalCount")

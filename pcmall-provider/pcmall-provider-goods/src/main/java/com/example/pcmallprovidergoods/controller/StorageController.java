@@ -1,13 +1,14 @@
 package com.example.pcmallprovidergoods.controller;
 
-import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.Storage;
-import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallprovidergoods.service.IStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
