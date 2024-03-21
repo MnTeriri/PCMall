@@ -37,7 +37,8 @@ public class StorageServiceImpl implements IStorageService {
 
     @Override
     public Long getTotalCount(Integer gid) {
-        return storageDao.selectCount(null);
+        QueryWrapper<Storage> queryWrapper = new QueryWrapper<Storage>().eq("gid", gid);
+        return storageDao.selectCount(queryWrapper);
     }
 
     @Transactional(rollbackFor = Exception.class)
