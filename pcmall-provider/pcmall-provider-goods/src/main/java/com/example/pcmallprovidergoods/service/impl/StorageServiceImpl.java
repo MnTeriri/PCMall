@@ -30,7 +30,9 @@ public class StorageServiceImpl implements IStorageService {
 
     @Override
     public List<Storage> getStorageList(Integer gid, Integer currentPage, Integer pageSize) {
-        QueryWrapper<Storage> queryWrapper = new QueryWrapper<Storage>().eq("gid", gid);
+        QueryWrapper<Storage> queryWrapper = new QueryWrapper<Storage>()
+                .eq("gid", gid)
+                .orderByDesc("id");
         Page<Storage> page = new Page<>(currentPage, pageSize);
         return storageDao.selectPage(page, queryWrapper).getRecords();
     }
