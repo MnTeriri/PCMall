@@ -30,8 +30,8 @@ public class GoodsController {
         return goodsClient.searchGoodsList(currentPage, pageSize);
     }
 
-    @PostMapping("/getTotalCount")
-    public ResponseResult<Long> getTotalCount() {
-        return goodsClient.getTotalCount();
+    @PostMapping("/searchTotalCount")
+    public ResponseResult<Long> searchTotalCount() {
+        return goodsClient.searchTotalCount();
     }
 }
