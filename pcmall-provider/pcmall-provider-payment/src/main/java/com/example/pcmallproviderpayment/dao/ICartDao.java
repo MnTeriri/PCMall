@@ -2,10 +2,7 @@ package com.example.pcmallproviderpayment.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.pcmallcommon.model.Cart;
-import org.apache.ibatis.annotations.One;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
 import java.util.List;
@@ -24,4 +21,15 @@ public interface ICartDao extends BaseMapper<Cart> {
             @Result(property = "goods", column = "gid", one = @One(select = "com.example.pcmallproviderpayment.dao.IGoodsDao.searchGoods"))
     })
     public Cart searchCart(Integer id);
+
+    /**
+     * 对购物车全选或者取消全选时，需要过滤掉
+     * 1、书籍状态不为正常状态
+     * 2、书籍数量比购物车数量少的
+     * 这些购物车信息是异常信息
+     */
+    @Update("UPDATE cart INNER JOIN goods ON cart.gid = goods.id " +
+            "SET cart.is_select=#{isSelect} " +
+            "WHERE cart.uid=#{uid} AND goods.status=0 AND goods.count>=cart.count")
+    public boolean updateAllCartSelected(String uid, Integer isSelect);
 }
