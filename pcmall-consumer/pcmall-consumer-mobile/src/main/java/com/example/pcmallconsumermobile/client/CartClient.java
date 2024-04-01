@@ -32,6 +32,9 @@ public interface CartClient {
     @PostMapping("/cart/selectCart")
     public ResponseResult<String> selectCart(@RequestBody Cart cart);
 
+    @PostMapping("/cart/selectAllCart")
+    public ResponseResult<String> selectAllCart(@RequestBody Cart cart);
+
     @PostMapping("/cart/deleteCart")
     public ResponseResult<String> deleteCart(@RequestBody Cart cart);
 }
