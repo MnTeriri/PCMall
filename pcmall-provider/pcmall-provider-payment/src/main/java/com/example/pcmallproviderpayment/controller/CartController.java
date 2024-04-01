@@ -57,6 +57,12 @@ public class CartController {
         return ResponseResult.ok("购物车商品选中状态改变成功！");
     }
 
+    @PostMapping("/selectAllCart")
+    public ResponseResult<String> selectAllCart(@RequestBody Cart cart) {
+        cartService.selectAllCart(cart);
+        return ResponseResult.ok("购物车商品选中状态改变成功！");
+    }
+
     @PostMapping("/deleteCart")
     public ResponseResult<String> deleteCart(@RequestBody Cart cart) {
         cartService.deleteCart(cart);

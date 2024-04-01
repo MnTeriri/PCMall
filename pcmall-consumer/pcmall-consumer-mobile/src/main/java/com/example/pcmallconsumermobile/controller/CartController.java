@@ -55,6 +55,11 @@ public class CartController {
         return cartClient.selectCart(cart);
     }
 
+    @PostMapping("/selectAllCart")
+    public ResponseResult<String> selectAllCart(Cart cart) {
+        return cartClient.selectAllCart(cart);
+    }
+
     @PostMapping("/deleteCart")
     public ResponseResult<String> deleteCart(Cart cart) {
         return cartClient.deleteCart(cart);
