@@ -87,7 +87,16 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
-    public void deleteCart(Cart cart) {
+    public void selectAllCart(Cart cart) {
+        if (!cartDao.updateAllCartSelected(cart.getUid(), cart.getIsSelect())) {
+            throw new SystemException(ResponseCode.ERROR);
+        }
+    }
 
+    @Override
+    public void deleteCart(Cart cart) {
+        if (cartDao.deleteById(cart) != 1) {
+            throw new SystemException(ResponseCode.ERROR);
+        }
     }
 }

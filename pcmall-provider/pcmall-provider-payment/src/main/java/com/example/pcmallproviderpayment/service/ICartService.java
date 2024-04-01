@@ -17,5 +17,7 @@ public interface ICartService {
 
     public void selectCart(Cart cart);
 
+    public void selectAllCart(Cart cart);
+
     public void deleteCart(Cart cart);
 }
