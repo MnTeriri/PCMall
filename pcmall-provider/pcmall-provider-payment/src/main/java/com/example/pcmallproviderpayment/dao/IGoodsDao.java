@@ -15,7 +15,9 @@ import java.util.List;
 public interface IGoodsDao extends BaseMapper<Goods> {
     @Select("SELECT * FROM goods WHERE id=#{id};")
     @Results({
+            @Result(property = "cid", column = "cid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
             @Result(property = "bid", column = "bid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
+            @Result(property = "category", column = "cid", one = @One(select = "com.example.pcmallproviderpayment.dao.ICategoryDao.searchCategory")),
             @Result(property = "brand", column = "bid", one = @One(select = "com.example.pcmallproviderpayment.dao.IBrandDao.searchBrand"))
     })
     public Goods searchGoods(Integer id);
