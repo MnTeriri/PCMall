@@ -2,10 +2,13 @@ package com.example.pcmallproviderpayment.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.pcmallcommon.exception.SystemException;
+import com.example.pcmallcommon.model.Brand;
 import com.example.pcmallcommon.model.Cart;
+import com.example.pcmallcommon.model.Category;
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallproviderpayment.dao.ICartDao;
+import com.example.pcmallproviderpayment.dao.IGoodsDao;
 import com.example.pcmallproviderpayment.service.ICartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ import java.util.List;
 public class CartServiceImpl implements ICartService {
     @Autowired
     private ICartDao cartDao;
+    @Autowired
+    private IGoodsDao goodsDao;
 
     public CartServiceImpl() {
         log.debug("创建Service对象：CartServiceImpl");
@@ -36,7 +41,36 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public void addCart(Cart cart) {
-
+        QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>()
+                .eq("uid", cart.getUid())
+                .eq("gid", cart.getGid());
+        Cart data = cartDao.selectOne(queryWrapper);
+        Goods goods = goodsDao.searchGoods(cart.getGid());
+        Brand brand = goods.getBrand();
+        Category category = goods.getCategory();
+        if (brand.getIsDelete() == 1 || category.getIsDelete() == 1) {
+            throw new SystemException(ResponseCode.CART_GOODS_ERROR);
+        }
+        if (goods.getStatus() == 1) {
+            throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
+        }
+        if (goods.getStatus() == 2) {
+            throw new SystemException(ResponseCode.GOODS_OFF_SHELF_ERROR);
+        }
+        if (data == null) {
+            //如果没添加过
+            if (cartDao.insert(cart) != 1) {
+                throw new SystemException(ResponseCode.ERROR);
+            }
+        } else {
+            if (data.getCount() >= goods.getCount()) {
+                throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
+            }
+            data.setCount(data.getCount() + 1);
+            if (cartDao.updateById(data) != 1) {
+                throw new SystemException(ResponseCode.ERROR);
+            }
+        }
     }
 
     @Override
