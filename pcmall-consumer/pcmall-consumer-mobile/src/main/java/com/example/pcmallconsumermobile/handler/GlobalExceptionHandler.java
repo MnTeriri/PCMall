@@ -1,8 +1,10 @@
 package com.example.pcmallconsumermobile.handler;
 
+import com.alibaba.fastjson2.JSON;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.response.ResponseResult;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -46,6 +48,14 @@ public class GlobalExceptionHandler {
         ResponseResult<String> message = ResponseResult.error(ResponseCode.AUTHORIZED_ERROR);
         log.error(message.toString());
         return message;
+    }
+
+    //处理FeignException.BadRequest异常
+    @ExceptionHandler(FeignException.BadRequest.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseResult<String> handlerBadRequestException(FeignException.BadRequest e) {
+        log.error("发生FeignException.BadRequest异常：{}", e.contentUTF8());
+        return JSON.parseObject(e.contentUTF8(), ResponseResult.class);
     }
 
 //    //处理Exception异常
