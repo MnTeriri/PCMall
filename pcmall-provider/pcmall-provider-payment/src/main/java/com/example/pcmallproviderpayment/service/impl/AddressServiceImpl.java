@@ -1,5 +1,6 @@
 package com.example.pcmallproviderpayment.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.pcmallcommon.model.Address;
 import com.example.pcmallproviderpayment.dao.IAddressDao;
 import com.example.pcmallproviderpayment.service.IAddressService;
@@ -20,14 +21,18 @@ public class AddressServiceImpl implements IAddressService {
     }
 
     @Override
+    public List<Address> searchAddressList(String uid) {
+        QueryWrapper<Address> queryWrapper = new QueryWrapper<Address>()
+                .eq("uid", uid)
+                .eq("is_delete", 0);
+        return addressDao.selectList(queryWrapper);
+    }
+
+    @Override
     public Address searchDefaultAddress(String uid) {
         return null;
     }
 
-    @Override
-    public List<Address> searchAddressByUid(String uid) {
-        return null;
-    }
 
     @Override
     public void addAddress(Address address) {

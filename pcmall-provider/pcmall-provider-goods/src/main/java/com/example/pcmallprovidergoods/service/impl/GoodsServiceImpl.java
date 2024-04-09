@@ -29,8 +29,8 @@ public class GoodsServiceImpl implements IGoodsService {
     }
 
     @Override
-    public List<Goods> searchGoodsList(Integer currentPage, Integer pageSize) {
-        return goodsDao.searchGoodsList((currentPage - 1) * pageSize, pageSize);
+    public List<Goods> searchGoodsList(String searchValue, Integer currentPage, Integer pageSize) {
+        return goodsDao.searchGoodsList(searchValue, (currentPage - 1) * pageSize, pageSize);
     }
 
     @Override
@@ -44,11 +44,8 @@ public class GoodsServiceImpl implements IGoodsService {
     }
 
     @Override
-    public Long searchTotalCount() {
-        QueryWrapper<Goods> queryWrapper = new QueryWrapper<Goods>()
-                .eq("status", 0)
-                .eq("is_delete", 0);
-        return goodsDao.selectCount(queryWrapper);
+    public Long getRecordsFiltered(String searchValue) {
+        return goodsDao.getRecordsFiltered(searchValue);
     }
 
     @Override

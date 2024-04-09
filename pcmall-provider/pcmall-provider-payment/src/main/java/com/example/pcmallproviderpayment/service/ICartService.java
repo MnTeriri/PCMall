@@ -5,7 +5,7 @@ import com.example.pcmallcommon.model.Cart;
 import java.util.List;
 
 public interface ICartService {
-    public List<Cart> searchCartByUid(String uid, Integer currentPage, Integer pageSize);
+    public List<Cart> searchCartList(String uid, Integer currentPage, Integer pageSize);
 
     public Long getTotalCount(String uid);
 

@@ -29,8 +29,8 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
-    public List<Cart> searchCartByUid(String uid, Integer currentPage, Integer pageSize) {
-        return cartDao.searchCartByUid(uid, (currentPage - 1) * pageSize, pageSize);
+    public List<Cart> searchCartList(String uid, Integer currentPage, Integer pageSize) {
+        return cartDao.searchCartList(uid, (currentPage - 1) * pageSize, pageSize);
     }
 
     @Override
