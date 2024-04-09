@@ -12,9 +12,10 @@ import java.util.List;
 public interface GoodsClient {
     @PostMapping("/goods/searchGoodsList")
     ResponseResult<List<Goods>> searchGoodsList(
+            @RequestParam("searchValue") String searchValue,
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
 
-    @PostMapping("/goods/searchTotalCount")
-    public ResponseResult<Long> searchTotalCount();
+    @PostMapping("/goods/getRecordsFiltered")
+    public ResponseResult<Long> getRecordsFiltered(@RequestParam("searchValue") String searchValue);
 }

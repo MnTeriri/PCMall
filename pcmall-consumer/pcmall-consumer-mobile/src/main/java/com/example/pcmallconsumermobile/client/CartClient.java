@@ -11,8 +11,8 @@ import java.util.List;
 
 @FeignClient(contextId = "cartClient", value = "pcmall-provider-payment")
 public interface CartClient {
-    @PostMapping("/cart/searchCartByUid")
-    public ResponseResult<List<Cart>> searchCartByUid(
+    @PostMapping("/cart/searchCartList")
+    public ResponseResult<List<Cart>> searchCartList(
             @RequestParam("uid") String uid,
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
