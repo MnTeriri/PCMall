@@ -27,7 +27,7 @@ public class CartController {
             String uid,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        return cartClient.searchCartByUid(uid, currentPage, pageSize);
+        return cartClient.searchCartList(uid, currentPage, pageSize);
     }
 
     @PostMapping("/getTotalCount")

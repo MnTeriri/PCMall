@@ -25,13 +25,14 @@ public class GoodsController {
 
     @RequestMapping("/searchGoodsList")
     public ResponseResult<List<Goods>> searchGoodsList(
+            @RequestParam(defaultValue = "") String searchValue,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        return goodsClient.searchGoodsList(currentPage, pageSize);
+        return goodsClient.searchGoodsList(searchValue, currentPage, pageSize);
     }
 
-    @PostMapping("/searchTotalCount")
-    public ResponseResult<Long> searchTotalCount() {
-        return goodsClient.searchTotalCount();
+    @PostMapping("/getRecordsFiltered")
+    public ResponseResult<Long> getRecordsFiltered(@RequestParam(defaultValue = "") String searchValue) {
+        return goodsClient.getRecordsFiltered(searchValue);
     }
 }

@@ -23,9 +23,9 @@ public class CartController {
         log.debug("创建Controller对象：CartController");
     }
 
-    @PostMapping("/searchCartByUid")
-    public ResponseResult<List<Cart>> searchCartByUid(String uid, Integer currentPage, Integer pageSize) {
-        return ResponseResult.ok(cartService.searchCartByUid(uid, currentPage, pageSize));
+    @PostMapping("/searchCartList")
+    public ResponseResult<List<Cart>> searchCartList(String uid, Integer currentPage, Integer pageSize) {
+        return ResponseResult.ok(cartService.searchCartList(uid, currentPage, pageSize));
     }
 
     @PostMapping("/getTotalCount")

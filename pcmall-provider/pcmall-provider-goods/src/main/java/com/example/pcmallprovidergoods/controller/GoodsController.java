@@ -29,8 +29,8 @@ public class GoodsController {
     }
 
     @PostMapping("/searchGoodsList")
-    public ResponseResult<List<Goods>> searchGoodsList(Integer currentPage, Integer pageSize) {
-        return ResponseResult.ok(goodsService.searchGoodsList(currentPage, pageSize));
+    public ResponseResult<List<Goods>> searchGoodsList(String searchValue, Integer currentPage, Integer pageSize) {
+        return ResponseResult.ok(goodsService.searchGoodsList(searchValue, currentPage, pageSize));
     }
 
     @PostMapping("/searchGoodsById")
@@ -43,9 +43,9 @@ public class GoodsController {
         return ResponseResult.ok(goodsService.getTotalCount());
     }
 
-    @PostMapping("/searchTotalCount")
-    public ResponseResult<Long> searchTotalCount() {
-        return ResponseResult.ok(goodsService.searchTotalCount());
+    @PostMapping("/getRecordsFiltered")
+    public ResponseResult<Long> getRecordsFiltered(String searchValue) {
+        return ResponseResult.ok(goodsService.getRecordsFiltered(searchValue));
     }
 
     @PostMapping("/addGoods")
