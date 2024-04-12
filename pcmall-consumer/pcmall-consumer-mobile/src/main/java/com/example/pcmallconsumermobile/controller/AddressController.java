@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,17 +31,19 @@ public class AddressController {
     }
 
     @PostMapping("/addAddress")
-    public ResponseResult<String> addAddress(Address address) {
-        return null;
+    public ResponseResult<String> addAddress(@RequestBody Address address) {
+        return addressClient.addAddress(address);
     }
 
     @PostMapping("/updateAddress")
-    public ResponseResult<String> updateAddress(Address address) {
-        return null;
+    public ResponseResult<String> updateAddress(@RequestBody Address address) {
+        return addressClient.updateAddress(address);
     }
 
     @PostMapping("/deleteAddress")
-    public ResponseResult<String> deleteAddress(Address address) {
-        return null;
+    public ResponseResult<String> deleteAddress(@RequestBody Address address) {
+        return addressClient.deleteAddress(address);
     }
+
+
 }
