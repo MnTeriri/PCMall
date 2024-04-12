@@ -44,7 +44,7 @@ public class UserServiceImpl implements IUserService {
         //生成token
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("uid", user.getUid());
-        String token = JwtUtils.createToken(payload, 1);
+        String token = JwtUtils.createToken(payload, 10);
 
         return new ResponseResult<>(200, token, user);
     }
