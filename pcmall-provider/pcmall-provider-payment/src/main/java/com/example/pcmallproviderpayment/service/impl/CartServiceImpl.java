@@ -34,6 +34,11 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
+    public List<Cart> searchSelectCartList(String uid) {
+        return cartDao.searchSelectCartList(uid);
+    }
+
+    @Override
     public Long getTotalCount(String uid) {
         QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>().eq("uid", uid);
         return cartDao.selectCount(queryWrapper);

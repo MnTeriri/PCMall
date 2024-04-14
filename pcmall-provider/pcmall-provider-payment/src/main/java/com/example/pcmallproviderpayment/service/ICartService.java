@@ -7,6 +7,8 @@ import java.util.List;
 public interface ICartService {
     public List<Cart> searchCartList(String uid, Integer currentPage, Integer pageSize);
 
+    public List<Cart> searchSelectCartList(String uid);
+
     public Long getTotalCount(String uid);
 
     public void addCart(Cart cart);
