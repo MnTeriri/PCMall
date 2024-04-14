@@ -14,6 +14,9 @@ public interface AddressClient {
     @PostMapping("/address/searchAddressList")
     public ResponseResult<List<Address>> searchAddressList(@RequestParam("uid") String uid);
 
+    @PostMapping("/address/searchDefaultAddress")
+    public ResponseResult<Address> searchDefaultAddress(@RequestParam("uid") String uid);
+
     @PostMapping("/address/addAddress")
     public ResponseResult<String> addAddress(@RequestBody Address address);
 

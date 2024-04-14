@@ -17,6 +17,9 @@ public interface CartClient {
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
 
+    @PostMapping("/cart/searchSelectCartList")
+    public ResponseResult<List<Cart>> searchSelectCartList(@RequestParam("uid") String uid);
+
     @PostMapping("/cart/getTotalCount")
     public ResponseResult<Long> getTotalCount(@RequestParam("uid") String uid);
 
