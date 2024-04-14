@@ -30,6 +30,11 @@ public class CartController {
         return cartClient.searchCartList(uid, currentPage, pageSize);
     }
 
+    @PostMapping("/searchSelectCartList")
+    public ResponseResult<List<Cart>> searchSelectCartList(String uid) {
+        return cartClient.searchSelectCartList(uid);
+    }
+
     @PostMapping("/getTotalCount")
     public ResponseResult<Long> getTotalCount(String uid) {
         return cartClient.getTotalCount(uid);

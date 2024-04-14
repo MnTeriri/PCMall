@@ -30,6 +30,11 @@ public class AddressController {
         return addressClient.searchAddressList(uid);
     }
 
+    @PostMapping("/searchDefaultAddress")
+    public ResponseResult<Address> searchDefaultAddress(String uid) {
+        return addressClient.searchDefaultAddress(uid);
+    }
+
     @PostMapping("/addAddress")
     public ResponseResult<String> addAddress(@RequestBody Address address) {
         return addressClient.addAddress(address);

@@ -28,6 +28,11 @@ public class AddressController {
         return ResponseResult.ok(addressService.searchAddressList(uid));
     }
 
+    @PostMapping("/searchDefaultAddress")
+    public ResponseResult<Address> searchDefaultAddress(String uid) {
+        return ResponseResult.ok(addressService.searchDefaultAddress(uid));
+    }
+
     @PostMapping("/addAddress")
     public ResponseResult<String> addAddress(@RequestBody Address address) {
         addressService.addAddress(address);
