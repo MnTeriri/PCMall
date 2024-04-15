@@ -1,10 +1,9 @@
-package com.example.pcmallconsumermobile.client;
+package com.example.pcmallconsumeradmin.client;
 
 import com.example.pcmallcommon.model.Order;
 import com.example.pcmallcommon.response.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -24,7 +23,4 @@ public interface OrderClient {
             @RequestParam("searchValue") String searchValue,
             @RequestParam("uid") String uid,
             @RequestParam("type") Integer type);
-
-    @PostMapping("/order/createOrder")
-    public ResponseResult<String> createOrder(@RequestParam("uid") String uid, @RequestParam("aid") Integer aid);
 }
