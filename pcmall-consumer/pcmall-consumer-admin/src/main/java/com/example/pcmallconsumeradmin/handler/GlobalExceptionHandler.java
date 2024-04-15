@@ -32,16 +32,6 @@ public class GlobalExceptionHandler {
         return ResponseResult.error(exception.getResponseStatus());
     }
 
-    @ExceptionHandler(FeignException.BadRequest.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseResult<String> handlerSystemException(FeignException.BadRequest exception) {
-        log.error("发生FeignException.BadRequest异常：{}", exception.getMessage());
-        ByteBuffer byteBuffer = exception.responseBody().get();
-        Charset charset = StandardCharsets.UTF_8;
-        String json = charset.decode(byteBuffer).toString();
-        return JSON.parseObject(json, ResponseResult.class);
-    }
-
     //处理权限异常
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -64,14 +54,24 @@ public class GlobalExceptionHandler {
         return message;
     }
 
-    //处理Exception异常
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseResult<String> handlerException(Exception e) {
-        log.error("发生Exception异常：{}", e.getMessage());
-        log.error("Class：{}", e.getClass());
-        ResponseResult<String> message = ResponseResult.error(ResponseCode.INTERNAL_SERVER_ERROR);
-        log.error(message.toString());
-        return message;
+    @ExceptionHandler(FeignException.BadRequest.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseResult<String> handlerSystemException(FeignException.BadRequest exception) {
+        log.error("发生FeignException.BadRequest异常：{}", exception.getMessage());
+        ByteBuffer byteBuffer = exception.responseBody().get();
+        Charset charset = StandardCharsets.UTF_8;
+        String json = charset.decode(byteBuffer).toString();
+        return JSON.parseObject(json, ResponseResult.class);
     }
+
+//    //处理Exception异常
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ResponseResult<String> handlerException(Exception e) {
+//        log.error("发生Exception异常：{}", e.getMessage());
+//        log.error("Class：{}", e.getClass());
+//        ResponseResult<String> message = ResponseResult.error(ResponseCode.INTERNAL_SERVER_ERROR);
+//        log.error(message.toString());
+//        return message;
+//    }
 }
