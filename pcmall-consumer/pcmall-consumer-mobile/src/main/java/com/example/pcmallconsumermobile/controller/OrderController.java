@@ -25,17 +25,17 @@ public class OrderController {
 
     @RequestMapping("/searchOrderList")
     public ResponseResult<List<Order>> searchOrderList() {
-        return orderClient.searchOrderList();
+        return orderClient.searchOrderList("", "000000000", -1, 1, 10);
     }
 
     @RequestMapping("/getRecordsFiltered")
     public ResponseResult<Long> getRecordsFiltered(String uid, Integer type) {
-        return orderClient.getRecordsFiltered(uid, type);
+        return orderClient.getRecordsFiltered("", uid, type);
     }
 
     @RequestMapping("/createOrder")
-    public ResponseResult<String> createOrder(String uid) {
-        return null;
+    public ResponseResult<String> createOrder(String uid, Integer aid) {
+        return orderClient.createOrder(uid, aid);
     }
 
     @RequestMapping("/cancelOrder")
