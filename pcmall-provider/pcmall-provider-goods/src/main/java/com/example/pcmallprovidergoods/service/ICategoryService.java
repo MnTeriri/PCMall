@@ -9,7 +9,7 @@ public interface ICategoryService {
 
     public Long getTotalCount();
 
-    public List<Category> searchCategory();
+    public List<Category> searchCategoryList();
 
     public Integer addCategory(Category category);
 

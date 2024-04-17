@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    public List<Category> searchCategory() {
+    public List<Category> searchCategoryList() {
         QueryWrapper<Category> queryWrapper = new QueryWrapper<Category>().eq("is_delete", 0);
         return categoryDao.selectList(queryWrapper);
     }
