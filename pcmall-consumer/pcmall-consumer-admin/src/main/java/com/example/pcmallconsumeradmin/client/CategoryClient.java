@@ -16,8 +16,8 @@ public interface CategoryClient {
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
 
-    @PostMapping("/category/searchCategory")
-    ResponseResult<List<Category>> searchCategory();
+    @PostMapping("/category/searchCategoryList")
+    ResponseResult<List<Category>> searchCategoryList();
 
     @PostMapping("/category/getTotalCount")
     ResponseResult<Long> getTotalCount();

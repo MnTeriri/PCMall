@@ -20,11 +20,20 @@ public interface OrderClient {
             @RequestParam("pageSize") Integer pageSize);
 
     @PostMapping("/order/getRecordsFiltered")
-    ResponseResult<Long> getRecordsFiltered(
+    public ResponseResult<Long> getRecordsFiltered(
             @RequestParam("searchValue") String searchValue,
             @RequestParam("uid") String uid,
             @RequestParam("type") Integer type);
 
     @PostMapping("/order/createOrder")
     public ResponseResult<String> createOrder(@RequestParam("uid") String uid, @RequestParam("aid") Integer aid);
+
+    @RequestMapping("/order/payOrder")
+    public ResponseResult<String> payOrder(@RequestParam("oid") String oid);
+
+    @RequestMapping("/order/cancelOrder")
+    public ResponseResult<String> cancelOrder(@RequestParam("oid") String oid);
+
+    @RequestMapping("/order/refundOrder")
+    public ResponseResult<String> refundOrder(@RequestParam("oid") String oid);
 }
