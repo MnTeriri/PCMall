@@ -1,16 +1,15 @@
 package com.example.pcmallproviderpayment.dao;
 
 import com.example.pcmallcommon.model.Goods;
-import org.apache.ibatis.annotations.One;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import com.example.pcmallproviderpayment.cache.OrderInfoCache;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
+@CacheNamespace(implementation = OrderInfoCache.class)
 public interface IOrderGoodsDao {
     @Select("SELECT goods.id, goods.cid, goods.bid, goods.gname, goods.image, goods.description," +
             "order_goods.count, order_goods.price, order_goods.discount " +
