@@ -24,13 +24,13 @@ public class OrderController {
     }
 
     @RequestMapping("/searchOrderList")
-    public ResponseResult<List<Order>> searchOrderList() {
-        return orderClient.searchOrderList("", "000000000", -1, 1, 10);
+    public ResponseResult<List<Order>> searchOrderList(String searchValue, String uid, Integer type, Integer currentPage, Integer pageSize) {
+        return orderClient.searchOrderList(searchValue, uid, type, currentPage, pageSize);
     }
 
     @RequestMapping("/getRecordsFiltered")
-    public ResponseResult<Long> getRecordsFiltered(String uid, Integer type) {
-        return orderClient.getRecordsFiltered("", uid, type);
+    public ResponseResult<Long> getRecordsFiltered(String searchValue, String uid, Integer type) {
+        return orderClient.getRecordsFiltered(searchValue, uid, type);
     }
 
     @RequestMapping("/createOrder")
@@ -38,8 +38,18 @@ public class OrderController {
         return orderClient.createOrder(uid, aid);
     }
 
+    @RequestMapping("/payOrder")
+    public ResponseResult<String> payOrder(String oid) {
+        return orderClient.payOrder(oid);
+    }
+
     @RequestMapping("/cancelOrder")
     public ResponseResult<String> cancelOrder(String oid) {
-        return null;
+        return orderClient.cancelOrder(oid);
+    }
+
+    @RequestMapping("/refundOrder")
+    public ResponseResult<String> refundOrder(String oid) {
+        return orderClient.refundOrder(oid);
     }
 }

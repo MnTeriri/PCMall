@@ -29,9 +29,9 @@ public class CategoryController {
         return ResponseResult.ok(categoryList);
     }
 
-    @PostMapping("/searchCategory")
-    public ResponseResult<List<Category>> searchCategory() {
-        List<Category> categoryList = categoryService.searchCategory();
+    @PostMapping("/searchCategoryList")
+    public ResponseResult<List<Category>> searchCategoryList() {
+        List<Category> categoryList = categoryService.searchCategoryList();
         return ResponseResult.ok(categoryList);
     }
 

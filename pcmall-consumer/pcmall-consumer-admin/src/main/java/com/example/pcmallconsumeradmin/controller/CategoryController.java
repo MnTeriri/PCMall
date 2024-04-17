@@ -32,9 +32,9 @@ public class CategoryController {
         return categoryClient.getCategoryList(currentPage, pageSize);
     }
 
-    @PostMapping("/searchCategory")
-    public ResponseResult<List<Category>> searchCategory(){
-        return categoryClient.searchCategory();
+    @PostMapping("/searchCategoryList")
+    public ResponseResult<List<Category>> searchCategoryList(){
+        return categoryClient.searchCategoryList();
     }
 
     @PostMapping("/getTotalCount")
