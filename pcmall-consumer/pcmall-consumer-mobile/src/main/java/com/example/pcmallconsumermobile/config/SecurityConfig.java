@@ -30,6 +30,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/goods/**").permitAll()
+                        .requestMatchers("/category/**").permitAll()
+                        .requestMatchers("/brand/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()//放行所有OPTIONS请求,要不然连header里面的token都获取不了
                         .anyRequest().authenticated()
                 )
@@ -41,6 +43,9 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer ignoringCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/goods/**");
+        return (web) -> web.ignoring()
+                .requestMatchers("/goods/**")
+                .requestMatchers("/category/**")
+                .requestMatchers("/brand/**");
     }
 }
