@@ -16,6 +16,16 @@ public interface GoodsClient {
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
 
+    @PostMapping("/goods/searchGoodsByCidAndBid")
+    ResponseResult<List<Goods>> searchGoodsByCidAndBid(
+            @RequestParam("cid") Integer cid,
+            @RequestParam("bid") Integer bid,
+            @RequestParam("currentPage") Integer currentPage,
+            @RequestParam("pageSize") Integer pageSize);
+
     @PostMapping("/goods/getRecordsFiltered")
     public ResponseResult<Long> getRecordsFiltered(@RequestParam("searchValue") String searchValue);
+
+    @PostMapping("/goods/getRecordsFilteredByCidAndBid")
+    public ResponseResult<Long> getRecordsFilteredByCidAndBid(@RequestParam("cid") Integer cid, @RequestParam("bid") Integer bid);
 }

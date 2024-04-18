@@ -39,5 +39,5 @@ public interface CartClient {
     public ResponseResult<String> selectAllCart(@RequestBody Cart cart);
 
     @PostMapping("/cart/deleteCart")
-    public ResponseResult<String> deleteCart(@RequestBody Cart cart);
+    public ResponseResult<String> deleteCart(@RequestParam("id") Integer id);
 }

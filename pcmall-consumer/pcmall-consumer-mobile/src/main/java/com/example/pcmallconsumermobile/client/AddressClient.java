@@ -24,5 +24,5 @@ public interface AddressClient {
     public ResponseResult<String> updateAddress(@RequestBody Address address);
 
     @PostMapping("/address/deleteAddress")
-    public ResponseResult<String> deleteAddress(@RequestBody Address address);
+    public ResponseResult<String> deleteAddress(@RequestParam("id") Integer id);
 }
