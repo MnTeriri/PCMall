@@ -2,6 +2,7 @@ package com.example.pcmallproviderpayment.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.Order;
 import com.example.pcmallcommon.response.ResponseCode;
@@ -45,7 +46,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public void createOrder(String uid, Integer aid) {
+    public String createOrder(String uid, Integer aid) {
         String oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
         while (orderDao.selectCount(new QueryWrapper<Order>().eq("oid", oid)) != 0) {//如果生成的订单号存在，则重新生成，直到不存在
             oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
@@ -70,7 +71,7 @@ public class OrderServiceImpl implements IOrderService {
                     .withIdentity(oid, "orderGroup")
                     .usingJobData("orderOid", oid)
                     .build();
-            LocalDateTime localDateTime = LocalDateTime.now().plusSeconds(10);
+            LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(15);
             Trigger trigger = TriggerBuilder.newTrigger()
                     .withIdentity(oid, "orderGroup")
                     .startAt(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
@@ -83,10 +84,28 @@ public class OrderServiceImpl implements IOrderService {
                 throw new RuntimeException(e);
             }
         }
+        return oid;
     }
 
     @Override
-    public void cancelOrder(String oid, Integer status) {
+    public void payOrder(String oid) {
+        UpdateWrapper<Order> updateWrapper = new UpdateWrapper<Order>()
+                .set("pay_time", LocalDateTime.now())
+                .set("status", 1)
+                .eq("oid", oid);
+        if (orderDao.update(updateWrapper) != 1) {
+            throw new SystemException(ResponseCode.ERROR);
+        }
+        try {//删除对应订单的定时任务
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            scheduler.unscheduleJob(new TriggerKey(oid, "orderGroup"));
+        } catch (SchedulerException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Integer cancelOrder(String oid, Integer status) {
         try {//删除对应订单的定时任务
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
             scheduler.unscheduleJob(new TriggerKey(oid, "orderGroup"));
@@ -97,6 +116,6 @@ public class OrderServiceImpl implements IOrderService {
         data.put("oid", oid);
         data.put("status", status);
         orderDao.cancelOrder(data);
-        System.out.println(data.get("result"));
+        return (Integer) data.get("result");
     }
 }

@@ -9,8 +9,12 @@ public interface IOrderService {
 
     public Long getRecordsFiltered(String searchValue, String uid, Integer type);
 
-    public void createOrder(String uid, Integer aid);
+    public String createOrder(String uid, Integer aid);
 
-    //status只有两个值（4交易取消、6退货完成）
-    public void cancelOrder(String oid, Integer status);
+    public void payOrder(String oid);
+
+    /**
+     * status只有两个值（4交易取消、6退货完成）
+     */
+    public Integer cancelOrder(String oid, Integer status);
 }

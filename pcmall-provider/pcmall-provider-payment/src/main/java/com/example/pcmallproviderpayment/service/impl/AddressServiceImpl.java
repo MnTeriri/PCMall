@@ -28,7 +28,6 @@ public class AddressServiceImpl implements IAddressService {
     public List<Address> searchAddressList(String uid) {
         QueryWrapper<Address> queryWrapper = new QueryWrapper<Address>()
                 .eq("uid", uid)
-                .eq("is_delete", 0)
                 .orderByDesc("is_default")
                 .orderByDesc("id");
         return addressDao.selectList(queryWrapper);
@@ -38,7 +37,6 @@ public class AddressServiceImpl implements IAddressService {
     public Address searchDefaultAddress(String uid) {
         QueryWrapper<Address> queryWrapper = new QueryWrapper<Address>()
                 .eq("uid", uid)
-                .eq("is_delete", 0)
                 .eq("is_default", 1);
         return addressDao.selectOne(queryWrapper);
     }
@@ -69,12 +67,9 @@ public class AddressServiceImpl implements IAddressService {
     }
 
     @Override
-    public void updateAddressByUid(Address address) {
-
-    }
-
-    @Override
-    public void deleteAddress(Address address) {
-
+    public void deleteAddress(Integer id) {
+        if (addressDao.deleteById(id) != 1) {
+            throw new SystemException(ResponseCode.ERROR);
+        }
     }
 }

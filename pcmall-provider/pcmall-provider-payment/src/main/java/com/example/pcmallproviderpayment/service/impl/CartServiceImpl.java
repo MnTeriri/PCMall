@@ -133,8 +133,8 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
-    public void deleteCart(Cart cart) {
-        if (cartDao.deleteById(cart) != 1) {
+    public void deleteCart(Integer id) {
+        if (cartDao.deleteById(id) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
     }

@@ -21,5 +21,5 @@ public interface ICartService {
 
     public void selectAllCart(Cart cart);
 
-    public void deleteCart(Cart cart);
+    public void deleteCart(Integer id);
 }

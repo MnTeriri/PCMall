@@ -13,7 +13,5 @@ public interface IAddressService {
 
     public void updateAddress(Address address);
 
-    public void updateAddressByUid(Address address);
-
-    public void deleteAddress(Address address);
+    public void deleteAddress(Integer id);
 }

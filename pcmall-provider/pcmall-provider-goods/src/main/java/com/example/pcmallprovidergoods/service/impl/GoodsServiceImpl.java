@@ -34,6 +34,11 @@ public class GoodsServiceImpl implements IGoodsService {
     }
 
     @Override
+    public List<Goods> searchGoodsByCidAndBid(Integer cid, Integer bid, Integer currentPage, Integer pageSize) {
+        return goodsDao.searchGoodsByCidAndBid(cid, bid, (currentPage - 1) * pageSize, pageSize);
+    }
+
+    @Override
     public Goods searchGoods(Integer id) {
         return goodsDao.searchGoods(id);
     }
@@ -46,6 +51,16 @@ public class GoodsServiceImpl implements IGoodsService {
     @Override
     public Long getRecordsFiltered(String searchValue) {
         return goodsDao.getRecordsFiltered(searchValue);
+    }
+
+    @Override
+    public Long getRecordsFilteredByCidAndBid(Integer cid, Integer bid) {
+        QueryWrapper<Goods> queryWrapper = new QueryWrapper<Goods>()
+                .eq("cid", cid)
+                .eq("bid", bid)
+                .eq("status", 0)
+                .eq("is_delete", 0);
+        return goodsDao.selectCount(queryWrapper);
     }
 
     @Override
