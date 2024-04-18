@@ -35,7 +35,12 @@ public class OrderController {
 
     @RequestMapping("/createOrder")
     public ResponseResult<String> createOrder(String uid, Integer aid) {
-        orderService.createOrder(uid, aid);
-        return ResponseResult.ok("创建订单成功！");
+        return ResponseResult.ok(orderService.createOrder(uid, aid), "创建订单成功！");
+    }
+
+    @RequestMapping("/payOrder")
+    public ResponseResult<String> payOrder(String oid) {
+        orderService.payOrder(oid);
+        return ResponseResult.ok("订单付款成功！");
     }
 }

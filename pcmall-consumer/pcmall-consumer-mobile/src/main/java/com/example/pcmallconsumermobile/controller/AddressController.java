@@ -46,8 +46,8 @@ public class AddressController {
     }
 
     @PostMapping("/deleteAddress")
-    public ResponseResult<String> deleteAddress(@RequestBody Address address) {
-        return addressClient.deleteAddress(address);
+    public ResponseResult<String> deleteAddress(Integer id) {
+        return addressClient.deleteAddress(id);
     }
 
 }

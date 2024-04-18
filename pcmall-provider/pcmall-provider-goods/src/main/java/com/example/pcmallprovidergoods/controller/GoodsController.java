@@ -33,6 +33,11 @@ public class GoodsController {
         return ResponseResult.ok(goodsService.searchGoodsList(searchValue, currentPage, pageSize));
     }
 
+    @PostMapping("/searchGoodsByCidAndBid")
+    public ResponseResult<List<Goods>> searchGoodsByCidAndBid(Integer cid, Integer bid, Integer currentPage, Integer pageSize) {
+        return ResponseResult.ok(goodsService.searchGoodsByCidAndBid(cid, bid, currentPage, pageSize));
+    }
+
     @PostMapping("/searchGoodsById")
     public ResponseResult<Goods> searchGoodsById(Integer id) {
         return ResponseResult.ok(goodsService.searchGoods(id));
@@ -46,6 +51,11 @@ public class GoodsController {
     @PostMapping("/getRecordsFiltered")
     public ResponseResult<Long> getRecordsFiltered(String searchValue) {
         return ResponseResult.ok(goodsService.getRecordsFiltered(searchValue));
+    }
+
+    @PostMapping("/getRecordsFilteredByCidAndBid")
+    public ResponseResult<Long> getRecordsFilteredByCidAndBid(Integer cid, Integer bid) {
+        return ResponseResult.ok(goodsService.getRecordsFilteredByCidAndBid(cid, bid));
     }
 
     @PostMapping("/addGoods")

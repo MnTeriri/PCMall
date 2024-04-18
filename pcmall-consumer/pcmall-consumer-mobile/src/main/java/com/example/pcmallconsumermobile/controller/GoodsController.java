@@ -31,8 +31,24 @@ public class GoodsController {
         return goodsClient.searchGoodsList(searchValue, currentPage, pageSize);
     }
 
+    @RequestMapping("/searchGoodsByCidAndBid")
+    public ResponseResult<List<Goods>> searchGoodsByCidAndBid(
+            @RequestParam(defaultValue = "1") Integer cid,
+            @RequestParam(defaultValue = "1") Integer bid,
+            @RequestParam(defaultValue = "1") Integer currentPage,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        return goodsClient.searchGoodsByCidAndBid(cid, bid, currentPage, pageSize);
+    }
+
     @PostMapping("/getRecordsFiltered")
     public ResponseResult<Long> getRecordsFiltered(@RequestParam(defaultValue = "") String searchValue) {
         return goodsClient.getRecordsFiltered(searchValue);
+    }
+
+    @PostMapping("/getRecordsFilteredByCidAndBid")
+    public ResponseResult<Long> getRecordsFilteredByCidAndBid(
+            @RequestParam(defaultValue = "1") Integer cid,
+            @RequestParam(defaultValue = "1") Integer bid) {
+        return goodsClient.getRecordsFilteredByCidAndBid(cid, bid);
     }
 }

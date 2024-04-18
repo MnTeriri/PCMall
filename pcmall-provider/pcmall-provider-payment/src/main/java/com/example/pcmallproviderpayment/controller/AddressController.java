@@ -46,8 +46,8 @@ public class AddressController {
     }
 
     @PostMapping("/deleteAddress")
-    public ResponseResult<String> deleteAddress(@RequestBody Address address) {
-        addressService.deleteAddress(address);
+    public ResponseResult<String> deleteAddress(Integer id) {
+        addressService.deleteAddress(id);
         return ResponseResult.ok("地址删除成功！");
     }
 

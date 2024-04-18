@@ -69,8 +69,8 @@ public class CartController {
     }
 
     @PostMapping("/deleteCart")
-    public ResponseResult<String> deleteCart(@RequestBody Cart cart) {
-        cartService.deleteCart(cart);
+    public ResponseResult<String> deleteCart(Integer id) {
+        cartService.deleteCart(id);
         return ResponseResult.ok("删除成功");
     }
 }
