@@ -37,4 +37,14 @@ public class OrderController {
             @RequestParam(defaultValue = "-1") Integer type) {
         return orderClient.getRecordsFiltered(searchValue, "", type);
     }
+
+    @PostMapping("/sendOrder")
+    public ResponseResult<String> sendOrder(String oid) {
+        return orderClient.sendOrder(oid);
+    }
+
+    @PostMapping("/refundCommit")
+    public ResponseResult<String> refundCommit(String oid) {
+        return orderClient.refundCommit(oid);
+    }
 }

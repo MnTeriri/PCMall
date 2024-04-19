@@ -43,6 +43,11 @@ public class OrderController {
         return orderClient.payOrder(oid);
     }
 
+    @RequestMapping("/finishOrder")
+    public ResponseResult<String> finishOrder(String oid) {
+        return orderClient.finishOrder(oid);
+    }
+
     @RequestMapping("/cancelOrder")
     public ResponseResult<String> cancelOrder(String oid) {
         return orderClient.cancelOrder(oid);
