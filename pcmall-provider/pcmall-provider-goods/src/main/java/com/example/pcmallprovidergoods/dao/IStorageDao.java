@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.CacheNamespace;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@CacheNamespace(implementation = StorageCache.class)
+//@CacheNamespace(implementation = StorageCache.class)
 public interface IStorageDao extends BaseMapper<Storage> {
 
 }
