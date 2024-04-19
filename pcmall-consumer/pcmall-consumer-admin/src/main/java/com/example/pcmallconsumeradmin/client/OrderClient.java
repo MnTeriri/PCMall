@@ -23,4 +23,10 @@ public interface OrderClient {
             @RequestParam("searchValue") String searchValue,
             @RequestParam("uid") String uid,
             @RequestParam("type") Integer type);
+
+    @PostMapping("/order/sendOrder")
+    public ResponseResult<String> sendOrder(@RequestParam("oid") String oid);
+
+    @PostMapping("/order/refundCommit")
+    public ResponseResult<String> refundCommit(@RequestParam("oid") String oid);
 }

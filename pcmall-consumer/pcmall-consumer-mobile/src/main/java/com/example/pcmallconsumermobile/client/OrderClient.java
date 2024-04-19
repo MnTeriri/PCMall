@@ -28,12 +28,15 @@ public interface OrderClient {
     @PostMapping("/order/createOrder")
     public ResponseResult<String> createOrder(@RequestParam("uid") String uid, @RequestParam("aid") Integer aid);
 
-    @RequestMapping("/order/payOrder")
+    @PostMapping("/order/payOrder")
     public ResponseResult<String> payOrder(@RequestParam("oid") String oid);
 
-    @RequestMapping("/order/cancelOrder")
+    @PostMapping("/order/finishOrder")
+    public ResponseResult<String> finishOrder(@RequestParam("oid") String oid);
+
+    @PostMapping("/order/cancelOrder")
     public ResponseResult<String> cancelOrder(@RequestParam("oid") String oid);
 
-    @RequestMapping("/order/refundOrder")
+    @PostMapping("/order/refundOrder")
     public ResponseResult<String> refundOrder(@RequestParam("oid") String oid);
 }
