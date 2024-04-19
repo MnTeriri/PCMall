@@ -105,6 +105,38 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
+    public void sendOrder(String oid) {
+        UpdateWrapper<Order> updateWrapper = new UpdateWrapper<Order>()
+                .set("send_time", LocalDateTime.now())
+                .set("status", 2)
+                .eq("oid", oid);
+        if (orderDao.update(updateWrapper) != 1) {
+            throw new SystemException(ResponseCode.ERROR);
+        }
+    }
+
+    @Override
+    public void finishOrder(String oid) {
+        UpdateWrapper<Order> updateWrapper = new UpdateWrapper<Order>()
+                .set("finish_time", LocalDateTime.now())
+                .set("status", 3)
+                .eq("oid", oid);
+        if (orderDao.update(updateWrapper) != 1) {
+            throw new SystemException(ResponseCode.ERROR);
+        }
+    }
+
+    @Override
+    public void refundOrder(String oid) {
+        UpdateWrapper<Order> updateWrapper = new UpdateWrapper<Order>()
+                .set("status", 5)
+                .eq("oid", oid);
+        if (orderDao.update(updateWrapper) != 1) {
+            throw new SystemException(ResponseCode.ERROR);
+        }
+    }
+
+    @Override
     public Integer cancelOrder(String oid, Integer status) {
         try {//删除对应订单的定时任务
             Scheduler scheduler = schedulerFactoryBean.getScheduler();

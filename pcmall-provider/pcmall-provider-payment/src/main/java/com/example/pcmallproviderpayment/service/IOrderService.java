@@ -13,6 +13,12 @@ public interface IOrderService {
 
     public void payOrder(String oid);
 
+    public void sendOrder(String oid);
+
+    public void finishOrder(String oid);
+
+    public void refundOrder(String oid);
+
     /**
      * status只有两个值（4交易取消、6退货完成）
      */
