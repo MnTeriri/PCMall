@@ -1,7 +1,6 @@
 package com.example.pcmallprovidergoods.handler;
 
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.response.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
