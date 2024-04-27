@@ -35,12 +35,11 @@ public class UserServiceImpl implements IUserService {
     private IUserRoleDao userRoleDao;
 
     @Override
-    public ResponseResult<User> login(String uid, String password) {
+    public ResponseResult<LoginUser> login(String uid, String password) {
         //查询权限信息
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(uid, DigestUtil.md5Hex(password));
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
-        User user = loginUser.getUser();
         //用户信息存到redis
         RedisUtils.setCacheObject(uid, loginUser);
         //生成token
@@ -55,7 +54,7 @@ public class UserServiceImpl implements IUserService {
             throw new SystemException(ResponseCode.ERROR);
         }
 
-        return new ResponseResult<>(200, token, user);
+        return new ResponseResult<>(200, token, loginUser);
     }
 
     @Transactional(rollbackFor = Exception.class)
