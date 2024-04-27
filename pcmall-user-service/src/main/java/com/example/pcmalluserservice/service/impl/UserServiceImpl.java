@@ -2,6 +2,7 @@ package com.example.pcmalluserservice.service.impl;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.LoginUser;
 import com.example.pcmallcommon.model.User;
@@ -20,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @Slf4j
@@ -40,11 +42,18 @@ public class UserServiceImpl implements IUserService {
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
         User user = loginUser.getUser();
         //用户信息存到redis
-        RedisUtils.setCacheObject(user.getUid(), loginUser);
+        RedisUtils.setCacheObject(uid, loginUser);
         //生成token
         HashMap<String, Object> payload = new HashMap<>();
-        payload.put("uid", user.getUid());
+        payload.put("uid", uid);
         String token = JwtUtils.createToken(payload, 10);
+
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<User>()
+                .eq("uid", uid)
+                .set("login_time", LocalDateTime.now());
+        if (userDao.update(updateWrapper) != 1) {
+            throw new SystemException(ResponseCode.ERROR);
+        }
 
         return new ResponseResult<>(200, token, user);
     }
