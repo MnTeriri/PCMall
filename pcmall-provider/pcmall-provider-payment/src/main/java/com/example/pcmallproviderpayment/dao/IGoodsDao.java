@@ -9,8 +9,6 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface IGoodsDao extends BaseMapper<Goods> {
     @Select("SELECT * FROM goods WHERE id=#{id};")
