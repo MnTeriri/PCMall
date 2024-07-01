@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(contextId = "userClient", value = "pcmall-provider-user")
 public interface UserClient {
     @PostMapping("/user/updateInformation")
-    public ResponseResult<User> updateInformation(@RequestBody User user);
+    ResponseResult<User> updateInformation(@RequestBody User user);
 
     @PostMapping("/user/updatePassword")
-    public ResponseResult<String> updatePassword(
+    ResponseResult<String> updatePassword(
             @RequestParam("uid") String uid,
             @RequestParam("oldPassword") String oldPassword,
             @RequestParam("newPassword") String newPassword);

@@ -5,13 +5,13 @@ import com.example.pcmallcommon.model.Category;
 import java.util.List;
 
 public interface ICategoryService {
-    public List<Category> getCategoryList(Integer currentPage, Integer pageSize);
+    List<Category> getCategoryList(Integer currentPage, Integer pageSize);
 
-    public Long getTotalCount();
+    Long getTotalCount();
 
-    public List<Category> searchCategoryList();
+    List<Category> searchCategoryList();
 
-    public Integer addCategory(Category category);
+    Integer addCategory(Category category);
 
-    public Integer updateCategory(Category category);
+    Integer updateCategory(Category category);
 }

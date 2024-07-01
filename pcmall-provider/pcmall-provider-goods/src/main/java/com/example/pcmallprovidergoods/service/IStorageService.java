@@ -5,11 +5,11 @@ import com.example.pcmallcommon.model.Storage;
 import java.util.List;
 
 public interface IStorageService {
-    public List<Storage> getStorageList(Integer gid, Integer currentPage, Integer pageSize);
+    List<Storage> getStorageList(Integer gid, Integer currentPage, Integer pageSize);
 
-    public Long getTotalCount(Integer gid);
+    Long getTotalCount(Integer gid);
 
-    public void inboundDelivery(Storage storage);
+    void inboundDelivery(Storage storage);
 
-    public void outboundDelivery(Storage storage);
+    void outboundDelivery(Storage storage);
 }

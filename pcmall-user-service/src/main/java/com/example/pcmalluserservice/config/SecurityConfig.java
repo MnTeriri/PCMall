@@ -13,6 +13,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,8 +27,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     @Autowired
     private UserDetailsServiceImpl userService;
-    @Autowired
-    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+//    @Autowired
+//    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 //    @Autowired
 //    private SimpleAuthenticationEntryPoint authenticationEntryPoint;
 //    @Autowired
@@ -47,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()//放行所有OPTIONS请求,要不然连header里面的token都获取不了
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable);
 //                .exceptionHandling(config -> {
@@ -67,5 +68,13 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public WebSecurityCustomizer ignoringCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/api/login")
+                .requestMatchers("/api/register")
+                .requestMatchers("/api/captcha.jpg");
     }
 }

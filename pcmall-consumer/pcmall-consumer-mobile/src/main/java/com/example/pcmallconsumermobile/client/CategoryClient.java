@@ -10,5 +10,5 @@ import java.util.List;
 @FeignClient(contextId = "categoryClient", value = "pcmall-provider-goods")
 public interface CategoryClient {
     @PostMapping("/category/searchCategoryList")
-    public ResponseResult<List<Category>> searchCategoryList();
+    ResponseResult<List<Category>> searchCategoryList();
 }

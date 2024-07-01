@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @CacheNamespace(implementation = OrderInfoCache.class)
 public interface IOrderAddressDao {
     @Select("SELECT province, city, district, address_detail, receiver_name, phone FROM order_address WHERE oid=#{oid}")
-    public Address searchOrderAddress(String oid);
+    Address searchOrderAddress(String oid);
 }

@@ -5,21 +5,21 @@ import com.example.pcmallcommon.model.Cart;
 import java.util.List;
 
 public interface ICartService {
-    public List<Cart> searchCartList(String uid, Integer currentPage, Integer pageSize);
+    List<Cart> searchCartList(String uid, Integer currentPage, Integer pageSize);
 
-    public List<Cart> searchSelectCartList(String uid);
+    List<Cart> searchSelectCartList(String uid);
 
-    public Long getTotalCount(String uid);
+    Long getTotalCount(String uid);
 
-    public void addCart(Cart cart);
+    void addCart(Cart cart);
 
-    public void addCartCount(Cart cart);
+    void addCartCount(Cart cart);
 
-    public void subCartCount(Cart cart);
+    void subCartCount(Cart cart);
 
-    public void selectCart(Cart cart);
+    void selectCart(Cart cart);
 
-    public void selectAllCart(Cart cart);
+    void selectAllCart(Cart cart);
 
-    public void deleteCart(Integer id);
+    void deleteCart(Integer id);
 }

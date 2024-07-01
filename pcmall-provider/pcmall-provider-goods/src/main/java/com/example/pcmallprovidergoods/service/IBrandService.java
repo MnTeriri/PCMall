@@ -6,18 +6,18 @@ import java.util.List;
 
 public interface IBrandService {
 
-    public List<Brand> getBrandList(Integer currentPage, Integer pageSize);
+    List<Brand> getBrandList(Integer currentPage, Integer pageSize);
 
-    public Long getTotalCount();
+    Long getTotalCount();
 
-    public List<Brand> searchBrandByCid(Integer cid);
+    List<Brand> searchBrandByCid(Integer cid);
 
-    public List<Integer> searchSelectedCategoryId(Integer bid);
+    List<Integer> searchSelectedCategoryId(Integer bid);
 
-    public Integer brandCategoryChange(Integer bid, Integer cid, Boolean selected);
+    Integer brandCategoryChange(Integer bid, Integer cid, Boolean selected);
 
-    public Integer addBrand(Brand brand);
+    Integer addBrand(Brand brand);
 
-    public Integer updateBrand(Brand brand);
+    Integer updateBrand(Brand brand);
 
 }

@@ -30,7 +30,9 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 || "/api/register".equals(path)
                 || "/api/captcha.jpg".equals(path)
                 || path.startsWith("/api/image")
-                || "/api/mobile/goods/searchGoodsList".equals(path)) {
+                || path.startsWith("/api/mobile/goods")
+                || path.startsWith("/api/mobile/category")
+                || path.startsWith("/api/mobile/brand")) {
             log.debug("是{}，放行", path);
             return chain.filter(exchange);
         }

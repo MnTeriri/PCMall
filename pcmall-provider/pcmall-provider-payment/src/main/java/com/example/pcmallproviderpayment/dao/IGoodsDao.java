@@ -18,5 +18,5 @@ public interface IGoodsDao extends BaseMapper<Goods> {
             @Result(property = "category", column = "cid", one = @One(select = "com.example.pcmallproviderpayment.dao.ICategoryDao.searchCategory")),
             @Result(property = "brand", column = "bid", one = @One(select = "com.example.pcmallproviderpayment.dao.IBrandDao.searchBrand"))
     })
-    public Goods searchGoods(Integer id);
+    Goods searchGoods(Integer id);
 }

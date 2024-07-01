@@ -12,32 +12,32 @@ import java.util.List;
 @FeignClient(contextId = "cartClient", value = "pcmall-provider-payment")
 public interface CartClient {
     @PostMapping("/cart/searchCartList")
-    public ResponseResult<List<Cart>> searchCartList(
+    ResponseResult<List<Cart>> searchCartList(
             @RequestParam("uid") String uid,
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
 
     @PostMapping("/cart/searchSelectCartList")
-    public ResponseResult<List<Cart>> searchSelectCartList(@RequestParam("uid") String uid);
+    ResponseResult<List<Cart>> searchSelectCartList(@RequestParam("uid") String uid);
 
     @PostMapping("/cart/getTotalCount")
-    public ResponseResult<Long> getTotalCount(@RequestParam("uid") String uid);
+    ResponseResult<Long> getTotalCount(@RequestParam("uid") String uid);
 
     @PostMapping("/cart/addCart")
-    public ResponseResult<String> addCart(@RequestBody Cart cart);
+    ResponseResult<String> addCart(@RequestBody Cart cart);
 
     @PostMapping("/cart/addCartCount")
-    public ResponseResult<String> addCartCount(@RequestBody Cart cart);
+    ResponseResult<String> addCartCount(@RequestBody Cart cart);
 
     @PostMapping("/cart/subCartCount")
-    public ResponseResult<String> subCartCount(@RequestBody Cart cart);
+    ResponseResult<String> subCartCount(@RequestBody Cart cart);
 
     @PostMapping("/cart/selectCart")
-    public ResponseResult<String> selectCart(@RequestBody Cart cart);
+    ResponseResult<String> selectCart(@RequestBody Cart cart);
 
     @PostMapping("/cart/selectAllCart")
-    public ResponseResult<String> selectAllCart(@RequestBody Cart cart);
+    ResponseResult<String> selectAllCart(@RequestBody Cart cart);
 
     @PostMapping("/cart/deleteCart")
-    public ResponseResult<String> deleteCart(@RequestParam("id") Integer id);
+    ResponseResult<String> deleteCart(@RequestParam("id") Integer id);
 }

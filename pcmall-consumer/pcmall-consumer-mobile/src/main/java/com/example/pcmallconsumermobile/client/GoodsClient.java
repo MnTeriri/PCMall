@@ -24,8 +24,8 @@ public interface GoodsClient {
             @RequestParam("pageSize") Integer pageSize);
 
     @PostMapping("/goods/getRecordsFiltered")
-    public ResponseResult<Long> getRecordsFiltered(@RequestParam("searchValue") String searchValue);
+    ResponseResult<Long> getRecordsFiltered(@RequestParam("searchValue") String searchValue);
 
     @PostMapping("/goods/getRecordsFilteredByCidAndBid")
-    public ResponseResult<Long> getRecordsFilteredByCidAndBid(@RequestParam("cid") Integer cid, @RequestParam("bid") Integer bid);
+    ResponseResult<Long> getRecordsFilteredByCidAndBid(@RequestParam("cid") Integer cid, @RequestParam("bid") Integer bid);
 }

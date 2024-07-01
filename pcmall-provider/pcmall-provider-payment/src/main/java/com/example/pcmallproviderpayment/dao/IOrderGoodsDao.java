@@ -21,5 +21,5 @@ public interface IOrderGoodsDao {
             @Result(property = "category", column = "cid", one = @One(select = "com.example.pcmallproviderpayment.dao.ICategoryDao.searchCategory")),
             @Result(property = "brand", column = "bid", one = @One(select = "com.example.pcmallproviderpayment.dao.IBrandDao.searchBrand"))
     })
-    public List<Goods> searchOrderGoods(String oid);
+    List<Goods> searchOrderGoods(String oid);
 }

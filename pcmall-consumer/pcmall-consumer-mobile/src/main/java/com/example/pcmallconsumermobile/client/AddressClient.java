@@ -12,17 +12,17 @@ import java.util.List;
 @FeignClient(contextId = "addressClient", value = "pcmall-provider-payment")
 public interface AddressClient {
     @PostMapping("/address/searchAddressList")
-    public ResponseResult<List<Address>> searchAddressList(@RequestParam("uid") String uid);
+    ResponseResult<List<Address>> searchAddressList(@RequestParam("uid") String uid);
 
     @PostMapping("/address/searchDefaultAddress")
-    public ResponseResult<Address> searchDefaultAddress(@RequestParam("uid") String uid);
+    ResponseResult<Address> searchDefaultAddress(@RequestParam("uid") String uid);
 
     @PostMapping("/address/addAddress")
-    public ResponseResult<String> addAddress(@RequestBody Address address);
+    ResponseResult<String> addAddress(@RequestBody Address address);
 
     @PostMapping("/address/updateAddress")
-    public ResponseResult<String> updateAddress(@RequestBody Address address);
+    ResponseResult<String> updateAddress(@RequestBody Address address);
 
     @PostMapping("/address/deleteAddress")
-    public ResponseResult<String> deleteAddress(@RequestParam("id") Integer id);
+    ResponseResult<String> deleteAddress(@RequestParam("id") Integer id);
 }

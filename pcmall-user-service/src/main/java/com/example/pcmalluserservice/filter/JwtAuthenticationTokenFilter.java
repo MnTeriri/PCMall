@@ -6,41 +6,40 @@ import com.example.pcmallcommon.model.LoginUser;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.utils.JwtUtils;
 import com.example.pcmalluserservice.utils.RedisUtils;
+import com.example.pcmalluserservice.utils.SpringContextUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
 @Slf4j
-@Component
+//@Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
-    @Autowired
-    @Qualifier("handlerExceptionResolver")
-    private HandlerExceptionResolver resolver;
+//    @Autowired
+//    @Qualifier("handlerExceptionResolver")
+//    private HandlerExceptionResolver resolver;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.debug("进入JwtAuthenticationTokenFilter");
+        HandlerExceptionResolver resolver= SpringContextUtils.getBean("handlerExceptionResolver");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        String requestURI = request.getRequestURI();
-        if ("/api/login".equals(requestURI)
-                || "/api/register".equals(requestURI)
-                || "/api/captcha.jpg".equals(requestURI)) {
-            log.debug("是{}，放行", requestURI);
-            filterChain.doFilter(request, response);
-            return;
-        }
+//        String requestURI = request.getRequestURI();
+//        if ("/api/login".equals(requestURI)
+//                || "/api/register".equals(requestURI)
+//                || "/api/captcha.jpg".equals(requestURI)) {
+//            log.debug("是{}，放行", requestURI);
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
         String token = request.getHeader("token");
         if (token == null) {
             //没有token

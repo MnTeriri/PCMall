@@ -53,7 +53,7 @@ public class CartServiceImpl implements ICartService {
         Goods goods = goodsDao.searchGoods(cart.getGid());
         Brand brand = goods.getBrand();
         Category category = goods.getCategory();
-        if (brand.getIsDelete() == 1 || category.getIsDelete() == 1) {
+        if (brand.getIsDelete() == 1 || category.getIsDelete() == 1 || goods.getIsDelete() == 1) {
             throw new SystemException(ResponseCode.CART_GOODS_ERROR);
         }
         if (goods.getStatus() == 1) {
@@ -85,12 +85,22 @@ public class CartServiceImpl implements ICartService {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
         }
         Goods goods = data.getGoods();
+        Brand brand = goods.getBrand();
+        Category category = goods.getCategory();
+        if (brand.getIsDelete() == 1 || category.getIsDelete() == 1 || goods.getIsDelete() == 1) {
+            throw new SystemException(ResponseCode.CART_GOODS_ERROR);
+        }
+        if (goods.getStatus() == 1) {
+            throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
+        }
+        if (goods.getStatus() == 2) {
+            throw new SystemException(ResponseCode.GOODS_OFF_SHELF_ERROR);
+        }
         if (data.getCount() >= goods.getCount()) {
             throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
         }
         cart.setCount(data.getCount() + 1);
-        if (cartDao.updateById(cart
-        ) != 1) {
+        if (cartDao.updateById(cart) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
     }
@@ -100,6 +110,18 @@ public class CartServiceImpl implements ICartService {
         Cart data = cartDao.searchCart(cart.getId());
         if (data == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
+        }
+        Goods goods = data.getGoods();
+        Brand brand = goods.getBrand();
+        Category category = goods.getCategory();
+        if (brand.getIsDelete() == 1 || category.getIsDelete() == 1 || goods.getIsDelete() == 1) {
+            throw new SystemException(ResponseCode.CART_GOODS_ERROR);
+        }
+        if (goods.getStatus() == 1) {
+            throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
+        }
+        if (goods.getStatus() == 2) {
+            throw new SystemException(ResponseCode.GOODS_OFF_SHELF_ERROR);
         }
         if (data.getCount() <= 1) {
             throw new SystemException(ResponseCode.CART_MIN_COUNT_ERROR);
@@ -117,7 +139,12 @@ public class CartServiceImpl implements ICartService {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
         }
         Goods goods = data.getGoods();
-        if (goods.getStatus() != 0 || goods.getIsDelete() == 1) {
+        Brand brand = goods.getBrand();
+        Category category = goods.getCategory();
+        if (brand.getIsDelete() == 1 ||
+                category.getIsDelete() == 1 ||
+                goods.getStatus() != 0 ||
+                goods.getIsDelete() == 1) {
             throw new SystemException(ResponseCode.CART_GOODS_ERROR);
         }
         if (cartDao.updateById(cart) != 1) {

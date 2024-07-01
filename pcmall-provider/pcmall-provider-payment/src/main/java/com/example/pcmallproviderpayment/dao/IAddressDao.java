@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IAddressDao extends BaseMapper<Address> {
     @Update("UPDATE address SET is_default=0,update_time=NOW() WHERE uid=#{uid} AND is_default=1;")
-    public Integer cleanUserDefaultAddress(String uid);
+    Integer cleanUserDefaultAddress(String uid);
 }

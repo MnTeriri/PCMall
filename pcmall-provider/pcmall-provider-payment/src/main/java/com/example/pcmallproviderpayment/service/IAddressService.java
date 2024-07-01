@@ -5,13 +5,13 @@ import com.example.pcmallcommon.model.Address;
 import java.util.List;
 
 public interface IAddressService {
-    public List<Address> searchAddressList(String uid);
+    List<Address> searchAddressList(String uid);
 
-    public Address searchDefaultAddress(String uid);
+    Address searchDefaultAddress(String uid);
 
-    public void addAddress(Address address);
+    void addAddress(Address address);
 
-    public void updateAddress(Address address);
+    void updateAddress(Address address);
 
-    public void deleteAddress(Integer id);
+    void deleteAddress(Integer id);
 }

@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IBrandDao extends BaseMapper<Brand> {
     @Select("SELECT * FROM brand WHERE id=#{id}")
-    public Brand searchBrand(Integer id);
+    Brand searchBrand(Integer id);
 }

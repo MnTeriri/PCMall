@@ -11,7 +11,7 @@ import java.util.List;
 @FeignClient(contextId = "orderClient", value = "pcmall-provider-payment")
 public interface OrderClient {
     @PostMapping("/order/searchOrderList")
-    public ResponseResult<List<Order>> searchOrderList(
+    ResponseResult<List<Order>> searchOrderList(
             @RequestParam("searchValue") String searchValue,
             @RequestParam("uid") String uid,
             @RequestParam("type") Integer type,
@@ -19,23 +19,23 @@ public interface OrderClient {
             @RequestParam("pageSize") Integer pageSize);
 
     @PostMapping("/order/getRecordsFiltered")
-    public ResponseResult<Long> getRecordsFiltered(
+    ResponseResult<Long> getRecordsFiltered(
             @RequestParam("searchValue") String searchValue,
             @RequestParam("uid") String uid,
             @RequestParam("type") Integer type);
 
     @PostMapping("/order/createOrder")
-    public ResponseResult<String> createOrder(@RequestParam("uid") String uid, @RequestParam("aid") Integer aid);
+    ResponseResult<String> createOrder(@RequestParam("uid") String uid, @RequestParam("aid") Integer aid);
 
     @PostMapping("/order/payOrder")
-    public ResponseResult<String> payOrder(@RequestParam("oid") String oid);
+    ResponseResult<String> payOrder(@RequestParam("oid") String oid);
 
     @PostMapping("/order/finishOrder")
-    public ResponseResult<String> finishOrder(@RequestParam("oid") String oid);
+    ResponseResult<String> finishOrder(@RequestParam("oid") String oid);
 
     @PostMapping("/order/cancelOrder")
-    public ResponseResult<String> cancelOrder(@RequestParam("oid") String oid);
+    ResponseResult<String> cancelOrder(@RequestParam("oid") String oid);
 
     @PostMapping("/order/refundOrder")
-    public ResponseResult<String> refundOrder(@RequestParam("oid") String oid);
+    ResponseResult<String> refundOrder(@RequestParam("oid") String oid);
 }

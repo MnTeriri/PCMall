@@ -11,7 +11,7 @@ import java.util.List;
 @FeignClient(contextId = "orderClient", value = "pcmall-provider-payment")
 public interface OrderClient {
     @PostMapping("/order/searchOrderList")
-    public ResponseResult<List<Order>> searchOrderList(
+    ResponseResult<List<Order>> searchOrderList(
             @RequestParam("searchValue") String searchValue,
             @RequestParam("uid") String uid,
             @RequestParam("type") Integer type,
@@ -25,8 +25,8 @@ public interface OrderClient {
             @RequestParam("type") Integer type);
 
     @PostMapping("/order/sendOrder")
-    public ResponseResult<String> sendOrder(@RequestParam("oid") String oid);
+    ResponseResult<String> sendOrder(@RequestParam("oid") String oid);
 
     @PostMapping("/order/refundCommit")
-    public ResponseResult<String> refundCommit(@RequestParam("oid") String oid);
+    ResponseResult<String> refundCommit(@RequestParam("oid") String oid);
 }
