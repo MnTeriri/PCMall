@@ -30,3 +30,7 @@ Android App项目说明：[PCMall-Mobile](https://github.com/MnTeriri/PCMall-Mob
 * Android Jetpack
 * Android Material Design
 * ...
+
+## 版本说明
+* v1.0：并未支持分布式事务，对服务提供者分割不够细致
+* v2.0：
