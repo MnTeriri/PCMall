@@ -8,7 +8,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>pcmall-provider-payment</artifactId>
+	<artifactId>pcmall-provider-order</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>pcmall-provider-payment</name>
 	<description>pcmall-provider-payment</description>
