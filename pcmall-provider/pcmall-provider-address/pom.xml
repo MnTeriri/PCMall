@@ -13,7 +13,6 @@
     <name>pcmall-provider-address</name>
     <description>pcmall-provider-address</description>
 
-
     <properties>
         <java.version>17</java.version>
     </properties>
