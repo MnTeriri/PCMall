@@ -1,4 +1,4 @@
-package org.example.pcmallprovidercategory;
+package com.example.pcmallprovidercategory;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

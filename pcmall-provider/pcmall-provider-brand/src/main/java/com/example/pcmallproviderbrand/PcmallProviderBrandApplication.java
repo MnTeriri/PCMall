@@ -1,4 +1,4 @@
-package com.example.pcmallproviderpayment;
+package com.example.pcmallproviderbrand;
 
 import cn.hutool.extra.spring.EnableSpringUtil;
 import org.springframework.boot.SpringApplication;
@@ -8,10 +8,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableSpringUtil
-public class PcmallProviderPaymentApplication {
+public class PcmallProviderBrandApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PcmallProviderPaymentApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(PcmallProviderBrandApplication.class, args);
+    }
 
 }
