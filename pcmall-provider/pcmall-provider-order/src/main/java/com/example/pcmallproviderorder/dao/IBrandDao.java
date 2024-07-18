@@ -1,4 +1,4 @@
-package com.example.pcmallproviderpayment.dao;
+package com.example.pcmallproviderorder.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.pcmallcommon.model.Brand;

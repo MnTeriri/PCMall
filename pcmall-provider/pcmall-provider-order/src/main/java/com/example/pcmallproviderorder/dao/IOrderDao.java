@@ -1,8 +1,8 @@
-package com.example.pcmallproviderpayment.dao;
+package com.example.pcmallproviderorder.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.pcmallcommon.model.Order;
-import com.example.pcmallproviderpayment.provider.OrderSqlProvider;
+import com.example.pcmallproviderorder.provider.OrderSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.type.JdbcType;

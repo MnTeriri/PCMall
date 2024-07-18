@@ -1,4 +1,4 @@
-package com.example.pcmallprovidergoods.dao;
+package com.example.pcmallproviderbrand.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.pcmallcommon.model.Brand;
@@ -11,9 +11,6 @@ import java.util.List;
 
 @Repository
 public interface IBrandDao extends BaseMapper<Brand> {
-    @Select("SELECT * FROM brand WHERE id=#{id}")
-    Brand searchBrand(Integer id);
-
     @Select("SELECT brand.id,bname,created_time,update_time,image,is_delete " +
             "FROM brand INNER JOIN category_brand " +
             "ON brand.id = category_brand.bid WHERE cid=#{cid} AND is_delete=0;")

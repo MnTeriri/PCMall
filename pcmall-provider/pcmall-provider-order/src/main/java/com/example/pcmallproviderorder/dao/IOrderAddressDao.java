@@ -1,7 +1,7 @@
-package com.example.pcmallproviderpayment.dao;
+package com.example.pcmallproviderorder.dao;
 
 import com.example.pcmallcommon.model.Address;
-import com.example.pcmallproviderpayment.cache.OrderInfoCache;
+import com.example.pcmallproviderorder.cache.OrderInfoCache;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
