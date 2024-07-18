@@ -1,7 +1,7 @@
-package com.example.pcmallproviderpayment.config;
+package com.example.pcmallproviderorder.config;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.example.pcmallproviderpayment.util.AutowiringSpringBeanJobFactory;
+import com.example.pcmallproviderorder.util.AutowiringSpringBeanJobFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
