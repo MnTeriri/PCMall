@@ -1,4 +1,4 @@
-package com.example.pcmallprovidergoods.cache;
+package com.example.pcmallproviderstorage.cache;
 
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
