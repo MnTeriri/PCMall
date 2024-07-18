@@ -12,6 +12,14 @@ public class ResponseResult<T> {
     private String message;
     private T data;
 
+    public static <T> ResponseResult<T> ok() {
+        ResponseResult<T> result = new ResponseResult<>();
+        result.setCode(ResponseCode.OK.getCode());
+        result.setMessage(ResponseCode.OK.getMessage());
+        result.setData(null);
+        return result;
+    }
+
     public static <T> ResponseResult<T> ok(T data) {
         ResponseResult<T> result = new ResponseResult<>();
         result.setCode(ResponseCode.OK.getCode());
@@ -25,6 +33,14 @@ public class ResponseResult<T> {
         result.setCode(ResponseCode.OK.getCode());
         result.setMessage(msg);
         result.setData(data);
+        return result;
+    }
+
+    public static <T> ResponseResult<T> error() {
+        ResponseResult<T> result = new ResponseResult<>();
+        result.setCode(ResponseCode.ERROR.getCode());
+        result.setMessage(ResponseCode.ERROR.getMessage());
+        result.setData(null);
         return result;
     }
 
