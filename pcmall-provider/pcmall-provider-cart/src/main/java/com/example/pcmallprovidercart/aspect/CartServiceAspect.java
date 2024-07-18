@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -48,10 +49,11 @@ public class CartServiceAspect {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (Cart cart : list) {
             //设置异步任务
-//            cart.setGoods(goodsClient.searchGoodsById(cart.getGid()).getData());
             CompletableFuture<Void> completableFuture = CompletableFuture
-                    .supplyAsync(() -> goodsClient.searchGoodsById(cart.getGid(), true, true).getData(),
-                            threadPoolTaskExecutor)
+                    .supplyAsync(() -> goodsClient.searchGoodsById(new HashMap<>(){{
+                        put("isSearchBrand",true);
+                        put("isSearchCategory",true);
+                    }}, cart.getGid()).getData(), threadPoolTaskExecutor)
                     .thenAccept(cart::setGoods);
             futures.add(completableFuture);
         }
