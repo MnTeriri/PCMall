@@ -3,11 +3,20 @@ package com.example.pcmallprovidercart.service;
 import com.example.pcmallcommon.model.Cart;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ICartService {
-    Cart searchCartById(Integer id);
+    /**
+     * aspectRule：null时不增强，（isSearchGoods：是否搜索商品）、（isSearchCategory：是否搜索商品分类）、（isSearchBrand：是否搜索商品品牌）<br>
+     */
+    Cart searchCartById(Map<String, Boolean> aspectRule, Integer id);
 
-    List<Cart> searchCartList(String uid, Integer currentPage, Integer pageSize, CartSearchType searchType);
+    /**
+     * aspectRule：null时不增强，（isSearchGoods：是否搜索商品）、（isSearchCategory：是否搜索商品分类）、（isSearchBrand：是否搜索商品品牌）<br>
+     * searchType：搜索类型枚举<br>
+     * searchValue：（uid(String)：用户ID）、（currentPage(Integer)：当前页数）、（pageSize(Integer)：页面大小）
+     */
+    List<Cart> searchCartList(Map<String, Boolean> aspectRule, CartSearchType searchType, Map<String, Object> searchValue);
 
     Long getTotalCount(String uid);
 

@@ -1,4 +1,4 @@
-package com.example.pcmallproviderpayment.service;
+package com.example.pcmallproviderorder.service;
 
 import com.example.pcmallcommon.model.Order;
 

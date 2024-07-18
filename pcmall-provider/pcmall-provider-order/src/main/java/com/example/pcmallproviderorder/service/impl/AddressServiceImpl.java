@@ -1,11 +1,11 @@
-package com.example.pcmallproviderpayment.service.impl;
+package com.example.pcmallproviderorder.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.Address;
 import com.example.pcmallcommon.response.ResponseCode;
-import com.example.pcmallproviderpayment.dao.IAddressDao;
-import com.example.pcmallproviderpayment.service.IAddressService;
+import com.example.pcmallproviderorder.dao.IAddressDao;
+import com.example.pcmallproviderorder.service.IAddressService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

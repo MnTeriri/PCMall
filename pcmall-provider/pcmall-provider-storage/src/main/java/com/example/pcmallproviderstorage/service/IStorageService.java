@@ -1,4 +1,4 @@
-package com.example.pcmallprovidergoods.service;
+package com.example.pcmallproviderstorage.service;
 
 import com.example.pcmallcommon.model.Storage;
 

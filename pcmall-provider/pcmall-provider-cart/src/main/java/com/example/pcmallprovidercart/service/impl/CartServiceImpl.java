@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -30,27 +31,21 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
-    public Cart searchCartById(Integer id) {
-        Cart cart = cartDao.selectById(id);
-        if (cart == null) {
-            throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
-        }
-        Goods goods = goodsClient.searchGoodsById(cart.getGid(), true, true).getData();
-        cart.setGoods(goods);
-        return cart;
+    public Cart searchCartById(Map<String, Boolean> aspectRule, Integer id) {
+        return cartDao.selectById(id);
     }
 
     @Override
-    public List<Cart> searchCartList(String uid, Integer currentPage, Integer pageSize, CartSearchType searchType) {
+    public List<Cart> searchCartList(Map<String, Boolean> aspectRule, CartSearchType searchType, Map<String, Object> searchValue) {
         if (searchType == CartSearchType.ALL) {
             QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>()
-                    .eq("uid", uid)
+                    .eq("uid", searchValue.get("uid"))
                     .orderByDesc("id");
-            Page<Cart> page = new Page<>(currentPage, pageSize);
+            Page<Cart> page = new Page<>((Integer) searchValue.get("currentPage"), (Integer) searchValue.get("pageSize"));
             return cartDao.selectPage(page, queryWrapper).getRecords();
         } else if (searchType == CartSearchType.SELECT) {
             QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>()
-                    .eq("uid", uid)
+                    .eq("uid", searchValue.get("uid"))
                     .eq("is_select", 1)
                     .orderByDesc("id");
             return cartDao.selectList(queryWrapper);
@@ -65,36 +60,6 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public void addCart(Cart cart) {
-        QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>()
-                .eq("uid", cart.getUid())
-                .eq("gid", cart.getGid());
-        Cart data = cartDao.selectOne(queryWrapper);
-        Goods goods = goodsClient.searchGoodsById(cart.getGid(), true, true).getData();
-        Brand brand = goods.getBrand();
-        Category category = goods.getCategory();
-        if (brand.getIsDelete() == 1 || category.getIsDelete() == 1 || goods.getIsDelete() == 1) {
-            throw new SystemException(ResponseCode.CART_GOODS_ERROR);
-        }
-        if (goods.getStatus() == 1) {
-            throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
-        }
-        if (goods.getStatus() == 2) {
-            throw new SystemException(ResponseCode.GOODS_OFF_SHELF_ERROR);
-        }
-        if (data == null) {
-            //如果没添加过
-            if (cartDao.insert(cart) != 1) {
-                throw new SystemException(ResponseCode.ERROR);
-            }
-        } else {
-            if (data.getCount() >= goods.getCount()) {
-                throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
-            }
-            data.setCount(data.getCount() + 1);
-            if (cartDao.updateById(data) != 1) {
-                throw new SystemException(ResponseCode.ERROR);
-            }
-        }
     }
 
     @Override
@@ -104,67 +69,14 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public void addCartCount(Cart cart) {
-        Cart data = searchCartById(cart.getId());
-        Goods goods = data.getGoods();
-        Brand brand = goods.getBrand();
-        Category category = goods.getCategory();
-        if (brand.getIsDelete() == 1 || category.getIsDelete() == 1 || goods.getIsDelete() == 1) {
-            throw new SystemException(ResponseCode.CART_GOODS_ERROR);
-        }
-        if (goods.getStatus() == 1) {
-            throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
-        }
-        if (goods.getStatus() == 2) {
-            throw new SystemException(ResponseCode.GOODS_OFF_SHELF_ERROR);
-        }
-        if (data.getCount() >= goods.getCount()) {
-            throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
-        }
-        cart.setCount(data.getCount() + 1);
-        if (cartDao.updateById(cart) != 1) {
-            throw new SystemException(ResponseCode.ERROR);
-        }
     }
 
     @Override
     public void subCartCount(Cart cart) {
-        Cart data = searchCartById(cart.getId());
-        Goods goods = data.getGoods();
-        Brand brand = goods.getBrand();
-        Category category = goods.getCategory();
-        if (brand.getIsDelete() == 1 || category.getIsDelete() == 1 || goods.getIsDelete() == 1) {
-            throw new SystemException(ResponseCode.CART_GOODS_ERROR);
-        }
-        if (goods.getStatus() == 1) {
-            throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
-        }
-        if (goods.getStatus() == 2) {
-            throw new SystemException(ResponseCode.GOODS_OFF_SHELF_ERROR);
-        }
-        if (data.getCount() <= 1) {
-            throw new SystemException(ResponseCode.CART_MIN_COUNT_ERROR);
-        }
-        cart.setCount(data.getCount() - 1);
-        if (cartDao.updateById(cart) != 1) {
-            throw new SystemException(ResponseCode.ERROR);
-        }
     }
 
     @Override
     public void selectCart(Cart cart) {
-        Cart data = searchCartById(cart.getId());
-        Goods goods = data.getGoods();
-        Brand brand = goods.getBrand();
-        Category category = goods.getCategory();
-        if (brand.getIsDelete() == 1 ||
-                category.getIsDelete() == 1 ||
-                goods.getStatus() != 0 ||
-                goods.getIsDelete() == 1) {
-            throw new SystemException(ResponseCode.CART_GOODS_ERROR);
-        }
-        if (cartDao.updateById(cart) != 1) {
-            throw new SystemException(ResponseCode.ERROR);
-        }
     }
 
     @Override
