@@ -1,4 +1,4 @@
-package com.example.pcmallproviderpayment.config;
+package com.example.pcmallprovidercategory.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
-@MapperScan("com.example.pcmallproviderpayment.dao")
+@MapperScan("com.example.pcmallprovidercategory.dao")
 public class MybatisPlusConfig {
     public MybatisPlusConfig() {
-        log.debug("创建配置类对象：MybatisPlusConfig");
+        log.debug("创建配置类对象：{}", this);
     }
 
     @Bean
