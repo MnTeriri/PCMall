@@ -1,4 +1,4 @@
-package com.example.pcmallproviderpayment.config;
+package com.example.pcmallproviderstorage.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.EnableCaching;
