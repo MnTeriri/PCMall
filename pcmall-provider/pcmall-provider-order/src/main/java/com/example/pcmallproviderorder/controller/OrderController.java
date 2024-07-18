@@ -1,10 +1,10 @@
-package com.example.pcmallproviderpayment.controller;
+package com.example.pcmallproviderorder.controller;
 
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.Order;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.response.ResponseResult;
-import com.example.pcmallproviderpayment.service.IOrderService;
+import com.example.pcmallproviderorder.service.IOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
