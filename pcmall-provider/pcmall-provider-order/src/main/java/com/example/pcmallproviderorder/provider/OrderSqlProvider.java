@@ -1,4 +1,4 @@
-package com.example.pcmallproviderpayment.provider;
+package com.example.pcmallproviderorder.provider;
 
 import org.apache.ibatis.annotations.Param;
 
