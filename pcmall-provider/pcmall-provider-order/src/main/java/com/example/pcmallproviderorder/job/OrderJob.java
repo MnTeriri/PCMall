@@ -1,9 +1,9 @@
-package com.example.pcmallproviderpayment.job;
+package com.example.pcmallproviderorder.job;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.pcmallcommon.model.Order;
-import com.example.pcmallproviderpayment.dao.IOrderDao;
-import com.example.pcmallproviderpayment.service.IOrderService;
+import com.example.pcmallproviderorder.dao.IOrderDao;
+import com.example.pcmallproviderorder.service.IOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
