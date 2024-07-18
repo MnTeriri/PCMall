@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -38,13 +40,27 @@ public class CartController {
             String uid,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        return ResponseResult.ok(cartService.searchCartList(uid, currentPage, pageSize, ICartService.CartSearchType.ALL));
+        Map<String, Boolean> aspectRule = new HashMap<>() {{
+            put("isSearchGoods", true);
+        }};
+        Map<String, Object> searchValue = new HashMap<>() {{
+            put("uid", uid);
+            put("currentPage", currentPage);
+            put("pageSize", pageSize);
+        }};
+        return ResponseResult.ok(cartService.searchCartList(aspectRule, ICartService.CartSearchType.ALL, searchValue));
     }
 
     @PostMapping("/searchSelectCartList")
     @Operation(summary = "查询已选中购物车信息")
     public ResponseResult<List<Cart>> searchSelectCartList(String uid) {
-        return ResponseResult.ok(cartService.searchCartList(uid, null, null, ICartService.CartSearchType.SELECT));
+        Map<String, Boolean> aspectRule = new HashMap<>() {{
+            put("isSearchGoods", true);
+        }};
+        Map<String, Object> searchValue = new HashMap<>() {{
+            put("uid", uid);
+        }};
+        return ResponseResult.ok(cartService.searchCartList(aspectRule, ICartService.CartSearchType.SELECT, searchValue));
     }
 //
 //    @PostMapping("/getTotalCount")
