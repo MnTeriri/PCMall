@@ -1,0 +1,25 @@
+package com.example.pcmallproviderbrand.handler;
+
+import com.example.pcmallcommon.exception.SystemException;
+import com.example.pcmallcommon.response.ResponseResult;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@Slf4j
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    public GlobalExceptionHandler() {
+        log.debug("创建全局异常处理对象：GlobalExceptionHandler");
+    }
+
+    //处理自定义异常
+    @ExceptionHandler(SystemException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseResult<String> handlerSystemException(SystemException exception) {
+        log.error("发生自定义SystemException异常：{}", exception.getResponseStatus());
+        return ResponseResult.error(exception.getResponseStatus());
+    }
+}
