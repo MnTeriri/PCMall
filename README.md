@@ -14,7 +14,8 @@
 * 用户基本信息管理
 * ...
 
-Android App项目说明：[PCMall-Mobile](https://github.com/MnTeriri/PCMall-Mobile)
+Android App项目说明：[PCMall-Mobile](https://github.com/MnTeriri/PCMall-Mobile)<br>
+Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 
 ## 使用的框架
 * Spring Boot
@@ -58,7 +59,7 @@ Android App项目说明：[PCMall-Mobile](https://github.com/MnTeriri/PCMall-Mob
 ### v1.0：
 ![图片](image/架构图v1.0.jpg)
 ### v2.0：
-![图片](image/架构图v1.0.jpg)
+![图片](image/架构图v2.0.jpg)
 ## 界面效果
 ### 移动端
 <table>
@@ -122,7 +123,7 @@ PCMall
 │      └── pcmall-provider-category              // 商品分类模块 [11003]
 │      └── pcmall-provider-goods                 // 商品模块 [11004]
 │      └── pcmall-provider-order                 // 订单模块 [11005]
-│      └── pcmall-provider-storage               // 商品存储模块 [11006]
+│      └── pcmall-provider-storage               // 商品库存模块 [11006]
 │      └── pcmall-provider-user                  // 用户模块 [11007]
 ├──pom.xml                // 公共依赖
 ~~~
