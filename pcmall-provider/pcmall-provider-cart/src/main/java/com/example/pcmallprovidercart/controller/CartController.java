@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +30,11 @@ public class CartController {
 
     @PostMapping("/searchCartList")
     @Operation(summary = "查询购物车信息")
-//    @Parameters({
-//            @Parameter(name = "uid", description = "用户UID", required = true, in = ParameterIn.QUERY)
-//    })
+    @Parameters({
+            @Parameter(name = "uid", description = "用户UID", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "currentPage", description = "当前页数", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "pageSize", description = "页面大小", required = true, in = ParameterIn.QUERY)
+    })
     public ResponseResult<List<Cart>> searchCartList(
             String uid,
             @RequestParam(defaultValue = "1") Integer currentPage,
@@ -53,6 +52,9 @@ public class CartController {
 
     @PostMapping("/searchSelectCartList")
     @Operation(summary = "查询已选中购物车信息")
+    @Parameters({
+            @Parameter(name = "uid", description = "用户UID", required = true, in = ParameterIn.QUERY)
+    })
     public ResponseResult<List<Cart>> searchSelectCartList(String uid) {
         Map<String, Boolean> aspectRule = new HashMap<>() {{
             put("isSearchGoods", true);
@@ -62,45 +64,72 @@ public class CartController {
         }};
         return ResponseResult.ok(cartService.searchCartList(aspectRule, ICartService.CartSearchType.SELECT, searchValue));
     }
-//
-//    @PostMapping("/getTotalCount")
-//    public ResponseResult<Long> getTotalCount(String uid) {
-//        return ResponseResult.ok(cartService.getTotalCount(uid));
-//    }
-//
-//    @PostMapping("/addCart")
-//    public ResponseResult<String> addCart(@RequestBody Cart cart) {
-//        cartService.addCart(cart);
-//        return ResponseResult.ok("添加成功");
-//    }
-//
-//    @PostMapping("/addCartCount")
-//    public ResponseResult<String> addCartCount(@RequestBody Cart cart) {
-//        cartService.addCartCount(cart);
-//        return ResponseResult.ok("购物车商品数量增加成功！");
-//    }
-//
-//    @PostMapping("/subCartCount")
-//    public ResponseResult<String> subCartCount(@RequestBody Cart cart) {
-//        cartService.subCartCount(cart);
-//        return ResponseResult.ok("购物车商品数量减少成功！");
-//    }
-//
-//    @PostMapping("/selectCart")
-//    public ResponseResult<String> selectCart(@RequestBody Cart cart) {
-//        cartService.selectCart(cart);
-//        return ResponseResult.ok("购物车商品选中状态改变成功！");
-//    }
-//
-//    @PostMapping("/selectAllCart")
-//    public ResponseResult<String> selectAllCart(@RequestBody Cart cart) {
-//        cartService.selectAllCart(cart);
-//        return ResponseResult.ok("购物车商品选中状态改变成功！");
-//    }
-//
-//    @PostMapping("/deleteCart")
-//    public ResponseResult<String> deleteCart(Integer id) {
-//        cartService.deleteCart(id);
-//        return ResponseResult.ok("删除成功");
-//    }
+
+    @PostMapping("/getTotalCount")
+    @Operation(summary = "查询用户购物车信息总个数")
+    @Parameters({
+            @Parameter(name = "uid", description = "用户UID", required = true, in = ParameterIn.QUERY)
+    })
+    public ResponseResult<Long> getTotalCount(String uid) {
+        return ResponseResult.ok(cartService.getTotalCount(uid));
+    }
+
+    @PostMapping("/addCart")
+    @Operation(summary = "添加购物车信息")
+    public ResponseResult<String> addCart(@RequestBody Cart cart) {
+        cartService.addCart(cart);
+        return ResponseResult.ok();
+    }
+
+    @PostMapping("/addCartCount")
+    @Operation(summary = "增加购物车信息数量")
+    @Parameters({
+            @Parameter(name = "id", description = "购物车信息ID", required = true, in = ParameterIn.QUERY)
+    })
+    public ResponseResult<String> addCartCount(Integer id) {
+        cartService.addCartCount(id);
+        return ResponseResult.ok();
+    }
+
+    @PostMapping("/subCartCount")
+    @Operation(summary = "减少购物车信息数量")
+    @Parameters({
+            @Parameter(name = "id", description = "购物车信息ID", required = true, in = ParameterIn.QUERY)
+    })
+    public ResponseResult<String> subCartCount(Integer id) {
+        cartService.subCartCount(id);
+        return ResponseResult.ok();
+    }
+
+    @PostMapping("/selectCart")
+    @Operation(summary = "选择购物车信息")
+    @Parameters({
+            @Parameter(name = "id", description = "购物车信息ID", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "isSelect", description = "选中状态", required = true, in = ParameterIn.QUERY)
+    })
+    public ResponseResult<String> selectCart(Integer id, Integer isSelect) {
+        cartService.selectCart(id, isSelect);
+        return ResponseResult.ok();
+    }
+
+    @PostMapping("/selectAllCart")
+    @Operation(summary = "选择所有购物车信息")
+    @Parameters({
+            @Parameter(name = "id", description = "购物车信息ID", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "isSelect", description = "选中状态", required = true, in = ParameterIn.QUERY)
+    })
+    public ResponseResult<String> selectAllCart(String uid, Integer isSelect) {
+        cartService.selectAllCart(uid, isSelect);
+        return ResponseResult.ok("购物车商品选中状态改变成功！");
+    }
+
+    @PostMapping("/deleteCart")
+    @Operation(summary = "删除购物车信息")
+    @Parameters({
+            @Parameter(name = "id", description = "购物车信息ID", required = true, in = ParameterIn.QUERY)
+    })
+    public ResponseResult<String> deleteCart(Integer id) {
+        cartService.deleteCart(id);
+        return ResponseResult.ok();
+    }
 }

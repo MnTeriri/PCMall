@@ -49,23 +49,23 @@ public class CartController {
     }
 
     @PostMapping("/addCartCount")
-    public ResponseResult<String> addCartCount(Cart cart) {
-        return cartClient.addCartCount(cart);
+    public ResponseResult<String> addCartCount(Integer id) {
+        return cartClient.addCartCount(id);
     }
 
     @PostMapping("/subCartCount")
-    public ResponseResult<String> subCartCount(Cart cart) {
-        return cartClient.subCartCount(cart);
+    public ResponseResult<String> subCartCount(Integer id) {
+        return cartClient.subCartCount(id);
     }
 
     @PostMapping("/selectCart")
-    public ResponseResult<String> selectCart(Cart cart) {
-        return cartClient.selectCart(cart);
+    public ResponseResult<String> selectCart(Integer id, Integer isSelect) {
+        return cartClient.selectCart(id, isSelect);
     }
 
     @PostMapping("/selectAllCart")
-    public ResponseResult<String> selectAllCart(Cart cart) {
-        return cartClient.selectAllCart(cart);
+    public ResponseResult<String> selectAllCart(String uid, Integer isSelect) {
+        return cartClient.selectAllCart(uid, isSelect);
     }
 
     @PostMapping("/deleteCart")

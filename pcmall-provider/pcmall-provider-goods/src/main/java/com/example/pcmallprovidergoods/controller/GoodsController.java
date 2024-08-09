@@ -1,8 +1,10 @@
 package com.example.pcmallprovidergoods.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallprovidergoods.service.IGoodsService;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -66,7 +68,7 @@ public class GoodsController {
             @Parameter(name = "currentPage", description = "当前页数", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "pageSize", description = "页面大小", required = true, in = ParameterIn.QUERY)
     })
-    public ResponseResult<List<Goods>> searchGoodsList(
+    public ResponseResult<Map<String, String>> searchGoodsList(
             @RequestParam(defaultValue = "") String searchValue,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -75,7 +77,13 @@ public class GoodsController {
             put("currentPage", currentPage);
             put("pageSize", pageSize);
         }});
-        return ResponseResult.ok(goodsList);
+        Long totalCount = goodsService.getTotalCount(IGoodsService.GoodsSearchType.SEARCH, new HashMap<>() {{
+            put("searchValue", searchValue);
+        }});
+        return ResponseResult.ok(new HashMap<>() {{
+            put("goodsList", JSON.toJSONString(goodsList));
+            put("totalCount", JSON.toJSONString(totalCount));
+        }});
     }
 
     @PostMapping("/searchGoodsByCidAndBid")
@@ -130,18 +138,24 @@ public class GoodsController {
     }
 
     @PostMapping("/addGoods")
+    @Operation(summary = "添加商品信息")
     public ResponseResult<String> addGoods(@RequestBody Goods goods) {
         goodsService.addGoods(goods);
         return ResponseResult.ok();
     }
 
     @PostMapping("/updateGoods")
+    @Operation(summary = "更新商品信息")
     public ResponseResult<String> updateGoods(@RequestBody Goods goods) {
         goodsService.updateGoods(goods);
         return ResponseResult.ok();
     }
 
     @PostMapping("/deleteGoods")
+    @Operation(summary = "删除商品信息")
+    @Parameters({
+            @Parameter(name = "id", description = "商品ID", required = true, in = ParameterIn.QUERY)
+    })
     public ResponseResult<String> deleteGoods(Integer id) {
         Goods goods = new Goods().setId(id).setIsDelete(1);
         goodsService.updateGoods(goods);
@@ -149,6 +163,10 @@ public class GoodsController {
     }
 
     @PostMapping("/recoverGoods")
+    @Operation(summary = "恢复商品信息")
+    @Parameters({
+            @Parameter(name = "id", description = "商品ID", required = true, in = ParameterIn.QUERY)
+    })
     public ResponseResult<String> recoverGoods(Integer id) {
         Goods goods = new Goods().setId(id).setIsDelete(0);
         goodsService.updateGoods(goods);
@@ -156,7 +174,13 @@ public class GoodsController {
     }
 
     @PostMapping("/updateGoodsStatus")
-    public ResponseResult<String> updateGoodsStatus(@RequestBody Goods goods) {
+    @Operation(summary = "更新商品状态")
+    @Parameters({
+            @Parameter(name = "id", description = "商品ID", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "status", description = "商品状态", required = true, in = ParameterIn.QUERY)
+    })
+    public ResponseResult<String> updateGoodsStatus(Integer id, Integer status) {
+        Goods goods = new Goods().setId(id).setStatus(status);
         goodsService.updateGoodsStatus(goods);
         return ResponseResult.ok();
     }

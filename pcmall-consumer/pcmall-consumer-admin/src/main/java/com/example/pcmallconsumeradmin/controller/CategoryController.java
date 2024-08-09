@@ -33,17 +33,17 @@ public class CategoryController {
     }
 
     @PostMapping("/searchCategoryList")
-    public ResponseResult<List<Category>> searchCategoryList(){
+    public ResponseResult<List<Category>> searchCategoryList() {
         return categoryClient.searchCategoryList();
     }
 
     @PostMapping("/getTotalCount")
-    public ResponseResult<Long> getTotalCount(){
+    public ResponseResult<Long> getTotalCount() {
         return categoryClient.getTotalCount();
     }
 
     @PostMapping("/addCategory")
-    public ResponseResult<String> addCategory(Category category){
+    public ResponseResult<String> addCategory(Category category) {
         return categoryClient.addCategory(category);
     }
 
@@ -53,12 +53,12 @@ public class CategoryController {
     }
 
     @PostMapping("/deleteCategory")
-    public ResponseResult<String> deleteCategory(Category category){
-        return categoryClient.deleteCategory(category);
+    public ResponseResult<String> deleteCategory(Integer id) {
+        return categoryClient.deleteCategory(id);
     }
 
     @PostMapping("/recoverCategory")
-    public ResponseResult<String> recoverCategory(Category category){
-        return categoryClient.recoverCategory(category);
+    public ResponseResult<String> recoverCategory(Integer id) {
+        return categoryClient.recoverCategory(id);
     }
 }

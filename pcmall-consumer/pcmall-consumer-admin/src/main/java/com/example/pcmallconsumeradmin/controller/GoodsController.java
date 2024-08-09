@@ -53,17 +53,17 @@ public class GoodsController {
     }
 
     @PostMapping("/deleteGoods")
-    public ResponseResult<String> deleteGoods(Goods goods) {
-        return goodsClient.deleteGoods(goods);
+    public ResponseResult<String> deleteGoods(Integer id) {
+        return goodsClient.deleteGoods(id);
     }
 
     @PostMapping("/recoverGoods")
-    public ResponseResult<String> recoverGoods(Goods goods) {
-        return goodsClient.recoverGoods(goods);
+    public ResponseResult<String> recoverGoods(Integer id) {
+        return goodsClient.recoverGoods(id);
     }
 
     @PostMapping("/updateGoodsStatus")
-    public ResponseResult<String> updateGoodsStatus(Goods goods) {
-        return goodsClient.updateGoodsStatus(goods);
+    public ResponseResult<String> updateGoodsStatus(Integer id, Integer status) {
+        return goodsClient.updateGoodsStatus(id, status);
     }
 }

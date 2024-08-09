@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -24,7 +25,7 @@ public class GoodsController {
     }
 
     @RequestMapping("/searchGoodsList")
-    public ResponseResult<List<Goods>> searchGoodsList(
+    public ResponseResult<Map<String, String>> searchGoodsList(
             @RequestParam(defaultValue = "") String searchValue,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -32,7 +33,7 @@ public class GoodsController {
     }
 
     @RequestMapping("/searchGoodsByCidAndBid")
-    public ResponseResult<List<Goods>> searchGoodsByCidAndBid(
+    public ResponseResult<Map<String, String>> searchGoodsByCidAndBid(
             @RequestParam(defaultValue = "1") Integer cid,
             @RequestParam(defaultValue = "1") Integer bid,
             @RequestParam(defaultValue = "1") Integer currentPage,
@@ -40,15 +41,15 @@ public class GoodsController {
         return goodsClient.searchGoodsByCidAndBid(cid, bid, currentPage, pageSize);
     }
 
-    @PostMapping("/getRecordsFiltered")
-    public ResponseResult<Long> getRecordsFiltered(@RequestParam(defaultValue = "") String searchValue) {
-        return goodsClient.getRecordsFiltered(searchValue);
-    }
-
-    @PostMapping("/getRecordsFilteredByCidAndBid")
-    public ResponseResult<Long> getRecordsFilteredByCidAndBid(
-            @RequestParam(defaultValue = "1") Integer cid,
-            @RequestParam(defaultValue = "1") Integer bid) {
-        return goodsClient.getRecordsFilteredByCidAndBid(cid, bid);
-    }
+//    @PostMapping("/getRecordsFiltered")
+//    public ResponseResult<Long> getRecordsFiltered(@RequestParam(defaultValue = "") String searchValue) {
+//        return goodsClient.getRecordsFiltered(searchValue);
+//    }
+//
+//    @PostMapping("/getRecordsFilteredByCidAndBid")
+//    public ResponseResult<Long> getRecordsFilteredByCidAndBid(
+//            @RequestParam(defaultValue = "1") Integer cid,
+//            @RequestParam(defaultValue = "1") Integer bid) {
+//        return goodsClient.getRecordsFilteredByCidAndBid(cid, bid);
+//    }
 }

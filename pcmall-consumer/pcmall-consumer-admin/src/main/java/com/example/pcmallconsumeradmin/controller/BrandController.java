@@ -58,13 +58,13 @@ public class BrandController {
     }
 
     @PostMapping("/deleteBrand")
-    public ResponseResult<String> deleteBrand(Brand brand) {
-        return brandClient.deleteBrand(brand);
+    public ResponseResult<String> deleteBrand(Integer id) {
+        return brandClient.deleteBrand(id);
     }
 
     @PostMapping("/recoverBrand")
-    public ResponseResult<String> recoverBrand(Brand brand) {
-        return brandClient.recoverBrand(brand);
+    public ResponseResult<String> recoverBrand(Integer id) {
+        return brandClient.recoverBrand(id);
     }
 
     @PostMapping("/brandCategoryChange")

@@ -20,7 +20,7 @@ public class CaptchaController {
 
     @RequestMapping("/api/captcha.jpg")
     public ResponseResult<String> getCaptcha() {
-        LineCaptcha captcha = CaptchaUtil.createLineCaptcha(120, 40, 5, 30);
+        LineCaptcha captcha = CaptchaUtil.createLineCaptcha(135, 50, 5, 30);
         String code = captcha.getCode();//获取验证码字符串
         session.setAttribute("captchaCode", code);//验证码字符串放入到session
         log.debug("验证码是：{}", code);
