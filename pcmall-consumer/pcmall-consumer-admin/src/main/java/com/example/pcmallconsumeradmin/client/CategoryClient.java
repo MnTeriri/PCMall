@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(contextId = "categoryClient", value = "pcmall-provider-goods")
+@FeignClient(contextId = "categoryClient", value = "pcmall-provider-category")
 public interface CategoryClient {
     @PostMapping("/category/getCategoryList")
     ResponseResult<List<Category>> getCategoryList(
@@ -29,8 +29,8 @@ public interface CategoryClient {
     ResponseResult<String> updateCategory(@RequestBody Category category);
 
     @PostMapping("/category/deleteCategory")
-    ResponseResult<String> deleteCategory(@RequestBody Category category);
+    ResponseResult<String> deleteCategory(@RequestParam("id") Integer id);
 
     @PostMapping("/category/recoverCategory")
-    ResponseResult<String> recoverCategory(@RequestBody Category category);
+    ResponseResult<String> recoverCategory(@RequestParam("id") Integer id);
 }

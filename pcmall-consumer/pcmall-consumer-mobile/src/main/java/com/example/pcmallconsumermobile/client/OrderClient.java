@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(contextId = "orderClient", value = "pcmall-provider-payment")
+@FeignClient(contextId = "orderClient", value = "pcmall-provider-order")
 public interface OrderClient {
     @PostMapping("/order/searchOrderList")
     ResponseResult<List<Order>> searchOrderList(

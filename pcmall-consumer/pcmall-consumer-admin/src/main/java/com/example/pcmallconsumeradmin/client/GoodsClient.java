@@ -29,11 +29,13 @@ public interface GoodsClient {
     ResponseResult<String> updateGoods(@RequestBody Goods goods);
 
     @PostMapping("/goods/deleteGoods")
-    ResponseResult<String> deleteGoods(@RequestBody Goods goods) ;
+    ResponseResult<String> deleteGoods(@RequestParam("id") Integer id);
 
     @PostMapping("/goods/recoverGoods")
-    ResponseResult<String> recoverGoods(@RequestBody Goods goods);
+    ResponseResult<String> recoverGoods(@RequestParam("id") Integer id);
 
     @PostMapping("/goods/updateGoodsStatus")
-    ResponseResult<String> updateGoodsStatus(@RequestBody Goods goods);
+    ResponseResult<String> updateGoodsStatus(
+            @RequestParam("id") Integer id,
+            @RequestParam("status") Integer status);
 }

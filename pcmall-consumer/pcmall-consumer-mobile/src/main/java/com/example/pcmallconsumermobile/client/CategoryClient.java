@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
-@FeignClient(contextId = "categoryClient", value = "pcmall-provider-goods")
+@FeignClient(contextId = "categoryClient", value = "pcmall-provider-category")
 public interface CategoryClient {
     @PostMapping("/category/searchCategoryList")
     ResponseResult<List<Category>> searchCategoryList();

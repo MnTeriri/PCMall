@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(contextId = "brandClient", value = "pcmall-provider-goods")
+@FeignClient(contextId = "brandClient", value = "pcmall-provider-category")
 public interface BrandClient {
     @PostMapping("/brand/getBrandList")
     ResponseResult<List<Brand>> getBrandList(
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
-
 
     @PostMapping("/brand/searchBrandByCid")
     ResponseResult<List<Brand>> searchBrandByCid(@RequestParam("cid") Integer cid);
@@ -33,10 +32,10 @@ public interface BrandClient {
     ResponseResult<String> updateBrand(@RequestBody Brand brand);
 
     @PostMapping("/brand/deleteBrand")
-    ResponseResult<String> deleteBrand(@RequestBody Brand brand);
+    ResponseResult<String> deleteBrand(@RequestParam("id") Integer id);
 
     @PostMapping("/brand/recoverBrand")
-    ResponseResult<String> recoverBrand(@RequestBody Brand brand);
+    ResponseResult<String> recoverBrand(@RequestParam("id") Integer id);
 
     @PostMapping("/brand/brandCategoryChange")
     ResponseResult<String> brandCategoryChange(

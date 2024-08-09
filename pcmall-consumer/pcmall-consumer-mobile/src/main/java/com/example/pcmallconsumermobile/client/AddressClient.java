@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(contextId = "addressClient", value = "pcmall-provider-payment")
+@FeignClient(contextId = "addressClient", value = "pcmall-provider-address")
 public interface AddressClient {
     @PostMapping("/address/searchAddressList")
     ResponseResult<List<Address>> searchAddressList(@RequestParam("uid") String uid);

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(contextId = "cartClient", value = "pcmall-provider-payment")
+@FeignClient(contextId = "cartClient", value = "pcmall-provider-cart")
 public interface CartClient {
     @PostMapping("/cart/searchCartList")
     ResponseResult<List<Cart>> searchCartList(
@@ -27,16 +27,18 @@ public interface CartClient {
     ResponseResult<String> addCart(@RequestBody Cart cart);
 
     @PostMapping("/cart/addCartCount")
-    ResponseResult<String> addCartCount(@RequestBody Cart cart);
+    ResponseResult<String> addCartCount(@RequestParam("id") Integer id);
 
     @PostMapping("/cart/subCartCount")
-    ResponseResult<String> subCartCount(@RequestBody Cart cart);
+    ResponseResult<String> subCartCount(@RequestParam("id") Integer id);
 
     @PostMapping("/cart/selectCart")
-    ResponseResult<String> selectCart(@RequestBody Cart cart);
+    ResponseResult<String> selectCart(@RequestParam("id") Integer id,
+                                      @RequestParam("isSelect") Integer isSelect);
 
     @PostMapping("/cart/selectAllCart")
-    ResponseResult<String> selectAllCart(@RequestBody Cart cart);
+    ResponseResult<String> selectAllCart(@RequestParam("uid") String uid,
+                                         @RequestParam("isSelect") Integer isSelect);
 
     @PostMapping("/cart/deleteCart")
     ResponseResult<String> deleteCart(@RequestParam("id") Integer id);

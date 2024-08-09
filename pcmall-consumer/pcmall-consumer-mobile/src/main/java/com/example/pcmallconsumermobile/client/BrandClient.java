@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(contextId = "brandClient", value = "pcmall-provider-goods")
+@FeignClient(contextId = "brandClient", value = "pcmall-provider-brand")
 public interface BrandClient {
     @PostMapping("/brand/searchBrandByCid")
     ResponseResult<List<Brand>> searchBrandByCid(@RequestParam("cid") Integer cid);

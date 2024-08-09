@@ -12,7 +12,7 @@ import java.util.Map;
 
 @FeignClient(contextId = "goodsClient", value = "pcmall-provider-goods")
 public interface GoodsClient {
-    @PostMapping("/goods/newSearchGoodsById")
+    @PostMapping("/goods/searchGoodsById")
     ResponseResult<Goods> searchGoodsById(
             @RequestBody Map<String, Boolean> aspectRule,
             @RequestParam("id") Integer id
