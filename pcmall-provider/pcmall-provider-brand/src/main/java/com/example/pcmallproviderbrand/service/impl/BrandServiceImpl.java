@@ -8,6 +8,8 @@ import com.example.pcmallproviderbrand.dao.IBrandDao;
 import com.example.pcmallproviderbrand.service.IBrandService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,6 +26,7 @@ public class BrandServiceImpl implements IBrandService {
         log.debug("创建Service对象：{}", this);
     }
 
+    @Cacheable(cacheNames = "brand", key = "#id", sync = true)
     @Override
     public Brand searchBrandById(Integer id) {
         return brandDao.selectById(id);
@@ -73,6 +76,7 @@ public class BrandServiceImpl implements IBrandService {
         }
     }
 
+    @CacheEvict(cacheNames = "brand", key = "#brand.id", beforeInvocation = true)
     @Override
     public void updateBrand(Brand brand) {
         brand.setUpdateTime(LocalDateTime.now());

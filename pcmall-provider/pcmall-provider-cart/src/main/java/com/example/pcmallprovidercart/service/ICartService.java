@@ -26,13 +26,13 @@ public interface ICartService {
 
     void deleteCart(Integer id);
 
-    void addCartCount(Cart cart);
+    void addCartCount(Integer id);
 
-    void subCartCount(Cart cart);
+    void subCartCount(Integer id);
 
-    void selectCart(Cart cart);
+    void selectCart(Integer id, Integer isSelect);
 
-    void selectAllCart(Cart cart);
+    void selectAllCart(String uid, Integer isSelect);
 
     /**
      * ALL：搜索全部购物车信息，使用分页<br>

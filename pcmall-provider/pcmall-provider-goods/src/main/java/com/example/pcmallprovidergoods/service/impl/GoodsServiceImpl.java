@@ -84,7 +84,6 @@ public class GoodsServiceImpl implements IGoodsService {
 
     @Override
     public void updateGoodsStatus(Goods goods) {
-        goods.setUpdateTime(LocalDateTime.now());
         Goods searched = searchGoodsById(null, goods.getId());
         if (goods.getStatus() == 0 && searched.getCount() == 0) {
             //上架操作如果商品没货，设置为缺货

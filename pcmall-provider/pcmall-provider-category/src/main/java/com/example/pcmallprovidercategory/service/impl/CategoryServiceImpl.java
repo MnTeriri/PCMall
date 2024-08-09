@@ -9,6 +9,8 @@ import com.example.pcmallprovidercategory.dao.ICategoryDao;
 import com.example.pcmallprovidercategory.service.ICategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,6 +27,7 @@ public class CategoryServiceImpl implements ICategoryService {
         log.debug("创建Service对象：{}", this);
     }
 
+    @Cacheable(cacheNames = "category", key = "#id", sync = true)
     @Override
     public Category searchCategoryById(Integer id) {
         return categoryDao.selectById(id);
@@ -55,6 +58,7 @@ public class CategoryServiceImpl implements ICategoryService {
         }
     }
 
+    @CacheEvict(cacheNames = "category", key = "#category.id", beforeInvocation = true)
     @Override
     public void updateCategory(Category category) {
         category.setUpdateTime(LocalDateTime.now());
