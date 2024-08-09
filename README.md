@@ -65,24 +65,20 @@ Android App项目说明：[PCMall-Mobile](https://github.com/MnTeriri/PCMall-Mob
     <tr>
         <td><img src="image/Screenshot_20240809_162603.png"/></td>
         <td><img src="image/Screenshot_20240809_162616.png"/></td>
-    </tr>
-    <tr>
         <td><img src="image/Screenshot_20240809_162721.png"/></td>
-        <td><img src="image/Screenshot_20240809_162730.png"/></td>
     </tr>
     <tr>
+        <td><img src="image/Screenshot_20240809_162730.png"/></td>
         <td><img src="image/Screenshot_20240809_162755.png"/></td>
         <td><img src="image/Screenshot_20240809_162816.png"/></td>
     </tr>
     <tr>
         <td><img src="image/Screenshot_20240809_162827.png"/></td>
         <td><img src="image/Screenshot_20240809_162841.png"/></td>
-    </tr>
-    <tr>
         <td><img src="image/Screenshot_20240809_162857.png"/></td>
-        <td><img src="image/Screenshot_20240809_162903.png"/></td>
     </tr>
     <tr>
+        <td><img src="image/Screenshot_20240809_162903.png"/></td>
         <td><img src="image/Screenshot_20240809_162629.png"/></td>
         <td><img src="image/Screenshot_20240809_162638.png"/></td>
     </tr>
