@@ -1,12 +1,12 @@
 package com.example.pcmallconsumermobile.filter;
 
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.jwt.JWT;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.LoginUser;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.utils.JwtUtils;
 import com.example.pcmallconsumermobile.utils.RedisUtils;
-import com.example.pcmallconsumermobile.utils.SpringContextUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +29,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.debug("进入JwtAuthenticationTokenFilter");
-        HandlerExceptionResolver resolver= SpringContextUtils.getBean("handlerExceptionResolver");
+        HandlerExceptionResolver resolver= SpringUtil.getBean("handlerExceptionResolver");
         String token = request.getHeader("token");
         if (token == null|| token.isEmpty()) {
             //没有token
