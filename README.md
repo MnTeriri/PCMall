@@ -44,7 +44,8 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 4. 使用Loadbalancer、OpenFeign完成微服务远程调用
 5. 使用MyBatis和MyBatis-Plus实现持久层
 6. 使用Redis实现MyBatis二级缓存
-7. 使用Spring Quartz完成定时任务处理
+7. 使用Quartz完成定时任务处理
+8. 使用存储过程，配合锁表和事务，完成订单的创建和取消，并使用MyBatis调用存储过程
 
 ### v2.0：
 #### 相比v1.0增添如下功能：
@@ -60,6 +61,7 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 ![图片](image/架构图v1.0.jpg)
 ### v2.0：
 ![图片](image/架构图v2.0.jpg)
+
 ## 界面效果
 ### 移动端
 <table>
