@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients(basePackages = "com.example.pcmallcommon.client")
 @EnableSpringUtil
 public class PcmallConsumerMobileApplication {
 

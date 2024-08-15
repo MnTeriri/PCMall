@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients(basePackages = "com.example.pcmallcommon.client")
 @EnableSpringUtil
 public class PcmallProviderGoodsApplication {
 
