@@ -2,13 +2,13 @@ package com.example.pcmallprovidercart.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.pcmallcommon.client.GoodsClient;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.Brand;
 import com.example.pcmallcommon.model.Cart;
 import com.example.pcmallcommon.model.Category;
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseCode;
-import com.example.pcmallprovidercart.client.GoodsClient;
 import com.example.pcmallprovidercart.dao.ICartDao;
 import com.example.pcmallprovidercart.service.ICartService;
 import lombok.extern.slf4j.Slf4j;
