@@ -1,8 +1,8 @@
 package com.example.pcmallconsumeradmin.controller;
 
+import com.example.pcmallcommon.client.GoodsClient;
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseResult;
-import com.example.pcmallconsumeradmin.client.GoodsClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,7 +34,7 @@ public class GoodsController {
 
     @PostMapping("/searchGoodsById")
     public ResponseResult<Goods> searchGoodsById(Integer id) {
-        return goodsClient.searchGoodsById(id);
+        return goodsClient.searchGoodsById(null, id);
     }
 
     @PostMapping("/getTotalCount")

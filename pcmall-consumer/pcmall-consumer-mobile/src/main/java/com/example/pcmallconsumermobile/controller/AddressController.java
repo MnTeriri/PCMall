@@ -1,8 +1,8 @@
 package com.example.pcmallconsumermobile.controller;
 
+import com.example.pcmallcommon.client.AddressClient;
 import com.example.pcmallcommon.model.Address;
 import com.example.pcmallcommon.response.ResponseResult;
-import com.example.pcmallconsumermobile.client.AddressClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

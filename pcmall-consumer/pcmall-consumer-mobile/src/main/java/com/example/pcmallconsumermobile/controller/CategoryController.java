@@ -1,8 +1,8 @@
 package com.example.pcmallconsumermobile.controller;
 
+import com.example.pcmallcommon.client.CategoryClient;
 import com.example.pcmallcommon.model.Category;
 import com.example.pcmallcommon.response.ResponseResult;
-import com.example.pcmallconsumermobile.client.CategoryClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

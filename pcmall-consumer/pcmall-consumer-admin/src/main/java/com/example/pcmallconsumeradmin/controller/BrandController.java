@@ -1,8 +1,8 @@
 package com.example.pcmallconsumeradmin.controller;
 
+import com.example.pcmallcommon.client.BrandClient;
 import com.example.pcmallcommon.model.Brand;
 import com.example.pcmallcommon.response.ResponseResult;
-import com.example.pcmallconsumeradmin.client.BrandClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

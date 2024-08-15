@@ -1,10 +1,8 @@
 package com.example.pcmallprovidergoods.controller;
 
-import com.alibaba.fastjson2.JSON;
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallprovidergoods.service.IGoodsService;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -68,7 +66,7 @@ public class GoodsController {
             @Parameter(name = "currentPage", description = "当前页数", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "pageSize", description = "页面大小", required = true, in = ParameterIn.QUERY)
     })
-    public ResponseResult<Map<String, String>> searchGoodsList(
+    public ResponseResult<List<Goods>> searchGoodsList(
             @RequestParam(defaultValue = "") String searchValue,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -77,13 +75,7 @@ public class GoodsController {
             put("currentPage", currentPage);
             put("pageSize", pageSize);
         }});
-        Long totalCount = goodsService.getTotalCount(IGoodsService.GoodsSearchType.SEARCH, new HashMap<>() {{
-            put("searchValue", searchValue);
-        }});
-        return ResponseResult.ok(new HashMap<>() {{
-            put("goodsList", JSON.toJSONString(goodsList));
-            put("totalCount", JSON.toJSONString(totalCount));
-        }});
+        return ResponseResult.ok(goodsList);
     }
 
     @PostMapping("/searchGoodsByCidAndBid")
