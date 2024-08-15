@@ -1,15 +1,12 @@
 package com.example.pcmallprovidergoods.aspect;
 
-import com.example.pcmallcommon.model.Brand;
-import com.example.pcmallcommon.model.Category;
+import com.example.pcmallcommon.client.BrandClient;
+import com.example.pcmallcommon.client.CategoryClient;
 import com.example.pcmallcommon.model.Goods;
-import com.example.pcmallprovidergoods.client.BrandClient;
-import com.example.pcmallprovidergoods.client.CategoryClient;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -19,9 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @Slf4j
 @Component
