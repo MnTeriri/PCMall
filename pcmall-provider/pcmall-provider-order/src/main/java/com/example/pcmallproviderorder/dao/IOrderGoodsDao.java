@@ -18,8 +18,8 @@ public interface IOrderGoodsDao {
     @Results({
             @Result(property = "cid", column = "cid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
             @Result(property = "bid", column = "bid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
-            @Result(property = "category", column = "cid", one = @One(select = "com.example.pcmallproviderpayment.dao.ICategoryDao.searchCategory")),
-            @Result(property = "brand", column = "bid", one = @One(select = "com.example.pcmallproviderpayment.dao.IBrandDao.searchBrand"))
+            @Result(property = "category", column = "cid", one = @One(select = "com.example.pcmallproviderorder.dao.ICategoryDao.searchCategory")),
+            @Result(property = "brand", column = "bid", one = @One(select = "com.example.pcmallproviderorder.dao.IBrandDao.searchBrand"))
     })
     List<Goods> searchOrderGoods(String oid);
 }

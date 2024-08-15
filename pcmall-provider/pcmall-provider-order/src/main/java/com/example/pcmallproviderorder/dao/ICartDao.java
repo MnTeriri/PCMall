@@ -13,7 +13,7 @@ public interface ICartDao extends BaseMapper<Cart> {
     @Select("SELECT * FROM cart WHERE uid=#{uid} ORDER BY id DESC LIMIT #{start},#{pageSize};")
     @Results({
             @Result(property = "gid", column = "gid", javaType = Integer.class, jdbcType = JdbcType.INTEGER),
-            @Result(property = "goods", column = "gid", one = @One(select = "com.example.pcmallproviderpayment.dao.IGoodsDao.searchGoods"))
+            @Result(property = "goods", column = "gid", one = @One(select = "com.example.pcmallproviderorder.dao.IGoodsDao.searchGoods"))
     })
     List<Cart> searchCartList(String uid, Integer start, Integer pageSize);
 

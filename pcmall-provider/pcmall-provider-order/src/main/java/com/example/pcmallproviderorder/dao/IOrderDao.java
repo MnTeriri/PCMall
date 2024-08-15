@@ -16,8 +16,8 @@ public interface IOrderDao extends BaseMapper<Order> {
     @SelectProvider(type = OrderSqlProvider.class, method = "searchOrderListSql")
     @Results({
             @Result(property = "oid", column = "oid", javaType = String.class, jdbcType = JdbcType.CHAR),
-            @Result(property = "goodsList", column = "oid", many = @Many(select = "com.example.pcmallproviderpayment.dao.IOrderGoodsDao.searchOrderGoods")),
-            @Result(property = "address", column = "oid", one = @One(select = "com.example.pcmallproviderpayment.dao.IOrderAddressDao.searchOrderAddress"))
+            @Result(property = "goodsList", column = "oid", many = @Many(select = "com.example.pcmallproviderorder.dao.IOrderGoodsDao.searchOrderGoods")),
+            @Result(property = "address", column = "oid", one = @One(select = "com.example.pcmallproviderorder.dao.IOrderAddressDao.searchOrderAddress"))
     })
     List<Order> searchOrderList(@Param("searchValue") String searchValue, @Param("uid") String uid, @Param("type") Integer type, @Param("start") Integer start, @Param("pageSize") Integer pageSize);
 
