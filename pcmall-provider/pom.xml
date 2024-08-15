@@ -48,21 +48,21 @@
             <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
         </dependency>
 
-<!--        &lt;!&ndash; Spring Cloud Ailibaba Seata &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>io.seata</groupId>-->
-<!--            <artifactId>seata-spring-boot-starter</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>io.seata</groupId>-->
-<!--                    <artifactId>seata-spring-boot-starter</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
-<!--        </dependency>-->
+        <!--        &lt;!&ndash; Spring Cloud Ailibaba Seata &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>io.seata</groupId>-->
+        <!--            <artifactId>seata-spring-boot-starter</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>-->
+        <!--            <exclusions>-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>io.seata</groupId>-->
+        <!--                    <artifactId>seata-spring-boot-starter</artifactId>-->
+        <!--                </exclusion>-->
+        <!--            </exclusions>-->
+        <!--        </dependency>-->
 
         <!-- JDBC驱动 -->
         <dependency>
@@ -94,14 +94,22 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-web</artifactId>
                 </exclusion>
+
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-security</artifactId>
                 </exclusion>
+
+                <exclusion>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-openfeign</artifactId>
+                </exclusion>
+
                 <exclusion>
                     <groupId>com.baomidou</groupId>
                     <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 </exclusion>
+
             </exclusions>
         </dependency>
     </dependencies>
