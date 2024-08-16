@@ -2,12 +2,10 @@ package com.example.pcmallprovidercart.aspect;
 
 import com.example.pcmallcommon.client.GoodsClient;
 import com.example.pcmallcommon.model.Cart;
-import com.example.pcmallcommon.model.Goods;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -17,7 +15,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 @Slf4j
 @Aspect
