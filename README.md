@@ -18,6 +18,7 @@ Android App项目说明：[PCMall-Mobile](https://github.com/MnTeriri/PCMall-Mob
 Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 
 ## 使用的框架
+
 * Spring Boot
 * Spring Cloud
 * Nacos
@@ -37,7 +38,9 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 * ...
 
 ## 版本说明
+
 ### v1.0：
+
 1. 使用Nacos作为服务发现、注册、配置中心
 2. 使用Spring Cloud GateWay作为API网关
 3. 使用Spring Security、JWT实现鉴权
@@ -48,7 +51,9 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 8. 使用存储过程，配合锁表和事务，完成订单的创建和取消，并使用MyBatis调用存储过程
 
 ### v2.0：
+
 #### 相比v1.0增添如下功能：
+
 1. 引入分布式事务Seata
 2. 对服务提供者采取更细致的分割，为后续能实现分库分表做准备
 3. 使用Spring AOP，灵活的对方法的功能进行拓展
@@ -57,13 +62,19 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 6. 使用Knife4j，完成API文档编写
 
 ## 架构图
+
 ### v1.0：
+
 ![图片](image/架构图v1.0.jpg)
+
 ### v2.0：
+
 ![图片](image/架构图v2.0.jpg)
 
 ## 界面效果
+
 ### 移动端
+
 <table>
     <tr>
         <td><img src="image/Screenshot_20240809_162603.png"/></td>
@@ -91,7 +102,9 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 ### 管理端
 
 ## 项目结构
+
 ### v1.0：
+
 ~~~
 PCMall
 ├── pcmall-common         // 通用模块
@@ -109,6 +122,7 @@ PCMall
 ~~~
 
 ### v2.0：
+
 ~~~
 PCMall
 ├── pcmall-common         // 通用模块
@@ -131,4 +145,110 @@ PCMall
 ~~~
 
 ## 核心代码
+
 ### 1. Spring Cloud GateWay配置
+
+### 2. Seata的使用
+
+1. 下载Seata  
+   先在[Seata官网](https://seata.apache.org/zh-cn/unversioned/download/seata-server/)下载Seata安装包，然后解压
+2. 配置Seata-Service  
+   打开config/application.yml文件，修改如下部分
+
+~~~yaml
+seata:
+  config:
+    # support: nacos 、 consul 、 apollo 、 zk  、 etcd3
+    type: nacos
+    nacos:
+      server-addr: 127.0.0.1:8848
+      namespace: seata
+      group: SEATA_GROUP
+      data-id: seataServer.properties
+    
+  registry:
+    # support: nacos 、 eureka 、 redis 、 zk  、 consul 、 etcd3 、 sofa
+    type: nacos
+    preferred-networks: 30.240.*
+    nacos:
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+      namespace: seata
+      group: SEATA_GROUP
+      cluster: default
+
+  store:
+    # support: file 、 db 、 redis 、 raft
+    mode: db
+~~~
+
+然后在Nacos当中创建命名空间（seata），然后在此命名空间创建seataServer.properties配置，
+group设置为SEATA_GROUP（需要和上述配置的namespace、group属性相对应）。
+设置好后将script/config-center/config.txt当中的内容复制，并修改此部分为下述代码（配置模式为db，并填写自己数据库配置）
+
+~~~properties
+#Transaction storage configuration, only for the server. The file, db, and redis configuration values are optional.
+store.mode=db
+store.lock.mode=db
+store.session.mode=db
+#Used for password encryption
+store.publicKey=
+
+#These configurations are required if the `store mode` is `db`. If `store.mode,store.lock.mode,store.session.mode` are not equal to `db`, you can remove the configuration block.
+store.db.datasource=druid
+store.db.dbType=mysql
+store.db.driverClassName=com.mysql.cj.jdbc.Driver
+store.db.url=jdbc:mysql://127.0.0.1:3306/seata?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+store.db.user=root
+store.db.password=root
+store.db.minConn=5
+store.db.maxConn=30
+store.db.globalTable=global_table
+store.db.branchTable=branch_table
+store.db.distributedLockTable=distributed_lock
+store.db.queryLimit=100
+store.db.lockTable=lock_table
+store.db.maxWait=5000
+~~~
+
+然后打开script/server/db/mysql.sql，创建数据库
+
+3. 配置微服务模块  
+pom.xml添加如下依赖
+~~~xml
+<!-- Spring Cloud Ailibaba Seata -->
+<dependency>
+    <groupId>io.seata</groupId>
+    <artifactId>seata-spring-boot-starter</artifactId>
+</dependency>
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>io.seata</groupId>
+            <artifactId>seata-spring-boot-starter</artifactId>
+       </exclusion>
+    </exclusions>
+</dependency>
+~~~
+application.properties添加如下配置
+~~~
+seata.tx-service-group=my_test_tx_group ---------------> 事务分组配置（在v1.5之后默认值为default_tx_group）
+seata.service.vgroup-mapping.my_test_tx_group=default  ---------------> 指定事务分组至集群映射关系（等号右侧的集群名需要与Seata-server注册到Nacos的cluster保持一致）
+seata.registry.type=nacos      ---------------> 使用nacos作为注册中心
+seata.registry.nacos.server-addr=127.0.0.1:8848
+seata.registry.nacos.namespace=seata              ---------------> Seata命名空间（应与seata-server实际注册的命名空间一致）
+seata.registry.nacos.application=seata-server     ---------------> Seata服务名（应与seata-server实际注册的服务名一致）
+seata.registry.nacos.group=SEATA_GROUP            ---------------> Seata分组名（应与seata-server实际注册的分组名一致）
+seata.data-source-proxy-mode=AT
+~~~
+
+4. 使用  
+在所需的方法上加上注解@GlobalTransactional，代码如下
+~~~java
+@GlobalTransactional(rollbackFor = Exception.class)
+public void outboundDelivery(Storage storage) {
+    //业务逻辑
+}
+~~~
