@@ -13,6 +13,10 @@ import java.util.Map;
 
 @FeignClient(contextId = "goodsClient", value = "pcmall-provider-goods")
 public interface GoodsClient {
+    /**
+     * aspectRule：null时不增强，（isSearchCategory：是否搜索商品分类）、（isSearchBrand：是否搜索商品品牌）<br>
+     * id：商品ID
+     */
     @PostMapping("/goods/searchGoodsById")
     ResponseResult<Goods> searchGoodsById(
             @RequestBody Map<String, Boolean> aspectRule,
