@@ -32,7 +32,7 @@ public class GoodsServiceAspect {
         log.debug("创建切面类对象：{}", this);
     }
 
-    @Around("execution(* com.example.pcmallprovidergoods.service.IGoodsService.searchGoodsById(java.util.Map,..))")
+    @Around("execution(* com.example.pcmallprovidergoods.service.IGoodsService.searchGoodsById(..))")
     public Object searchGoodsAround(ProceedingJoinPoint joinPoint) throws Throwable {
         log.debug("进入切面");
         Object[] args = joinPoint.getArgs();
@@ -45,29 +45,30 @@ public class GoodsServiceAspect {
         }
         log.debug("结果类名：{}", result.getClass());
         log.debug("结果：{}", result);
-        if (args[0] != null) {
-            Map<String, Boolean> aspectRule = (Map<String, Boolean>) args[0];
-            List<CompletableFuture<Void>> futures = new ArrayList<>();
-            if (aspectRule.get("isSearchBrand")) {
-                CompletableFuture<Void> brandFuture = CompletableFuture
-                        .supplyAsync(() -> brandClient.searchBrandById(result.getBid()).getData(), threadPoolTaskExecutor)
-                        .thenAccept(result::setBrand);
-                futures.add(brandFuture);
-            }
-            if (aspectRule.get("isSearchCategory")) {
-                CompletableFuture<Void> categoryFuture = CompletableFuture
-                        .supplyAsync(() -> categoryClient.searchCategoryById(result.getCid()).getData(), threadPoolTaskExecutor)
-                        .thenAccept(result::setCategory);
-                futures.add(categoryFuture);
-            }
-            //等待所有异步任务执行完成
-            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-            log.debug("增强后结果：{}", result);
+        if (args[0] == null) {
+            return result;
         }
+        Map<String, Boolean> aspectRule = (Map<String, Boolean>) args[0];
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        if (aspectRule.get("isSearchCategory") != null && aspectRule.get("isSearchCategory")) {
+            CompletableFuture<Void> categoryFuture = CompletableFuture
+                    .supplyAsync(() -> categoryClient.searchCategoryById(result.getCid()).getData(), threadPoolTaskExecutor)
+                    .thenAccept(result::setCategory);
+            futures.add(categoryFuture);
+        }
+        if (aspectRule.get("isSearchBrand") != null && aspectRule.get("isSearchBrand")) {
+            CompletableFuture<Void> brandFuture = CompletableFuture
+                    .supplyAsync(() -> brandClient.searchBrandById(result.getBid()).getData(), threadPoolTaskExecutor)
+                    .thenAccept(result::setBrand);
+            futures.add(brandFuture);
+        }
+        //等待所有异步任务执行完成
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        log.debug("增强后结果：{}", result);
         return result;
     }
 
-    @Around("execution(java.util.List com.example.pcmallprovidergoods.service.IGoodsService.searchGoodsList(java.util.Map,..))")
+    @Around("execution(java.util.List com.example.pcmallprovidergoods.service.IGoodsService.searchGoodsList(..))")
     public Object searchGoodsListAround(ProceedingJoinPoint joinPoint) throws Throwable {
         log.debug("进入切面");
         Object[] args = joinPoint.getArgs();
@@ -78,16 +79,26 @@ public class GoodsServiceAspect {
         if (result == null) {
             return null;
         }
+        log.debug("结果类名：{}", result.getClass());
+        log.debug("结果：{}", result);
+        if (args[0] == null) {
+            return result;
+        }
+        Map<String, Boolean> aspectRule = (Map<String, Boolean>) args[0];
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (Goods goods : result) {
-            CompletableFuture<Void> brandFuture = CompletableFuture
-                    .supplyAsync(() -> brandClient.searchBrandById(goods.getBid()).getData(), threadPoolTaskExecutor)
-                    .thenAccept(goods::setBrand);
-            futures.add(brandFuture);
-            CompletableFuture<Void> categoryFuture = CompletableFuture
-                    .supplyAsync(() -> categoryClient.searchCategoryById(goods.getCid()).getData(), threadPoolTaskExecutor)
-                    .thenAccept(goods::setCategory);
-            futures.add(categoryFuture);
+            if (aspectRule.get("isSearchCategory") != null && aspectRule.get("isSearchCategory")) {
+                CompletableFuture<Void> categoryFuture = CompletableFuture
+                        .supplyAsync(() -> categoryClient.searchCategoryById(goods.getCid()).getData(), threadPoolTaskExecutor)
+                        .thenAccept(goods::setCategory);
+                futures.add(categoryFuture);
+            }
+            if (aspectRule.get("isSearchBrand") != null && aspectRule.get("isSearchBrand")) {
+                CompletableFuture<Void> brandFuture = CompletableFuture
+                        .supplyAsync(() -> brandClient.searchBrandById(goods.getBid()).getData(), threadPoolTaskExecutor)
+                        .thenAccept(goods::setBrand);
+                futures.add(brandFuture);
+            }
         }
         //等待所有异步任务执行完成
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
