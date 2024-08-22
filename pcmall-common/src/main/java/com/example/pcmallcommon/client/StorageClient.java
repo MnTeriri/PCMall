@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(contextId = "storageClient", value = "pcmall-provider-goods")
+@FeignClient(contextId = "storageClient", value = "pcmall-provider-storage")
 public interface StorageClient {
     @PostMapping("/storage/getStorageList")
     ResponseResult<List<Storage>> getStorageList(

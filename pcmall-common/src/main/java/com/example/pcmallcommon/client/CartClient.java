@@ -18,7 +18,11 @@ public interface CartClient {
             @RequestParam("pageSize") Integer pageSize);
 
     @PostMapping("/cart/searchSelectCartList")
-    ResponseResult<List<Cart>> searchSelectCartList(@RequestParam("uid") String uid);
+    ResponseResult<List<Cart>> searchSelectCartList(
+            @RequestParam("uid") String uid,
+            @RequestParam("isSearchGoods") Boolean isSearchGoods,
+            @RequestParam("isSearchCategory") Boolean isSearchCategory,
+            @RequestParam("isSearchBrand") Boolean isSearchBrand);
 
     @PostMapping("/cart/getTotalCount")
     ResponseResult<Long> getTotalCount(@RequestParam("uid") String uid);

@@ -11,6 +11,9 @@ import java.util.List;
 
 @FeignClient(contextId = "addressClient", value = "pcmall-provider-address")
 public interface AddressClient {
+    @PostMapping("/address/searchAddressById")
+    ResponseResult<Address> searchAddressById(@RequestParam("id") Integer id);
+
     @PostMapping("/address/searchAddressList")
     ResponseResult<List<Address>> searchAddressList(@RequestParam("uid") String uid);
 
