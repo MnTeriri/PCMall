@@ -62,10 +62,7 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public void addCart(Cart cart) {
-        Goods goods = goodsClient.searchGoodsById(new HashMap<>() {{
-            put("isSearchCategory", true);
-            put("isSearchBrand", true);
-        }}, cart.getGid()).getData();
+        Goods goods = goodsClient.searchGoodsById(cart.getGid(), true, true).getData();
         Brand brand = goods.getBrand();
         Category category = goods.getCategory();
         if (brand.getIsDelete() == 1 || category.getIsDelete() == 1 || goods.getIsDelete() == 1) {
@@ -107,7 +104,11 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public void addCartCount(Integer id) {
-        Cart data = ((ICartService) AopContext.currentProxy()).searchCartById(null, id);
+        Cart data = ((ICartService) AopContext.currentProxy()).searchCartById(new HashMap<>() {{
+            put("isSearchGoods", true);
+            put("isSearchCategory", true);
+            put("isSearchBrand", true);
+        }}, id);
         if (data == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
         }
@@ -132,7 +133,11 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public void subCartCount(Integer id) {
-        Cart data = ((ICartService) AopContext.currentProxy()).searchCartById(null, id);
+        Cart data = ((ICartService) AopContext.currentProxy()).searchCartById(new HashMap<>() {{
+            put("isSearchGoods", true);
+            put("isSearchCategory", true);
+            put("isSearchBrand", true);
+        }}, id);
         if (data == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
         }
@@ -157,7 +162,11 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public void selectCart(Integer id, Integer isSelect) {
-        Cart data = ((ICartService) AopContext.currentProxy()).searchCartById(null, id);
+        Cart data = ((ICartService) AopContext.currentProxy()).searchCartById(new HashMap<>() {{
+            put("isSearchGoods", true);
+            put("isSearchCategory", true);
+            put("isSearchBrand", true);
+        }}, id);
         if (data == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
         }

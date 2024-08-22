@@ -5,6 +5,8 @@ import com.example.pcmallcommon.model.Address;
 import java.util.List;
 
 public interface IAddressService {
+    Address searchAddressById(Integer id);
+
     List<Address> searchAddressList(String uid);
 
     Address searchDefaultAddress(String uid);

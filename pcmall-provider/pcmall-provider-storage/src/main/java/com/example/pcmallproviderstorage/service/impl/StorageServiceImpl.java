@@ -9,10 +9,12 @@ import com.example.pcmallcommon.model.Storage;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallproviderstorage.dao.IStorageDao;
 import com.example.pcmallproviderstorage.service.IStorageService;
+import io.seata.spring.annotation.GlobalLock;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +49,7 @@ public class StorageServiceImpl implements IStorageService {
     @GlobalTransactional(rollbackFor = Exception.class)
     @Override
     public void inboundDelivery(Storage storage) {
-        Goods goods = goodsClient.searchGoodsById(new HashMap<>(), storage.getGid()).getData();
+        Goods goods = goodsClient.searchGoodsById(storage.getGid(), false, false).getData();
         if (goods == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);//不存在该商品
         }
@@ -64,7 +66,7 @@ public class StorageServiceImpl implements IStorageService {
     @GlobalTransactional(rollbackFor = Exception.class)
     @Override
     public void outboundDelivery(Storage storage) {
-        Goods goods = goodsClient.searchGoodsById(new HashMap<>(), storage.getGid()).getData();
+        Goods goods = goodsClient.searchGoodsById(storage.getGid(), false, false).getData();
         if (goods == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);//不存在该商品
         }

@@ -25,6 +25,11 @@ public class AddressServiceImpl implements IAddressService {
     }
 
     @Override
+    public Address searchAddressById(Integer id) {
+        return addressDao.selectById(id);
+    }
+
+    @Override
     public List<Address> searchAddressList(String uid) {
         QueryWrapper<Address> queryWrapper = new QueryWrapper<Address>()
                 .eq("uid", uid)
