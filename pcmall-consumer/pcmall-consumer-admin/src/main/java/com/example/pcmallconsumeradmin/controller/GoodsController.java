@@ -34,7 +34,7 @@ public class GoodsController {
 
     @PostMapping("/searchGoodsById")
     public ResponseResult<Goods> searchGoodsById(Integer id) {
-        return goodsClient.searchGoodsById(null, id);
+        return goodsClient.searchGoodsById(id, false, false);
     }
 
     @PostMapping("/getTotalCount")

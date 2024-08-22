@@ -31,15 +31,19 @@ public class GoodsController {
     @PostMapping("/searchGoodsById")
     @Operation(summary = "查询商品信息")
     @Parameters({
+            @Parameter(name = "id", description = "商品ID", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "isSearchCategory", description = "是否搜索商品分类", required = true, in = ParameterIn.QUERY),
-            @Parameter(name = "isSearchBrand", description = "是否搜索商品品牌", required = true, in = ParameterIn.QUERY),
-            @Parameter(name = "id", description = "商品ID", required = true, in = ParameterIn.QUERY)
+            @Parameter(name = "isSearchBrand", description = "是否搜索商品品牌", required = true, in = ParameterIn.QUERY)
     })
-    public ResponseResult<Goods> searchGoodsById(@RequestBody Map<String, String> aspectRule, Integer id) {
-        Goods goods = goodsService.searchGoodsById(new HashMap<>() {{
-            put("isSearchCategory", Boolean.valueOf(aspectRule.get("isSearchCategory")));
-            put("isSearchBrand", Boolean.valueOf(aspectRule.get("isSearchBrand")));
-        }}, id);
+    public ResponseResult<Goods> searchGoodsById(
+            Integer id,
+            @RequestParam(defaultValue = "false") Boolean isSearchCategory,
+            @RequestParam(defaultValue = "false") Boolean isSearchBrand) {
+        HashMap<String, Boolean> aspectRule = new HashMap<>() {{
+            put("isSearchCategory", isSearchCategory);
+            put("isSearchBrand", isSearchBrand);
+        }};
+        Goods goods = goodsService.searchGoodsById(aspectRule, id);
         return ResponseResult.ok(goods);
     }
 
@@ -52,10 +56,15 @@ public class GoodsController {
     public ResponseResult<List<Goods>> getGoodsList(
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        List<Goods> goodsList = goodsService.searchGoodsList(null, IGoodsService.GoodsSearchType.ALL, new HashMap<>() {{
+        HashMap<String, Boolean> aspectRule = new HashMap<>() {{
+            put("isSearchCategory", true);
+            put("isSearchBrand", true);
+        }};
+        HashMap<String, Object> searchValue = new HashMap<>() {{
             put("currentPage", currentPage);
             put("pageSize", pageSize);
-        }});
+        }};
+        List<Goods> goodsList = goodsService.searchGoodsList(aspectRule, IGoodsService.GoodsSearchType.ALL, searchValue);
         return ResponseResult.ok(goodsList);
     }
 
@@ -67,14 +76,19 @@ public class GoodsController {
             @Parameter(name = "pageSize", description = "页面大小", required = true, in = ParameterIn.QUERY)
     })
     public ResponseResult<List<Goods>> searchGoodsList(
-            @RequestParam(defaultValue = "") String searchValue,
+            @RequestParam(value = "searchValue", defaultValue = "") String searchParam,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        List<Goods> goodsList = goodsService.searchGoodsList(null, IGoodsService.GoodsSearchType.SEARCH, new HashMap<>() {{
-            put("searchValue", searchValue);
+        HashMap<String, Boolean> aspectRule = new HashMap<>() {{
+            put("isSearchCategory", true);
+            put("isSearchBrand", true);
+        }};
+        HashMap<String, Object> searchValue = new HashMap<>() {{
+            put("searchValue", searchParam);
             put("currentPage", currentPage);
             put("pageSize", pageSize);
-        }});
+        }};
+        List<Goods> goodsList = goodsService.searchGoodsList(aspectRule, IGoodsService.GoodsSearchType.SEARCH, searchValue);
         return ResponseResult.ok(goodsList);
     }
 
@@ -90,12 +104,17 @@ public class GoodsController {
             Integer cid, Integer bid,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        List<Goods> goodsList = goodsService.searchGoodsList(null, IGoodsService.GoodsSearchType.SEARCH_BY_CID_AND_BID, new HashMap<>() {{
+        HashMap<String, Boolean> aspectRule = new HashMap<>() {{
+            put("isSearchCategory", true);
+            put("isSearchBrand", true);
+        }};
+        HashMap<String, Object> searchValue = new HashMap<>() {{
             put("cid", cid);
             put("bid", bid);
             put("currentPage", currentPage);
             put("pageSize", pageSize);
-        }});
+        }};
+        List<Goods> goodsList = goodsService.searchGoodsList(aspectRule, IGoodsService.GoodsSearchType.SEARCH_BY_CID_AND_BID, searchValue);
         return ResponseResult.ok(goodsList);
     }
 

@@ -29,6 +29,15 @@ public class AddressController {
         log.debug("创建Controller对象：{}", this);
     }
 
+    @PostMapping("/searchAddressById")
+    @Operation(summary = "查询地址信息")
+    @Parameters({
+            @Parameter(name = "id", description = "地址ID", required = true, in = ParameterIn.QUERY)
+    })
+    public ResponseResult<Address> searchAddressById(Integer id) {
+        return ResponseResult.ok(addressService.searchAddressById(id));
+    }
+
     @PostMapping("/searchAddressList")
     @Operation(summary = "查询所有地址")
     @Parameters({
