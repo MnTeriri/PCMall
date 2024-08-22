@@ -19,10 +19,18 @@ public interface IOrderDao extends BaseMapper<Order> {
             @Result(property = "goodsList", column = "oid", many = @Many(select = "com.example.pcmallproviderorder.dao.IOrderGoodsDao.searchOrderGoods")),
             @Result(property = "address", column = "oid", one = @One(select = "com.example.pcmallproviderorder.dao.IOrderAddressDao.searchOrderAddress"))
     })
-    List<Order> searchOrderList(@Param("searchValue") String searchValue, @Param("uid") String uid, @Param("type") Integer type, @Param("start") Integer start, @Param("pageSize") Integer pageSize);
+    List<Order> searchOrderList(
+            @Param("searchValue") String searchValue,
+            @Param("uid") String uid,
+            @Param("type") Integer type,
+            @Param("start") Integer start,
+            @Param("pageSize") Integer pageSize);
 
     @SelectProvider(type = OrderSqlProvider.class, method = "getRecordsFilteredSql")
-    Long getRecordsFiltered(@Param("searchValue") String searchValue, @Param("uid") String uid, @Param("type") Integer type);
+    Long getRecordsFiltered(
+            @Param("searchValue") String searchValue,
+            @Param("uid") String uid,
+            @Param("type") Integer type);
 
     /**
      * @param data 存储过程输出参数(data["result"])：1成功、-4SQL语句出错、-3购物车为空、-2商品缺货下架或删除、-1商品数量不够
