@@ -9,6 +9,9 @@ import java.util.List;
 
 @Repository
 public interface IGoodsDao extends BaseMapper<Goods> {
+    @Select("SELECT * FROM goods WHERE id=#{id} FOR UPDATE;")
+    Goods searchGoodsForUpdate(Integer id);
+
     @Select("SELECT * FROM goods WHERE status=0 AND is_delete=0 " +
             "AND (gname LIKE CONCAT('%', #{searchValue}, '%') OR description LIKE CONCAT('%', #{searchValue}, '%') " +
             "OR bid IN (SELECT id FROM brand WHERE bname LIKE CONCAT('%', #{searchValue}, '%'))" +

@@ -5,6 +5,7 @@ import com.example.pcmallproviderorder.cache.OrderInfoCache;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -15,4 +16,7 @@ public interface IOrderGoodsDao {
             "FROM order_goods INNER JOIN goods ON order_goods.gid = goods.id " +
             "WHERE oid=#{oid}")
     List<Goods> searchOrderGoods(String oid);
+
+    @Insert("INSERT INTO order_goods(oid, gid, count, price, discount) VALUES (#{oid}, #{gid}, #{count}, #{price}, #{discount});")
+    Integer insertOrderGoods(String oid, Integer gid, Integer count, BigDecimal price, BigDecimal discount);
 }
