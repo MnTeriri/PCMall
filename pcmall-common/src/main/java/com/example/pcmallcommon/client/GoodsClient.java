@@ -66,4 +66,14 @@ public interface GoodsClient {
             @RequestParam("id") Integer id,
             @RequestParam("status") Integer status);
 
+    @PostMapping("/goods/addGoodsCount")
+    ResponseResult<String> addGoodsCount(
+            @RequestParam("id") Integer id,
+            @RequestParam("count") Integer count);
+
+    @PostMapping("/goods/divGoodsCount")
+    ResponseResult<String> divGoodsCount(
+            @RequestParam("id") Integer id,
+            @RequestParam("count") Integer count);
+
 }

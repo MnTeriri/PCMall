@@ -36,7 +36,9 @@ public class OrderController {
 
     @PostMapping("/createOrder")
     public ResponseResult<String> createOrder(String uid, Integer aid) {
-        return ResponseResult.ok(orderService.createOrder(uid, aid), "创建订单成功！");
+        //return ResponseResult.ok(orderService.createOrderByProcedure(uid, aid));
+        return ResponseResult.ok(orderService.createOrder(uid, aid));
+        //return ResponseResult.ok(orderService.createOrderByRocketMQ(uid, aid));
     }
 
     @PostMapping("/payOrder")

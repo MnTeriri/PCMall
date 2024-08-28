@@ -195,4 +195,26 @@ public class GoodsController {
         goodsService.updateGoodsStatus(goods);
         return ResponseResult.ok();
     }
+
+    @PostMapping("/addGoodsCount")
+    @Operation(summary = "增加商品数量")
+    @Parameters({
+            @Parameter(name = "id", description = "商品ID", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "count", description = "数量", required = true, in = ParameterIn.QUERY)
+    })
+    public ResponseResult<String> addGoodsCount(Integer id, Integer count) {
+        goodsService.addGoodsCount(id, count);
+        return ResponseResult.ok();
+    }
+
+    @PostMapping("/divGoodsCount")
+    @Operation(summary = "减少商品数量")
+    @Parameters({
+            @Parameter(name = "id", description = "商品ID", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "count", description = "数量", required = true, in = ParameterIn.QUERY)
+    })
+    public ResponseResult<String> divGoodsCount(Integer id, Integer count) {
+        goodsService.divGoodsCount(id, count);
+        return ResponseResult.ok();
+    }
 }
