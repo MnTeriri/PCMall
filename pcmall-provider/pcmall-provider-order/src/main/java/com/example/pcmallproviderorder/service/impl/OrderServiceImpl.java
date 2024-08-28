@@ -1,5 +1,6 @@
 package com.example.pcmallproviderorder.service.impl;
 
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -20,11 +21,13 @@ import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -33,6 +36,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 @Slf4j
 @Service
@@ -52,6 +57,8 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private IOrderGoodsDao orderGoodsDao;
     @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;
 
     public OrderServiceImpl() {
@@ -68,48 +75,6 @@ public class OrderServiceImpl implements IOrderService {
         return orderDao.getRecordsFiltered(searchValue, uid, type);
     }
 
-//    @Override
-//    public String createOrder(String uid, Integer aid) {
-//        String oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
-//        while (orderDao.selectCount(new QueryWrapper<Order>().eq("oid", oid)) != 0) {//如果生成的订单号存在，则重新生成，直到不存在
-//            oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
-//        }
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("oid", oid);
-//        data.put("uid", uid);
-//        data.put("aid", aid);
-//        orderDao.createOrder(data);//执行存储过程
-//        Integer result = (Integer) data.get("result");//获取输出参数
-//        if (result == -4) {
-//            throw new SystemException(ResponseCode.ERROR);
-//        } else if (result == -3) {
-//            throw new SystemException(ResponseCode.CART_EMPTY_ERROR);
-//        } else if (result == -2) {
-//            throw new SystemException(ResponseCode.CART_GOODS_ERROR);
-//        } else if (result == -1) {
-//            throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
-//        } else if (result == 1) {
-//            //创建定时任务，15分钟自动关闭订单
-//            JobDetail jobDetail = JobBuilder.newJob(OrderJob.class)
-//                    .withIdentity(oid, "orderGroup")
-//                    .usingJobData("orderOid", oid)
-//                    .build();
-//            LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(15);
-//            Trigger trigger = TriggerBuilder.newTrigger()
-//                    .withIdentity(oid, "orderGroup")
-//                    .startAt(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
-//                    .build();
-//            try {
-//                Scheduler scheduler = schedulerFactoryBean.getScheduler();
-//                scheduler.scheduleJob(jobDetail, trigger);//添加订单定时任务
-//                log.debug("订单定时任务{}添加成功", scheduler);
-//            } catch (SchedulerException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//        return oid;
-//    }
-
     @GlobalTransactional(rollbackFor = Exception.class)
     @Override
     public String createOrder(String uid, Integer aid) {
@@ -118,8 +83,17 @@ public class OrderServiceImpl implements IOrderService {
             oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
         }
 
-        List<Cart> cartList = cartClient.searchSelectCartList(uid, false, false, false).getData();
-        Address address = addressClient.searchAddressById(aid).getData();
+        CompletableFuture<List<Cart>> cartListFuture = CompletableFuture.supplyAsync(() -> cartClient.searchSelectCartList(uid, false, false, false).getData(), threadPoolTaskExecutor);
+        CompletableFuture<Address> addressFuture = CompletableFuture.supplyAsync(() -> addressClient.searchAddressById(aid).getData(), threadPoolTaskExecutor);
+        CompletableFuture.allOf(cartListFuture, addressFuture).join();//等待所有异步任务执行完成
+
+        List<Cart> cartList = cartListFuture.join();//已选中的购物车信息
+        Address address = addressFuture.join();//选择的地址信息
+        BigDecimal totalPrice = new BigDecimal("0");//总价格
+
+        if (cartList.isEmpty()) {
+            throw new SystemException(ResponseCode.CART_EMPTY_ERROR);//购物车为空
+        }
         for (Cart cart : cartList) {
             Goods goods = goodsClient.searchGoodsById(cart.getGid(), false, false).getData();
             if (goods.getStatus() != 0) {
@@ -131,11 +105,87 @@ public class OrderServiceImpl implements IOrderService {
             } else {
                 throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);//商品缺货
             }
+            //添加订单商品信息
+            if (orderGoodsDao.insertOrderGoods(oid, cart.getGid(), cart.getCount(), goods.getPrice(), goods.getDiscount()) != 1) {
+                throw new SystemException(ResponseCode.ERROR);
+            }
+            //cartClient.deleteCart(cart.getId());//删除购物车信息
+            BigDecimal temp = NumberUtil.mul(cart.getCount(), goods.getPrice(), goods.getDiscount());
+            totalPrice = totalPrice.add(temp);//计算总价格
         }
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        //添加订单地址信息
+        if (orderAddressDao.addOrderAddress(oid, address) != 1) {
+            throw new SystemException(ResponseCode.ERROR);
+        }
+        //添加订单信息
+        if (orderDao.insert(new Order().setOid(oid).setUid(uid).setPrice(totalPrice)) != 1) {
+            throw new SystemException(ResponseCode.ERROR);
+        }
+
+//        //创建定时任务，15分钟自动关闭订单
+//        JobDetail jobDetail = JobBuilder.newJob(OrderJob.class)
+//                .withIdentity(oid, "orderGroup")
+//                .usingJobData("orderOid", oid)
+//                .build();
+//        LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(1);
+//        Trigger trigger = TriggerBuilder.newTrigger()
+//                .withIdentity(oid, "orderGroup")
+//                .startAt(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
+//                .build();
+//        try {
+//            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+//            scheduler.scheduleJob(jobDetail, trigger);//添加订单定时任务
+//            log.debug("订单定时任务{}添加成功", scheduler);
+//        } catch (SchedulerException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        return oid;
+    }
+
+    @Override
+    public String createOrderByRocketMQ(String uid, Integer aid) {
+        return "";
+    }
+
+    @Override
+    public String createOrderByProcedure(String uid, Integer aid) {
+        String oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
+        while (orderDao.selectCount(new QueryWrapper<Order>().eq("oid", oid)) != 0) {//如果生成的订单号存在，则重新生成，直到不存在
+            oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("oid", oid);
+        data.put("uid", uid);
+        data.put("aid", aid);
+        orderDao.createOrder(data);//执行存储过程
+        Integer result = (Integer) data.get("result");//获取输出参数
+        if (result == -4) {
+            throw new SystemException(ResponseCode.ERROR);
+        } else if (result == -3) {
+            throw new SystemException(ResponseCode.CART_EMPTY_ERROR);
+        } else if (result == -2) {
+            throw new SystemException(ResponseCode.CART_GOODS_ERROR);
+        } else if (result == -1) {
+            throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
+        } else if (result == 1) {
+            //创建定时任务，15分钟自动关闭订单
+            JobDetail jobDetail = JobBuilder.newJob(OrderJob.class)
+                    .withIdentity(oid, "orderGroup")
+                    .usingJobData("orderOid", oid)
+                    .build();
+            LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(15);
+            Trigger trigger = TriggerBuilder.newTrigger()
+                    .withIdentity(oid, "orderGroup")
+                    .startAt(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
+                    .build();
+            try {
+                Scheduler scheduler = schedulerFactoryBean.getScheduler();
+                scheduler.scheduleJob(jobDetail, trigger);//添加订单定时任务
+                log.debug("订单定时任务{}添加成功", scheduler);
+            } catch (SchedulerException e) {
+                throw new RuntimeException(e);
+            }
         }
         return oid;
     }
@@ -191,6 +241,11 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public Integer cancelOrder(String oid, Integer status) {
+        return cancelOrderByProcedure(oid, status);
+    }
+
+    @Override
+    public Integer cancelOrderByProcedure(String oid, Integer status) {
         try {//删除对应订单的定时任务
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
             scheduler.unscheduleJob(new TriggerKey(oid, "orderGroup"));

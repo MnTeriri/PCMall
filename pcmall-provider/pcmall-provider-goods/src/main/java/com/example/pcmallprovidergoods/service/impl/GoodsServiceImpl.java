@@ -1,5 +1,6 @@
 package com.example.pcmallprovidergoods.service.impl;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.pcmallcommon.exception.SystemException;
@@ -7,9 +8,12 @@ import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallprovidergoods.dao.IGoodsDao;
 import com.example.pcmallprovidergoods.service.IGoodsService;
+import io.seata.spring.annotation.GlobalLock;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -88,6 +92,39 @@ public class GoodsServiceImpl implements IGoodsService {
         if (goods.getStatus() == 0 && searched.getCount() == 0) {
             //上架操作如果商品没货，设置为缺货
             goods.setStatus(1);
+        }
+        updateGoods(goods);
+    }
+
+    @GlobalLock(lockRetryInterval = 50, lockRetryTimes = 1000)
+    @Transactional
+    @Override
+    public void addGoodsCount(Integer id, Integer count) {
+        Goods goods = goodsDao.searchGoodsForUpdate(id);
+        if (goods == null) {
+            throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);//不存在该商品
+        }
+        if (goods.getStatus() == 1) {
+            goods.setStatus(0);//如果商品状态为缺货，设置为正常
+        }
+        goods.setCount(goods.getCount() + count);
+        updateGoods(goods);
+    }
+
+    @GlobalLock(lockRetryInterval = 50, lockRetryTimes = 1000)
+    @Transactional
+    @Override
+    public void divGoodsCount(Integer id, Integer count) {
+        Goods goods = goodsDao.searchGoodsForUpdate(id);
+        if (goods == null) {
+            throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);//不存在该商品
+        }
+        if (goods.getCount() < count) {
+            throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);//库存不足
+        }
+        goods.setCount(goods.getCount() - count);
+        if (goods.getCount() == 0) {
+            goods.setStatus(1);//如果商品数量为0，设置状态为缺货
         }
         updateGoods(goods);
     }

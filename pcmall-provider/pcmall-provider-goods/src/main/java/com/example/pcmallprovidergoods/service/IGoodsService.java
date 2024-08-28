@@ -26,6 +26,10 @@ public interface IGoodsService {
 
     void updateGoodsStatus(Goods goods);
 
+    void addGoodsCount(Integer id, Integer count);
+
+    void divGoodsCount(Integer id, Integer count);
+
     /**
      * ALL：搜索全部商品信息，使用分页<br>
      * SEARCH：搜索状态正常商品，并使用searchValue模糊查询，使用分页<br>

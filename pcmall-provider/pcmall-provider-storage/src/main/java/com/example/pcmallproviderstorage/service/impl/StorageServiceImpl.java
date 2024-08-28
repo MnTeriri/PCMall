@@ -13,6 +13,8 @@ import io.seata.spring.annotation.GlobalLock;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,7 @@ public class StorageServiceImpl implements IStorageService {
         log.debug("创建Service对象：{}", this);
     }
 
+    //@Cacheable(cacheNames = "storage", key = "#gid+':'+#currentPage+':'+#pageSize", sync = true)
     @Override
     public List<Storage> getStorageList(Integer gid, Integer currentPage, Integer pageSize) {
         QueryWrapper<Storage> queryWrapper = new QueryWrapper<Storage>()
@@ -46,38 +49,21 @@ public class StorageServiceImpl implements IStorageService {
         return storageDao.selectCount(queryWrapper);
     }
 
+    //@CacheEvict(cacheNames = "storage", allEntries = true)
     @GlobalTransactional(rollbackFor = Exception.class)
     @Override
     public void inboundDelivery(Storage storage) {
-        Goods goods = goodsClient.searchGoodsById(storage.getGid(), false, false).getData();
-        if (goods == null) {
-            throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);//不存在该商品
-        }
-        if (goods.getStatus() == 1) {
-            goods.setStatus(0);//如果商品状态为缺货，设置为正常
-        }
-        goods.setCount(goods.getCount() + storage.getCount());
-        goodsClient.updateGoods(goods);//更新商品数量
+        goodsClient.addGoodsCount(storage.getGid(), storage.getCount());
         if (storageDao.insert(storage) != 1) {
             throw new SystemException(ResponseCode.ERROR);//库存信息插入失败
         }
     }
 
+    //@CacheEvict(cacheNames = "storage", allEntries = true)
     @GlobalTransactional(rollbackFor = Exception.class)
     @Override
     public void outboundDelivery(Storage storage) {
-        Goods goods = goodsClient.searchGoodsById(storage.getGid(), false, false).getData();
-        if (goods == null) {
-            throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);//不存在该商品
-        }
-        if (goods.getCount() < storage.getCount()) {
-            throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);//库存不足
-        }
-        goods.setCount(goods.getCount() - storage.getCount());
-        if (goods.getCount() == 0) {
-            goods.setStatus(1);//如果商品数量为0，设置状态为缺货
-        }
-        goodsClient.updateGoods(goods);//更新商品数量
+        goodsClient.divGoodsCount(storage.getGid(), storage.getCount());
         storage.setCount(-storage.getCount());
         if (storageDao.insert(storage) != 1) {
             throw new SystemException(ResponseCode.ERROR);//库存信息插入失败
