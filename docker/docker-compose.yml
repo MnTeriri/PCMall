@@ -1,0 +1,94 @@
+services:
+  pcmall-redis:
+    image: redis
+    container_name: pcmall-redis
+    ports:
+      - "6379:6379"
+
+  pcmall-nacos:
+    image: nacos/nacos-server:v2.5.0
+    container_name: pcmall-nacos
+    build:
+      context: ./nacos
+    environment:
+      - MODE=standalone
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "9849:9849"
+    volumes:
+      - pcmall-nacos-data:/home/nacos
+
+  pcmall-seata:
+    container_name: pcmall-seata
+    build:
+      context: ./seata
+    ports:
+      - "7091:7091"
+      - "8091:8091"
+    environment:
+      - STORE_MODE=db
+      - SEATA_IP=192.168.31.109 #不能是127.0.0.1 可以是宿主机地址
+      - SEATA_PORT=8091
+    depends_on:
+      - pcmall-nacos
+    volumes:
+      - pcmall-seata-data:/seata-server
+      - "/usr/share/zoneinfo/Asia/Shanghai:/etc/localtime"  #设置系统时区
+      - "/usr/share/zoneinfo/Asia/Shanghai:/etc/timezone"   #设置时区
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  pcmall-sentinel:
+    container_name: pcmall-sentinel
+    build:
+      context: ./sentinel
+    ports:
+      - "8088:8088"
+
+  pcmall-rocketmq-nameserver:
+    image: apache/rocketmq:5.3.1
+    container_name: pcmall-rocketmq-nameserver
+    ports:
+      - "9876:9876"
+    networks:
+      - rocketmq
+    command: sh mqnamesrv
+  pcmall-rocketmq-broker:
+    image: apache/rocketmq:5.3.1
+    container_name: pcmall-rocketmq-broker
+    ports:
+      - "10909:10909"
+      - "10911:10911"
+      - "10912:10912"
+    environment:
+      - NAMESRV_ADDR=pcmall-rocketmq-nameserver:9876
+    depends_on:
+      - pcmall-rocketmq-nameserver
+    networks:
+      - rocketmq
+    command: sh mqbroker
+  pcmall-rocketmq-proxy:
+    image: apache/rocketmq:5.3.1
+    container_name: pcmall-rocketmq-proxy
+    networks:
+      - rocketmq
+    depends_on:
+      - pcmall-rocketmq-broker
+      - pcmall-rocketmq-nameserver
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    restart: on-failure
+    environment:
+      - NAMESRV_ADDR=pcmall-rocketmq-nameserver:9876
+    command: sh mqproxy
+
+networks:
+  rocketmq:
+    driver: bridge
+
+volumes:
+  pcmall-nacos-data:
+  pcmall-seata-data:
+
