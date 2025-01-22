@@ -10,8 +10,8 @@
 
     <artifactId>pcmall-provider-order</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>pcmall-provider-payment</name>
-    <description>pcmall-provider-payment</description>
+    <name>pcmall-provider-order</name>
+    <description>pcmall-provider-order</description>
 
     <properties>
         <java.version>17</java.version>
