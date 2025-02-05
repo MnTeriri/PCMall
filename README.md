@@ -252,3 +252,11 @@ public void outboundDelivery(Storage storage) {
     //业务逻辑
 }
 ~~~
+
+### 2. RocketMQ的使用
+
+1. broker执行
+~~~
+sh mqadmin updateTopic -c DefaultCluster -t test-topic
+~~~
+

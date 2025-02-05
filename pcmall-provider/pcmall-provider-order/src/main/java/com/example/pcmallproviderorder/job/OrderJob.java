@@ -10,6 +10,7 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 public class OrderJob implements Job {
     @Autowired
     private IOrderDao orderDao;
+    @Qualifier("orderServiceImpl")
     @Autowired
     private IOrderService orderService;
 

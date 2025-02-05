@@ -54,6 +54,8 @@ services:
     networks:
       - rocketmq
     command: sh mqnamesrv
+    volumes:
+      - pcmall-rocketmq-data:/home/rocketmq
   pcmall-rocketmq-broker:
     image: apache/rocketmq:5.3.1
     container_name: pcmall-rocketmq-broker
@@ -67,7 +69,9 @@ services:
       - pcmall-rocketmq-nameserver
     networks:
       - rocketmq
-    command: sh mqbroker
+    command: sh -c "echo 'brokerIP1=192.168.31.109' >> ../conf/broker.conf && sh mqbroker -c ../conf/broker.conf"
+    volumes:
+      - pcmall-rocketmq-data:/home/rocketmq
   pcmall-rocketmq-proxy:
     image: apache/rocketmq:5.3.1
     container_name: pcmall-rocketmq-proxy
@@ -83,6 +87,8 @@ services:
     environment:
       - NAMESRV_ADDR=pcmall-rocketmq-nameserver:9876
     command: sh mqproxy
+    volumes:
+      - pcmall-rocketmq-data:/home/rocketmq
 
 networks:
   rocketmq:
@@ -91,4 +97,5 @@ networks:
 volumes:
   pcmall-nacos-data:
   pcmall-seata-data:
+  pcmall-rocketmq-data:
 

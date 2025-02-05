@@ -7,6 +7,7 @@ import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallproviderorder.service.IOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +18,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/order")
 public class OrderController {
+    @Qualifier("orderServiceImpl")
     @Autowired
     private IOrderService orderService;
+    @Qualifier("seataOrderServiceImpl")
+    @Autowired
+    private IOrderService seataOrderService;
+    @Qualifier("rocketMQOrderServiceImpl")
+    @Autowired
+    private IOrderService rocketMQOrderService;
 
     public OrderController() {
         log.debug("创建Controller对象：OrderController");
+    }
+
+    @PostMapping("/test")
+    void test() {
+        rocketMQOrderService.createOrder("", 1);
     }
 
     @PostMapping("/searchOrderList")

@@ -9,11 +9,7 @@ public interface IOrderService {
 
     Long getRecordsFiltered(String searchValue, String uid, Integer type);
 
-    String createOrder(String uid, Integer aid);//使用分布式事务创建订单，Quartz处理订单过期
-
-    String createOrderByRocketMQ(String uid, Integer aid);//使用分布式事务创建订单，RocketMQ处理订单过期
-
-    String createOrderByProcedure(String uid, Integer aid);//使用存储过程创建订单，Quartz处理订单过期
+    String createOrder(String uid, Integer aid);
 
     void payOrder(String oid);
 
