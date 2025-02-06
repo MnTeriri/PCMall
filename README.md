@@ -255,8 +255,16 @@ public void outboundDelivery(Storage storage) {
 
 ### 2. RocketMQ的使用
 
-1. broker执行
-~~~
-sh mqadmin updateTopic -c DefaultCluster -t test-topic
-~~~
+1. broker配置
+   messageDelayLevel用于配置延迟等级对应的时间，brokerIP1用于配置broker的IP（Docker环境下如果不配置则会使用容器内地址，在宿主机环境下的程序无法访问到）。配置如下：
 
+   ~~~
+   messageDelayLevel=1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 15m 20m 30m 1h 2h
+   brokerIP1=192.168.31.109
+   ~~~
+
+2. broker执行
+
+   ~~~
+   sh mqadmin updateTopic -c DefaultCluster -t test-topic
+   ~~~

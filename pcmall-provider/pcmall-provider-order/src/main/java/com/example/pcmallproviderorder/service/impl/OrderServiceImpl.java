@@ -67,24 +67,28 @@ public class OrderServiceImpl implements IOrderService {
             throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
         } else if (result == 1) {
             //创建定时任务，15分钟自动关闭订单
-            JobDetail jobDetail = JobBuilder.newJob(OrderJob.class)
-                    .withIdentity(oid, "orderGroup")
-                    .usingJobData("orderOid", oid)
-                    .build();
-            LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(15);
-            Trigger trigger = TriggerBuilder.newTrigger()
-                    .withIdentity(oid, "orderGroup")
-                    .startAt(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
-                    .build();
-            try {
-                Scheduler scheduler = schedulerFactoryBean.getScheduler();
-                scheduler.scheduleJob(jobDetail, trigger);//添加订单定时任务
-                log.debug("订单定时任务{}添加成功", scheduler);
-            } catch (SchedulerException e) {
-                throw new RuntimeException(e);
-            }
+            setSchedulerTask(oid);
         }
         return oid;
+    }
+
+    protected void setSchedulerTask(String oid) {
+        JobDetail jobDetail = JobBuilder.newJob(OrderJob.class)
+                .withIdentity(oid, "orderGroup")
+                .usingJobData("orderOid", oid)
+                .build();
+        LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(15);
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity(oid, "orderGroup")
+                .startAt(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
+                .build();
+        try {
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            scheduler.scheduleJob(jobDetail, trigger);//添加订单定时任务
+            log.debug("订单定时任务{}添加成功", scheduler);
+        } catch (SchedulerException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

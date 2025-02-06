@@ -13,8 +13,10 @@ import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallproviderorder.dao.IOrderAddressDao;
 import com.example.pcmallproviderorder.dao.IOrderDao;
 import com.example.pcmallproviderorder.dao.IOrderGoodsDao;
+import com.example.pcmallproviderorder.job.OrderJob;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
@@ -22,7 +24,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -45,8 +49,6 @@ public class SeataOrderServiceImpl extends OrderServiceImpl {
     private IOrderGoodsDao orderGoodsDao;
     @Autowired
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
-    @Autowired
-    private SchedulerFactoryBean schedulerFactoryBean;
 
     public SeataOrderServiceImpl() {
         log.debug("创建Service对象：{}", this);
@@ -86,7 +88,7 @@ public class SeataOrderServiceImpl extends OrderServiceImpl {
             if (orderGoodsDao.insertOrderGoods(oid, cart.getGid(), cart.getCount(), goods.getPrice(), goods.getDiscount()) != 1) {
                 throw new SystemException(ResponseCode.ERROR);
             }
-            //cartClient.deleteCart(cart.getId());//删除购物车信息
+            cartClient.deleteCart(cart.getId());//删除购物车信息
             BigDecimal temp = NumberUtil.mul(cart.getCount(), goods.getPrice(), goods.getDiscount());
             totalPrice = totalPrice.add(temp);//计算总价格
         }
@@ -98,25 +100,8 @@ public class SeataOrderServiceImpl extends OrderServiceImpl {
         if (orderDao.insert(new Order().setOid(oid).setUid(uid).setPrice(totalPrice)) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
-
-//        //创建定时任务，15分钟自动关闭订单
-//        JobDetail jobDetail = JobBuilder.newJob(OrderJob.class)
-//                .withIdentity(oid, "orderGroup")
-//                .usingJobData("orderOid", oid)
-//                .build();
-//        LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(1);
-//        Trigger trigger = TriggerBuilder.newTrigger()
-//                .withIdentity(oid, "orderGroup")
-//                .startAt(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
-//                .build();
-//        try {
-//            Scheduler scheduler = schedulerFactoryBean.getScheduler();
-//            scheduler.scheduleJob(jobDetail, trigger);//添加订单定时任务
-//            log.debug("订单定时任务{}添加成功", scheduler);
-//        } catch (SchedulerException e) {
-//            throw new RuntimeException(e);
-//        }
-
+        //创建定时任务，15分钟自动关闭订单
+        setSchedulerTask(oid);
         return oid;
     }
 }

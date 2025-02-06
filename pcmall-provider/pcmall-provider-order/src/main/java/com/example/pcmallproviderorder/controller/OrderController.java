@@ -49,9 +49,9 @@ public class OrderController {
 
     @PostMapping("/createOrder")
     public ResponseResult<String> createOrder(String uid, Integer aid) {
-        //return ResponseResult.ok(orderService.createOrderByProcedure(uid, aid));
         return ResponseResult.ok(orderService.createOrder(uid, aid));
-        //return ResponseResult.ok(orderService.createOrderByRocketMQ(uid, aid));
+        //return ResponseResult.ok(seataOrderService.createOrder(uid, aid));
+        //return ResponseResult.ok(rocketMQOrderService.createOrder(uid, aid));
     }
 
     @PostMapping("/payOrder")
