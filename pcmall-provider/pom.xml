@@ -19,6 +19,7 @@
         <module>pcmall-provider-brand</module>
         <module>pcmall-provider-cart</module>
         <module>pcmall-provider-category</module>
+        <module>pcmall-provider-comment</module>
         <module>pcmall-provider-goods</module>
         <module>pcmall-provider-order</module>
         <module>pcmall-provider-storage</module>
