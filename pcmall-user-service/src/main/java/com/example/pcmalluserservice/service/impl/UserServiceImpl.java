@@ -35,7 +35,7 @@ public class UserServiceImpl implements IUserService {
     private IUserRoleDao userRoleDao;
 
     @Override
-    public ResponseResult<LoginUser> login(String uid, String password) {
+    public ResponseResult<User> login(String uid, String password) {
         //查询权限信息
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(uid, DigestUtil.md5Hex(password));
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
@@ -54,7 +54,7 @@ public class UserServiceImpl implements IUserService {
             throw new SystemException(ResponseCode.ERROR);
         }
 
-        return new ResponseResult<>(200, token, loginUser);
+        return new ResponseResult<>(200, token, loginUser.getUser());
     }
 
     @Transactional(rollbackFor = Exception.class)

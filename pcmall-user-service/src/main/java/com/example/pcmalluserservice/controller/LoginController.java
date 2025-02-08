@@ -1,6 +1,6 @@
 package com.example.pcmalluserservice.controller;
 
-import com.example.pcmallcommon.model.LoginUser;
+import com.example.pcmallcommon.model.User;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmalluserservice.service.IUserService;
 import jakarta.servlet.http.HttpSession;
@@ -18,7 +18,7 @@ public class LoginController {
     private IUserService userService;
 
     @PostMapping(value = "/api/login")
-    public ResponseResult<LoginUser> login(String uid, String password, String code) {
+    public ResponseResult<User> login(String uid, String password, String code) {
         //判定验证码
 //        String captchaCode = (String) session.getAttribute("captchaCode");
 //        if (!captchaCode.equals(code)) {
