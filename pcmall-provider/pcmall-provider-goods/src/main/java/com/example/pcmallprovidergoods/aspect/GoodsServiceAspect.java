@@ -43,20 +43,17 @@ public class GoodsServiceAspect {
         if (result == null) {
             return null;
         }
-        log.debug("结果类名：{}", result.getClass());
         log.debug("结果：{}", result);
-        if (args[0] == null) {
-            return result;
-        }
-        Map<String, Boolean> aspectRule = (Map<String, Boolean>) args[0];
+        Boolean isSearchCategory = (Boolean) args[1];
+        Boolean isSearchBrand = (Boolean) args[2];
         List<CompletableFuture<Void>> futures = new ArrayList<>();
-        if (aspectRule.get("isSearchCategory") != null && aspectRule.get("isSearchCategory")) {
+        if (isSearchCategory) {
             CompletableFuture<Void> categoryFuture = CompletableFuture
                     .supplyAsync(() -> categoryClient.searchCategoryById(result.getCid()).getData(), threadPoolTaskExecutor)
                     .thenAccept(result::setCategory);
             futures.add(categoryFuture);
         }
-        if (aspectRule.get("isSearchBrand") != null && aspectRule.get("isSearchBrand")) {
+        if (isSearchBrand) {
             CompletableFuture<Void> brandFuture = CompletableFuture
                     .supplyAsync(() -> brandClient.searchBrandById(result.getBid()).getData(), threadPoolTaskExecutor)
                     .thenAccept(result::setBrand);
@@ -64,7 +61,7 @@ public class GoodsServiceAspect {
         }
         //等待所有异步任务执行完成
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-        log.debug("增强后结果：{}", result);
+        log.debug("增强完成");
         return result;
     }
 
@@ -79,30 +76,21 @@ public class GoodsServiceAspect {
         if (result == null) {
             return null;
         }
-        log.debug("结果类名：{}", result.getClass());
         log.debug("结果：{}", result);
-        if (args[0] == null) {
-            return result;
-        }
-        Map<String, Boolean> aspectRule = (Map<String, Boolean>) args[0];
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (Goods goods : result) {
-            if (aspectRule.get("isSearchCategory") != null && aspectRule.get("isSearchCategory")) {
-                CompletableFuture<Void> categoryFuture = CompletableFuture
-                        .supplyAsync(() -> categoryClient.searchCategoryById(goods.getCid()).getData(), threadPoolTaskExecutor)
-                        .thenAccept(goods::setCategory);
-                futures.add(categoryFuture);
-            }
-            if (aspectRule.get("isSearchBrand") != null && aspectRule.get("isSearchBrand")) {
-                CompletableFuture<Void> brandFuture = CompletableFuture
-                        .supplyAsync(() -> brandClient.searchBrandById(goods.getBid()).getData(), threadPoolTaskExecutor)
-                        .thenAccept(goods::setBrand);
-                futures.add(brandFuture);
-            }
+            CompletableFuture<Void> categoryFuture = CompletableFuture
+                    .supplyAsync(() -> categoryClient.searchCategoryById(goods.getCid()).getData(), threadPoolTaskExecutor)
+                    .thenAccept(goods::setCategory);
+            futures.add(categoryFuture);
+            CompletableFuture<Void> brandFuture = CompletableFuture
+                    .supplyAsync(() -> brandClient.searchBrandById(goods.getBid()).getData(), threadPoolTaskExecutor)
+                    .thenAccept(goods::setBrand);
+            futures.add(brandFuture);
         }
         //等待所有异步任务执行完成
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-        log.debug("增强后结果：{}", result);
+        log.debug("增强完成");
         return result;
     }
 }

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Map;
 
 
 @FeignClient(contextId = "goodsClient", value = "pcmall-provider-goods")
@@ -19,16 +18,13 @@ public interface GoodsClient {
             @RequestParam("isSearchCategory") Boolean isSearchCategory,
             @RequestParam("isSearchBrand") Boolean isSearchBrand);
 
-    @PostMapping("/goods/searchGoodsForUpdate")
-    ResponseResult<Goods> searchGoodsForUpdate(@RequestParam("id") Integer id);
-
-    @PostMapping("/goods/getGoodsList")
-    ResponseResult<List<Goods>> getGoodsList(
+    @PostMapping("/goods/searchAllGoods")
+    ResponseResult<List<Goods>> searchAllGoods(
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
 
-    @PostMapping("/goods/searchGoodsList")
-    ResponseResult<List<Goods>> searchGoodsList(
+    @PostMapping("/goods/searchGoodsByValue")
+    ResponseResult<List<Goods>> searchGoodsByValue(
             @RequestParam("searchValue") String searchValue,
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
@@ -43,11 +39,11 @@ public interface GoodsClient {
     @PostMapping("/goods/getTotalCount")
     ResponseResult<Long> getTotalCount();
 
-    @PostMapping("/goods/getRecordsFiltered")
-    ResponseResult<Long> getRecordsFiltered(@RequestParam("searchValue") String searchValue);
+    @PostMapping("/goods/getTotalCountByValue")
+    ResponseResult<Long> getTotalCountByValue(@RequestParam("searchValue") String searchValue);
 
-    @PostMapping("/goods/getRecordsFilteredByCidAndBid")
-    ResponseResult<Long> getRecordsFilteredByCidAndBid(@RequestParam("cid") Integer cid, @RequestParam("bid") Integer bid);
+    @PostMapping("/goods/getTotalCountByCidAndBid")
+    ResponseResult<Long> getTotalCountByCidAndBid(@RequestParam("cid") Integer cid, @RequestParam("bid") Integer bid);
 
     @PostMapping("/goods/addGoods")
     ResponseResult<String> addGoods(@RequestBody Goods goods);

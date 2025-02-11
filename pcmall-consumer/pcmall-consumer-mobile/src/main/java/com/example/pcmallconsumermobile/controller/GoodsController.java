@@ -20,15 +20,15 @@ public class GoodsController {
     private GoodsClient goodsClient;
 
     public GoodsController() {
-        log.debug("创建Controller对象：GoodsController");
+        log.debug("创建Controller对象：{}", this);
     }
 
-    @RequestMapping("/searchGoodsList")
-    public ResponseResult<List<Goods>> searchGoodsList(
+    @RequestMapping("/searchGoodsByValue")
+    public ResponseResult<List<Goods>> searchGoodsByValue(
             @RequestParam(defaultValue = "") String searchValue,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        return goodsClient.searchGoodsList(searchValue, currentPage, pageSize);
+        return goodsClient.searchGoodsByValue(searchValue, currentPage, pageSize);
     }
 
     @RequestMapping("/searchGoodsByCidAndBid")
@@ -40,15 +40,15 @@ public class GoodsController {
         return goodsClient.searchGoodsByCidAndBid(cid, bid, currentPage, pageSize);
     }
 
-    @PostMapping("/getRecordsFiltered")
-    public ResponseResult<Long> getRecordsFiltered(@RequestParam(defaultValue = "") String searchValue) {
-        return goodsClient.getRecordsFiltered(searchValue);
+    @PostMapping("/getTotalCountByValue")
+    public ResponseResult<Long> getTotalCountByValue(@RequestParam(defaultValue = "") String searchValue) {
+        return goodsClient.getTotalCountByValue(searchValue);
     }
 
-    @PostMapping("/getRecordsFilteredByCidAndBid")
-    public ResponseResult<Long> getRecordsFilteredByCidAndBid(
+    @PostMapping("/getTotalCountByCidAndBid")
+    public ResponseResult<Long> getTotalCountByCidAndBid(
             @RequestParam(defaultValue = "1") Integer cid,
             @RequestParam(defaultValue = "1") Integer bid) {
-        return goodsClient.getRecordsFilteredByCidAndBid(cid, bid);
+        return goodsClient.getTotalCountByCidAndBid(cid, bid);
     }
 }

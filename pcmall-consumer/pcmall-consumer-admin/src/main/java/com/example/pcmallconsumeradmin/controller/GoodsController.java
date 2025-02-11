@@ -29,7 +29,7 @@ public class GoodsController {
     public ResponseResult<List<Goods>> getGoodsList(
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        return goodsClient.getGoodsList(currentPage, pageSize);
+        return goodsClient.searchAllGoods(currentPage, pageSize);
     }
 
     @PostMapping("/searchGoodsById")

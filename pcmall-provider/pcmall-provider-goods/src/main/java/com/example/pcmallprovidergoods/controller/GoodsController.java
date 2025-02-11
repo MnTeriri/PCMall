@@ -39,57 +39,33 @@ public class GoodsController {
             Integer id,
             @RequestParam(defaultValue = "false") Boolean isSearchCategory,
             @RequestParam(defaultValue = "false") Boolean isSearchBrand) {
-        HashMap<String, Boolean> aspectRule = new HashMap<>() {{
-            put("isSearchCategory", isSearchCategory);
-            put("isSearchBrand", isSearchBrand);
-        }};
-        Goods goods = goodsService.searchGoodsById(aspectRule, id);
-        return ResponseResult.ok(goods);
+        return ResponseResult.ok(goodsService.searchGoodsById(id, isSearchCategory, isSearchBrand));
     }
 
-    @PostMapping("/getGoodsList")
+    @PostMapping("/searchAllGoods")
     @Operation(summary = "查询全部商品信息")
     @Parameters({
             @Parameter(name = "currentPage", description = "当前页数", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "pageSize", description = "页面大小", required = true, in = ParameterIn.QUERY)
     })
-    public ResponseResult<List<Goods>> getGoodsList(
+    public ResponseResult<List<Goods>> searchAllGoods(
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        HashMap<String, Boolean> aspectRule = new HashMap<>() {{
-            put("isSearchCategory", true);
-            put("isSearchBrand", true);
-        }};
-        HashMap<String, Object> searchValue = new HashMap<>() {{
-            put("currentPage", currentPage);
-            put("pageSize", pageSize);
-        }};
-        List<Goods> goodsList = goodsService.searchGoodsList(aspectRule, IGoodsService.GoodsSearchType.ALL, searchValue);
-        return ResponseResult.ok(goodsList);
+        return ResponseResult.ok(goodsService.searchGoodsList(currentPage, pageSize));
     }
 
-    @PostMapping("/searchGoodsList")
+    @PostMapping("/searchGoodsByValue")
     @Operation(summary = "使用搜索值查询状态正常商品信息")
     @Parameters({
             @Parameter(name = "searchValue", description = "搜索值", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "currentPage", description = "当前页数", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "pageSize", description = "页面大小", required = true, in = ParameterIn.QUERY)
     })
-    public ResponseResult<List<Goods>> searchGoodsList(
-            @RequestParam(value = "searchValue", defaultValue = "") String searchParam,
+    public ResponseResult<List<Goods>> searchGoodsByValue(
+            @RequestParam(defaultValue = "") String searchValue,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        HashMap<String, Boolean> aspectRule = new HashMap<>() {{
-            put("isSearchCategory", true);
-            put("isSearchBrand", true);
-        }};
-        HashMap<String, Object> searchValue = new HashMap<>() {{
-            put("searchValue", searchParam);
-            put("currentPage", currentPage);
-            put("pageSize", pageSize);
-        }};
-        List<Goods> goodsList = goodsService.searchGoodsList(aspectRule, IGoodsService.GoodsSearchType.SEARCH, searchValue);
-        return ResponseResult.ok(goodsList);
+        return ResponseResult.ok(goodsService.searchGoodsList(searchValue, currentPage, pageSize));
     }
 
     @PostMapping("/searchGoodsByCidAndBid")
@@ -104,48 +80,32 @@ public class GoodsController {
             Integer cid, Integer bid,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        HashMap<String, Boolean> aspectRule = new HashMap<>() {{
-            put("isSearchCategory", true);
-            put("isSearchBrand", true);
-        }};
-        HashMap<String, Object> searchValue = new HashMap<>() {{
-            put("cid", cid);
-            put("bid", bid);
-            put("currentPage", currentPage);
-            put("pageSize", pageSize);
-        }};
-        List<Goods> goodsList = goodsService.searchGoodsList(aspectRule, IGoodsService.GoodsSearchType.SEARCH_BY_CID_AND_BID, searchValue);
-        return ResponseResult.ok(goodsList);
+        return ResponseResult.ok(goodsService.searchGoodsList(cid, bid, currentPage, pageSize));
     }
 
     @PostMapping("/getTotalCount")
     @Operation(summary = "查询商品信息总个数")
     public ResponseResult<Long> getTotalCount() {
-        return ResponseResult.ok(goodsService.getTotalCount(IGoodsService.GoodsSearchType.ALL, null));
+        return ResponseResult.ok(goodsService.getTotalCount());
     }
 
-    @PostMapping("/getRecordsFiltered")
+    @PostMapping("/getTotalCountByValue")
     @Operation(summary = "使用搜索值查询状态正常商品信息总个数")
     @Parameters({
             @Parameter(name = "searchValue", description = "搜索值", required = true, in = ParameterIn.QUERY)
     })
-    public ResponseResult<Long> getRecordsFiltered(String searchValue) {
-        return ResponseResult.ok(goodsService.getTotalCount(IGoodsService.GoodsSearchType.SEARCH, new HashMap<>() {{
-            put("searchValue", searchValue);
-        }}));
+    public ResponseResult<Long> getTotalCountByValue(String searchValue) {
+        return ResponseResult.ok(goodsService.getTotalCount(searchValue));
     }
 
-    @PostMapping("/getRecordsFilteredByCidAndBid")
+    @PostMapping("/getTotalCountByCidAndBid")
     @Operation(summary = "使用分类ID和品牌ID查询状态正常商品信息总个数")
     @Parameters({
             @Parameter(name = "cid", description = "分类ID", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "bid", description = "品牌ID", required = true, in = ParameterIn.QUERY)
     })
-    public ResponseResult<Long> getRecordsFilteredByCidAndBid(Integer cid, Integer bid) {
-        return ResponseResult.ok(goodsService.getTotalCount(IGoodsService.GoodsSearchType.SEARCH_BY_CID_AND_BID, new HashMap<>() {{
-            put("cid", cid);
-            put("bid", bid);
-        }}));
+    public ResponseResult<Long> getTotalCountByCidAndBid(Integer cid, Integer bid) {
+        return ResponseResult.ok(goodsService.getTotalCount(cid, bid));
     }
 
     @PostMapping("/addGoods")
