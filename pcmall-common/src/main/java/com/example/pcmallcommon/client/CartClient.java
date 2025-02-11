@@ -11,14 +11,14 @@ import java.util.List;
 
 @FeignClient(contextId = "cartClient", value = "pcmall-provider-cart")
 public interface CartClient {
-    @PostMapping("/cart/searchCartList")
-    ResponseResult<List<Cart>> searchCartList(
+    @PostMapping("/cart/searchAllCart")
+    ResponseResult<List<Cart>> searchAllCart(
             @RequestParam("uid") String uid,
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
 
-    @PostMapping("/cart/searchSelectCartList")
-    ResponseResult<List<Cart>> searchSelectCartList(
+    @PostMapping("/cart/searchSelectCart")
+    ResponseResult<List<Cart>> searchSelectCart(
             @RequestParam("uid") String uid,
             @RequestParam("isSearchGoods") Boolean isSearchGoods,
             @RequestParam("isSearchCategory") Boolean isSearchCategory,

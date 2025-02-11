@@ -28,27 +28,27 @@ public class CartController {
         log.debug("创建Controller对象：{}", this);
     }
 
-    @PostMapping("/searchCartList")
+    @PostMapping("/searchAllCart")
     @Operation(summary = "查询购物车信息")
     @Parameters({
             @Parameter(name = "uid", description = "用户UID", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "currentPage", description = "当前页数", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "pageSize", description = "页面大小", required = true, in = ParameterIn.QUERY)
     })
-    public ResponseResult<List<Cart>> searchCartList(
+    public ResponseResult<List<Cart>> searchAllCart(
             String uid,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
         return ResponseResult.ok(cartService.searchAllCart(uid, currentPage, pageSize));
     }
 
-    @PostMapping("/searchSelectCartList")
+    @PostMapping("/searchSelectCart")
     @Operation(summary = "查询已选中购物车信息")
     @Parameters({
             @Parameter(name = "uid", description = "用户UID", required = true, in = ParameterIn.QUERY),
             @Parameter(name = "isSearchGoods", description = "是否搜索商品", required = true, in = ParameterIn.QUERY)
     })
-    public ResponseResult<List<Cart>> searchSelectCartList(
+    public ResponseResult<List<Cart>> searchSelectCart(
             String uid,
             @RequestParam(defaultValue = "false") Boolean isSearchGoods) {
         return ResponseResult.ok(cartService.searchSelectCart(uid, isSearchGoods));

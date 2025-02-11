@@ -22,20 +22,20 @@ public class CartController {
     private CartClient cartClient;
 
     public CartController() {
-        log.debug("创建Controller对象：CartController");
+        log.debug("创建Controller对象：{}", this);
     }
 
-    @PostMapping("/searchCartList")
-    public ResponseResult<List<Cart>> searchCartList(
+    @PostMapping("/searchAllCart")
+    public ResponseResult<List<Cart>> searchAllCart(
             String uid,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        return cartClient.searchCartList(uid, currentPage, pageSize);
+        return cartClient.searchAllCart(uid, currentPage, pageSize);
     }
 
-    @PostMapping("/searchSelectCartList")
-    public ResponseResult<List<Cart>> searchSelectCartList(String uid) {
-        return cartClient.searchSelectCartList(uid, true, true, true);
+    @PostMapping("/searchSelectCart")
+    public ResponseResult<List<Cart>> searchSelectCart(String uid) {
+        return cartClient.searchSelectCart(uid, true, true, true);
     }
 
     @PostMapping("/getTotalCount")

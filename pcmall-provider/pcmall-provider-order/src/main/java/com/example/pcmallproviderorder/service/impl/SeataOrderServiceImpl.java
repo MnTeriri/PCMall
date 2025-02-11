@@ -13,20 +13,15 @@ import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallproviderorder.dao.IOrderAddressDao;
 import com.example.pcmallproviderorder.dao.IOrderDao;
 import com.example.pcmallproviderorder.dao.IOrderGoodsDao;
-import com.example.pcmallproviderorder.job.OrderJob;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -62,7 +57,7 @@ public class SeataOrderServiceImpl extends OrderServiceImpl {
             oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
         }
 
-        CompletableFuture<List<Cart>> cartListFuture = CompletableFuture.supplyAsync(() -> cartClient.searchSelectCartList(uid, false, false, false).getData(), threadPoolTaskExecutor);
+        CompletableFuture<List<Cart>> cartListFuture = CompletableFuture.supplyAsync(() -> cartClient.searchSelectCart(uid, false, false, false).getData(), threadPoolTaskExecutor);
         CompletableFuture<Address> addressFuture = CompletableFuture.supplyAsync(() -> addressClient.searchAddressById(aid).getData(), threadPoolTaskExecutor);
         CompletableFuture.allOf(cartListFuture, addressFuture).join();//等待所有异步任务执行完成
 
