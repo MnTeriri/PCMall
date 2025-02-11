@@ -4,21 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.pcmallcommon.client.GoodsClient;
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.model.Storage;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallproviderstorage.dao.IStorageDao;
 import com.example.pcmallproviderstorage.service.IStorageService;
-import io.seata.spring.annotation.GlobalLock;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Slf4j

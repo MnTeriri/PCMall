@@ -2,7 +2,9 @@ package com.example.pcmallproviderorder.dao;
 
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallproviderorder.cache.OrderInfoCache;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.CacheNamespace;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;

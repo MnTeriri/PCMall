@@ -4,7 +4,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.*;
+import com.example.pcmallcommon.model.Order;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallproviderorder.dao.IOrderDao;
 import com.example.pcmallproviderorder.job.OrderJob;

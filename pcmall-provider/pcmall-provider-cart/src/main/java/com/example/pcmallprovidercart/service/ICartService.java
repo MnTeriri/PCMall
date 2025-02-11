@@ -3,7 +3,6 @@ package com.example.pcmallprovidercart.service;
 import com.example.pcmallcommon.model.Cart;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ICartService {
     Cart searchCartById(Integer id);
