@@ -12,9 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -51,7 +49,7 @@ public class GoodsController {
     public ResponseResult<List<Goods>> searchAllGoods(
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        return ResponseResult.ok(goodsService.searchGoodsList(currentPage, pageSize));
+        return ResponseResult.ok(goodsService.searchAllGoods(currentPage, pageSize));
     }
 
     @PostMapping("/searchGoodsByValue")
@@ -65,7 +63,7 @@ public class GoodsController {
             @RequestParam(defaultValue = "") String searchValue,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        return ResponseResult.ok(goodsService.searchGoodsList(searchValue, currentPage, pageSize));
+        return ResponseResult.ok(goodsService.searchGoodsByValue(searchValue, currentPage, pageSize));
     }
 
     @PostMapping("/searchGoodsByCidAndBid")
@@ -80,7 +78,7 @@ public class GoodsController {
             Integer cid, Integer bid,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        return ResponseResult.ok(goodsService.searchGoodsList(cid, bid, currentPage, pageSize));
+        return ResponseResult.ok(goodsService.searchGoodsByCidAndBid(cid, bid, currentPage, pageSize));
     }
 
     @PostMapping("/getTotalCount")
@@ -95,7 +93,7 @@ public class GoodsController {
             @Parameter(name = "searchValue", description = "搜索值", required = true, in = ParameterIn.QUERY)
     })
     public ResponseResult<Long> getTotalCountByValue(String searchValue) {
-        return ResponseResult.ok(goodsService.getTotalCount(searchValue));
+        return ResponseResult.ok(goodsService.getTotalCountByValue(searchValue));
     }
 
     @PostMapping("/getTotalCountByCidAndBid")
@@ -105,7 +103,7 @@ public class GoodsController {
             @Parameter(name = "bid", description = "品牌ID", required = true, in = ParameterIn.QUERY)
     })
     public ResponseResult<Long> getTotalCountByCidAndBid(Integer cid, Integer bid) {
-        return ResponseResult.ok(goodsService.getTotalCount(cid, bid));
+        return ResponseResult.ok(goodsService.getTotalCountByCidAndBid(cid, bid));
     }
 
     @PostMapping("/addGoods")

@@ -33,18 +33,18 @@ public class GoodsServiceImpl implements IGoodsService {
     }
 
     @Override
-    public List<Goods> searchGoodsList(Integer currentPage, Integer pageSize) {
+    public List<Goods> searchAllGoods(Integer currentPage, Integer pageSize) {
         Page<Goods> page = new Page<>(currentPage, pageSize);
         return goodsDao.selectPage(page, null).getRecords();
     }
 
     @Override
-    public List<Goods> searchGoodsList(String searchValue, Integer currentPage, Integer pageSize) {
+    public List<Goods> searchGoodsByValue(String searchValue, Integer currentPage, Integer pageSize) {
         return goodsDao.searchGoodsList(searchValue, (currentPage - 1) * pageSize, pageSize);
     }
 
     @Override
-    public List<Goods> searchGoodsList(Integer bid, Integer cid, Integer currentPage, Integer pageSize) {
+    public List<Goods> searchGoodsByCidAndBid(Integer bid, Integer cid, Integer currentPage, Integer pageSize) {
         return goodsDao.searchGoodsByCidAndBid(cid, bid, (currentPage - 1) * pageSize, pageSize);
     }
 
@@ -54,12 +54,12 @@ public class GoodsServiceImpl implements IGoodsService {
     }
 
     @Override
-    public Long getTotalCount(String searchValue) {
+    public Long getTotalCountByValue(String searchValue) {
         return goodsDao.getRecordsFiltered(searchValue);
     }
 
     @Override
-    public Long getTotalCount(Integer bid, Integer cid) {
+    public Long getTotalCountByCidAndBid(Integer bid, Integer cid) {
         QueryWrapper<Goods> queryWrapper = new QueryWrapper<Goods>()
                 .eq("cid", cid)
                 .eq("bid", bid)

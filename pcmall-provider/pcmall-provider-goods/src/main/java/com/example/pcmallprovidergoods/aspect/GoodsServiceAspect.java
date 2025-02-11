@@ -65,7 +65,9 @@ public class GoodsServiceAspect {
         return result;
     }
 
-    @Around("execution(java.util.List com.example.pcmallprovidergoods.service.IGoodsService.searchGoodsList(..))")
+    @Around("execution(java.util.List com.example.pcmallprovidergoods.service.IGoodsService.searchAllGoods(..)) ||" +
+            "execution(java.util.List com.example.pcmallprovidergoods.service.IGoodsService.searchGoodsByValue(..)) ||" +
+            "execution(java.util.List com.example.pcmallprovidergoods.service.IGoodsService.searchGoodsByCidAndBid(..)) ")
     public Object searchGoodsListAround(ProceedingJoinPoint joinPoint) throws Throwable {
         log.debug("进入切面");
         Object[] args = joinPoint.getArgs();
