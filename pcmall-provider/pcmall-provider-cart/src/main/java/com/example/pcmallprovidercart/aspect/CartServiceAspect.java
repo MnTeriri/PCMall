@@ -29,64 +29,45 @@ public class CartServiceAspect {
     @Around("execution(* com.example.pcmallprovidercart.service.ICartService.searchCartById(..))")
     public Object searchCartAround(ProceedingJoinPoint joinPoint) throws Throwable {
         log.debug("进入切面");
-        Object[] args = joinPoint.getArgs();
-        log.debug("方法参数：{}", Arrays.toString(args));
-        log.debug("方法签名：{}", joinPoint.getSignature());
-        log.debug("执行。。。。");
         Cart result = (Cart) joinPoint.proceed();
         if (result == null) {
             return null;
         }
-        log.debug("结果类名：{}", result.getClass());
-        log.debug("结果：{}", result);
-        if (args[0] == null) {
-            return result;
-        }
-        Map<String, Boolean> aspectRule = (Map<String, Boolean>) args[0];
-        if (aspectRule.get("isSearchGoods") != null && aspectRule.get("isSearchGoods")) {
-            CompletableFuture<Void> completableFuture = CompletableFuture
-                    .supplyAsync(() -> goodsClient.searchGoodsById(result.getGid(),
-                            aspectRule.get("isSearchCategory") != null && aspectRule.get("isSearchCategory"),
-                            aspectRule.get("isSearchBrand") != null && aspectRule.get("isSearchBrand")).getData(), threadPoolTaskExecutor)
-                    .thenAccept(result::setGoods);
-            completableFuture.join();
-            log.debug("增强后结果：{}", result);
-        }
+        CompletableFuture<Void> completableFuture = CompletableFuture
+                .supplyAsync(() -> goodsClient.searchGoodsById(result.getGid(), true, true).getData(), threadPoolTaskExecutor)
+                .thenAccept(result::setGoods);
+        completableFuture.join();
+        log.debug("执行完成");
         return result;
     }
 
-    @Around("execution(* com.example.pcmallprovidercart.service.ICartService.searchCartList(..))")
+    @Around("execution(* com.example.pcmallprovidercart.service.ICartService.searchAllCart(..)) || " +
+            "execution(* com.example.pcmallprovidercart.service.ICartService.searchSelectCart(..)) ")
     public Object searchCartListAround(ProceedingJoinPoint joinPoint) throws Throwable {
         log.debug("进入切面");
         Object[] args = joinPoint.getArgs();
-        log.debug("方法参数：{}", Arrays.toString(args));
-        log.debug("方法签名：{}", joinPoint.getSignature());
-        log.debug("执行。。。。");
         List<Cart> result = (List<Cart>) joinPoint.proceed();
         if (result == null) {
             return null;
         }
-        log.debug("结果类名：{}", result.getClass());
-        log.debug("结果：{}", result);
-        if (args[0] == null) {
-            return result;
-        }
-        Map<String, Boolean> aspectRule = (Map<String, Boolean>) args[0];
-        if (aspectRule.get("isSearchGoods") != null && aspectRule.get("isSearchGoods")) {
-            List<CompletableFuture<Void>> futures = new ArrayList<>();
-            for (Cart cart : result) {
-                //设置异步任务
-                CompletableFuture<Void> completableFuture = CompletableFuture
-                        .supplyAsync(() -> goodsClient.searchGoodsById(cart.getGid(),
-                                aspectRule.get("isSearchCategory") != null && aspectRule.get("isSearchCategory"),
-                                aspectRule.get("isSearchBrand") != null && aspectRule.get("isSearchBrand")).getData(), threadPoolTaskExecutor)
-                        .thenAccept(cart::setGoods);
-                futures.add(completableFuture);
+        String methodName = joinPoint.getSignature().getName();
+        if (methodName.equals("searchSelectCart")) {
+            Boolean isSearchGoods = (Boolean) args[1];
+            if (!isSearchGoods) {
+                return result;
             }
-            //等待所有异步任务执行完成
-            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-            log.debug("增强后结果：{}", result);
         }
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        for (Cart cart : result) {
+            //设置异步任务
+            CompletableFuture<Void> completableFuture = CompletableFuture
+                    .supplyAsync(() -> goodsClient.searchGoodsById(cart.getGid(), true, true).getData(), threadPoolTaskExecutor)
+                    .thenAccept(cart::setGoods);
+            futures.add(completableFuture);
+        }
+        //等待所有异步任务执行完成
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        log.debug("执行完成");
         return result;
     }
 }

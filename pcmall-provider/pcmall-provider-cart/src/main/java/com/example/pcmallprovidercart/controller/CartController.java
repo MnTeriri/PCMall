@@ -39,41 +39,19 @@ public class CartController {
             String uid,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
-        Map<String, Boolean> aspectRule = new HashMap<>() {{
-            put("isSearchGoods", true);
-            put("isSearchCategory", true);
-            put("isSearchBrand", true);
-        }};
-        Map<String, Object> searchValue = new HashMap<>() {{
-            put("uid", uid);
-            put("currentPage", currentPage);
-            put("pageSize", pageSize);
-        }};
-        return ResponseResult.ok(cartService.searchCartList(aspectRule, ICartService.CartSearchType.ALL, searchValue));
+        return ResponseResult.ok(cartService.searchAllCart(uid, currentPage, pageSize));
     }
 
     @PostMapping("/searchSelectCartList")
     @Operation(summary = "查询已选中购物车信息")
     @Parameters({
             @Parameter(name = "uid", description = "用户UID", required = true, in = ParameterIn.QUERY),
-            @Parameter(name = "isSearchGoods", description = "是否搜索商品", required = true, in = ParameterIn.QUERY),
-            @Parameter(name = "isSearchCategory", description = "是否搜索商品分类", required = true, in = ParameterIn.QUERY),
-            @Parameter(name = "isSearchBrand", description = "是否搜索商品品牌", required = true, in = ParameterIn.QUERY)
+            @Parameter(name = "isSearchGoods", description = "是否搜索商品", required = true, in = ParameterIn.QUERY)
     })
     public ResponseResult<List<Cart>> searchSelectCartList(
             String uid,
-            @RequestParam(defaultValue = "false") Boolean isSearchGoods,
-            @RequestParam(defaultValue = "false") Boolean isSearchCategory,
-            @RequestParam(defaultValue = "false") Boolean isSearchBrand) {
-        Map<String, Boolean> aspectRule = new HashMap<>() {{
-            put("isSearchGoods", isSearchGoods);
-            put("isSearchCategory", isSearchCategory);
-            put("isSearchBrand", isSearchBrand);
-        }};
-        Map<String, Object> searchValue = new HashMap<>() {{
-            put("uid", uid);
-        }};
-        return ResponseResult.ok(cartService.searchCartList(aspectRule, ICartService.CartSearchType.SELECT, searchValue));
+            @RequestParam(defaultValue = "false") Boolean isSearchGoods) {
+        return ResponseResult.ok(cartService.searchSelectCart(uid, isSearchGoods));
     }
 
     @PostMapping("/getTotalCount")

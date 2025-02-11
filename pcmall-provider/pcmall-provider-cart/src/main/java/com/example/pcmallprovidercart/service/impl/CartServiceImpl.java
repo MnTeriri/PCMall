@@ -33,26 +33,26 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
-    public Cart searchCartById(Map<String, Boolean> aspectRule, Integer id) {
+    public Cart searchCartById(Integer id) {
         return cartDao.selectById(id);
     }
 
     @Override
-    public List<Cart> searchCartList(Map<String, Boolean> aspectRule, CartSearchType searchType, Map<String, Object> searchValue) {
-        if (searchType == CartSearchType.ALL) {
-            QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>()
-                    .eq("uid", searchValue.get("uid"))
-                    .orderByDesc("id");
-            Page<Cart> page = new Page<>((Integer) searchValue.get("currentPage"), (Integer) searchValue.get("pageSize"));
-            return cartDao.selectPage(page, queryWrapper).getRecords();
-        } else if (searchType == CartSearchType.SELECT) {
-            QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>()
-                    .eq("uid", searchValue.get("uid"))
-                    .eq("is_select", 1)
-                    .orderByDesc("id");
-            return cartDao.selectList(queryWrapper);
-        }
-        return List.of();
+    public List<Cart> searchAllCart(String uid, Integer currentPage, Integer pageSize) {
+        QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>()
+                .eq("uid", uid)
+                .orderByDesc("id");
+        Page<Cart> page = new Page<>(currentPage, pageSize);
+        return cartDao.selectPage(page, queryWrapper).getRecords();
+    }
+
+    @Override
+    public List<Cart> searchSelectCart(String uid, Boolean isSearchGoods) {
+        QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>()
+                .eq("uid", uid)
+                .eq("is_select", 1)
+                .orderByDesc("id");
+        return cartDao.selectList(queryWrapper);
     }
 
     @Override
@@ -104,11 +104,7 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public void addCartCount(Integer id) {
-        Cart data = ((ICartService) AopContext.currentProxy()).searchCartById(new HashMap<>() {{
-            put("isSearchGoods", true);
-            put("isSearchCategory", true);
-            put("isSearchBrand", true);
-        }}, id);
+        Cart data = ((ICartService) AopContext.currentProxy()).searchCartById(id);
         if (data == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
         }
@@ -133,11 +129,7 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public void subCartCount(Integer id) {
-        Cart data = ((ICartService) AopContext.currentProxy()).searchCartById(new HashMap<>() {{
-            put("isSearchGoods", true);
-            put("isSearchCategory", true);
-            put("isSearchBrand", true);
-        }}, id);
+        Cart data = ((ICartService) AopContext.currentProxy()).searchCartById(id);
         if (data == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
         }
@@ -162,11 +154,7 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public void selectCart(Integer id, Integer isSelect) {
-        Cart data = ((ICartService) AopContext.currentProxy()).searchCartById(new HashMap<>() {{
-            put("isSearchGoods", true);
-            put("isSearchCategory", true);
-            put("isSearchBrand", true);
-        }}, id);
+        Cart data = ((ICartService) AopContext.currentProxy()).searchCartById(id);
         if (data == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
         }
