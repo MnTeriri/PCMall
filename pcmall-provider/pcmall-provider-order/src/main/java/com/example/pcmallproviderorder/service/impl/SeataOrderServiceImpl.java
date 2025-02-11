@@ -57,7 +57,7 @@ public class SeataOrderServiceImpl extends OrderServiceImpl {
             oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
         }
 
-        CompletableFuture<List<Cart>> cartListFuture = CompletableFuture.supplyAsync(() -> cartClient.searchSelectCart(uid, false, false, false).getData(), threadPoolTaskExecutor);
+        CompletableFuture<List<Cart>> cartListFuture = CompletableFuture.supplyAsync(() -> cartClient.searchSelectCart(uid, false).getData(), threadPoolTaskExecutor);
         CompletableFuture<Address> addressFuture = CompletableFuture.supplyAsync(() -> addressClient.searchAddressById(aid).getData(), threadPoolTaskExecutor);
         CompletableFuture.allOf(cartListFuture, addressFuture).join();//等待所有异步任务执行完成
 

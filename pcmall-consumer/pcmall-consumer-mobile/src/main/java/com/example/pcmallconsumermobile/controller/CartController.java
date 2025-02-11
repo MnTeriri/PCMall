@@ -35,7 +35,7 @@ public class CartController {
 
     @PostMapping("/searchSelectCart")
     public ResponseResult<List<Cart>> searchSelectCart(String uid) {
-        return cartClient.searchSelectCart(uid, true, true, true);
+        return cartClient.searchSelectCart(uid, true);
     }
 
     @PostMapping("/getTotalCount")

@@ -20,9 +20,7 @@ public interface CartClient {
     @PostMapping("/cart/searchSelectCart")
     ResponseResult<List<Cart>> searchSelectCart(
             @RequestParam("uid") String uid,
-            @RequestParam("isSearchGoods") Boolean isSearchGoods,
-            @RequestParam("isSearchCategory") Boolean isSearchCategory,
-            @RequestParam("isSearchBrand") Boolean isSearchBrand);
+            @RequestParam("isSearchGoods") Boolean isSearchGoods);
 
     @PostMapping("/cart/getTotalCount")
     ResponseResult<Long> getTotalCount(@RequestParam("uid") String uid);
