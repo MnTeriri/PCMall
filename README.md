@@ -471,4 +471,6 @@ pom.xml添加如下依赖
 
    ~~~
    sh mqadmin updateTopic -c DefaultCluster -t test-topic
+   docker pull apacherocketmq/rocketmq-dashboard:2.1.0
+   docker run -d --name rocketmq-dashboard --network docker_rocketmq -e "JAVA_OPTS=-Drocketmq.namesrv.addr=pcmall-rocketmq-nameserver:9876" -p 8082:8082 apacherocketmq/rocketmq-dashboard:2.1.0
    ~~~

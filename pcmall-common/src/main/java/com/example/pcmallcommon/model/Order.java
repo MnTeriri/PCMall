@@ -1,18 +1,16 @@
 package com.example.pcmallcommon.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,4 +36,32 @@ public class Order {
     private LocalDateTime sendTime;//发货时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime finishTime;//完成时间
+
+    @AllArgsConstructor
+    @ToString
+    @Getter
+    public enum OrderState {
+        PENDING_PAYMENT(0, "待付款"),
+        PENDING_SHIPMENT(1, "待发货"),
+        PENDING_RECEIPT(2, "待收货"),
+        SUCCESS(3, "交易成功"),
+        CANCELED(4, "交易取消"),
+        RETURNING(5, "退货中"),
+        RETURNED(6, "退货成功");
+
+        @JsonValue
+        @EnumValue
+        private final Integer code;
+        private final String name;
+
+        @JsonCreator
+        public static OrderState fromCode(Integer code) {
+            for (OrderState state : values()) {
+                if (Objects.equals(state.code, code)) {
+                    return state;
+                }
+            }
+            return null;
+        }
+    }
 }

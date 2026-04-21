@@ -12,10 +12,16 @@ public interface IGoodsDao extends BaseMapper<Goods> {
     @Select("SELECT * FROM goods WHERE id=#{id} FOR UPDATE;")
     Goods searchGoodsForUpdate(Integer id);
 
-    @Select("SELECT * FROM goods WHERE status=0 AND is_delete=0 " +
-            "AND (gname LIKE CONCAT('%', #{searchValue}, '%') OR description LIKE CONCAT('%', #{searchValue}, '%') " +
-            "OR bid IN (SELECT id FROM brand WHERE bname LIKE CONCAT('%', #{searchValue}, '%'))" +
-            "OR cid IN (SELECT id FROM category WHERE category.cname LIKE CONCAT('%', #{searchValue}, '%'))) " +
+    @Select("SELECT goods.* FROM goods " +
+            "INNER JOIN category ON goods.cid = category.id " +
+            "INNER JOIN brand ON goods.bid = brand.id " +
+            "WHERE status=0 AND goods.is_delete=0 " +
+            "AND (" +
+                "gname LIKE CONCAT('%', #{searchValue}, '%')" +
+                "OR description LIKE CONCAT('%', #{searchValue}, '%')" +
+                "OR category.cname LIKE CONCAT('%', #{searchValue}, '%')" +
+                "OR brand.bname LIKE CONCAT('%', #{searchValue}, '%')" +
+            ") " +
             "LIMIT #{start},#{pageSize};")
     List<Goods> searchGoodsList(String searchValue, Integer start, Integer pageSize);
 
@@ -24,9 +30,15 @@ public interface IGoodsDao extends BaseMapper<Goods> {
             "LIMIT #{start},#{pageSize};")
     List<Goods> searchGoodsByCidAndBid(Integer cid, Integer bid, Integer start, Integer pageSize);
 
-    @Select("SELECT COUNT(*) FROM goods WHERE status=0 AND is_delete=0 " +
-            "AND (gname LIKE CONCAT('%', #{searchValue}, '%') OR description LIKE CONCAT('%', #{searchValue}, '%') " +
-            "OR bid IN (SELECT id FROM brand WHERE bname LIKE CONCAT('%', #{searchValue}, '%'))" +
-            "OR cid IN (SELECT id FROM category WHERE category.cname LIKE CONCAT('%', #{searchValue}, '%')));")
+    @Select("SELECT COUNT(goods.id) FROM goods " +
+            "INNER JOIN category ON goods.cid = category.id " +
+            "INNER JOIN brand ON goods.bid = brand.id " +
+            "WHERE status=0 AND goods.is_delete=0 " +
+            "AND (" +
+                "gname LIKE CONCAT('%', #{searchValue}, '%')" +
+                "OR description LIKE CONCAT('%', #{searchValue}, '%')" +
+                "OR category.cname LIKE CONCAT('%', #{searchValue}, '%')" +
+                "OR brand.bname LIKE CONCAT('%', #{searchValue}, '%')" +
+            ");")
     Long getRecordsFiltered(String searchValue);
 }

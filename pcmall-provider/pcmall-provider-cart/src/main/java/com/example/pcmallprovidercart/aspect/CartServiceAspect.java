@@ -29,7 +29,6 @@ public class CartServiceAspect {
 
     @Around("execution(* com.example.pcmallprovidercart.service.ICartService.searchCartById(..))")
     public Object searchCartAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.debug("进入切面");
         Cart result = (Cart) joinPoint.proceed();
         if (result == null) {
             return null;
@@ -38,14 +37,12 @@ public class CartServiceAspect {
                 .supplyAsync(() -> goodsClient.searchGoodsById(result.getGid(), true, true).getData(), threadPoolTaskExecutor)
                 .thenAccept(result::setGoods);
         completableFuture.join();
-        log.debug("执行完成");
         return result;
     }
 
     @Around("execution(* com.example.pcmallprovidercart.service.ICartService.searchAllCart(..)) || " +
             "execution(* com.example.pcmallprovidercart.service.ICartService.searchSelectCart(..)) ")
     public Object searchCartListAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.debug("进入切面");
         Object[] args = joinPoint.getArgs();
         List<Cart> result = (List<Cart>) joinPoint.proceed();
         if (result == null) {
@@ -68,7 +65,6 @@ public class CartServiceAspect {
         }
         //等待所有异步任务执行完成
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-        log.debug("执行完成");
         return result;
     }
 }

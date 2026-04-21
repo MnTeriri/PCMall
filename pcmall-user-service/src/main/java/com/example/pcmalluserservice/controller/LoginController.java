@@ -1,6 +1,8 @@
 package com.example.pcmalluserservice.controller;
 
+import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.User;
+import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmalluserservice.service.IUserService;
 import jakarta.servlet.http.HttpSession;
@@ -20,10 +22,10 @@ public class LoginController {
     @PostMapping(value = "/api/login")
     public ResponseResult<User> login(String uid, String password, String code) {
         //判定验证码
-//        String captchaCode = (String) session.getAttribute("captchaCode");
-//        if (!captchaCode.equals(code)) {
-//            throw new SystemException(ResponseCode.CAPTCHA_ERROR);
-//        }
+        String captchaCode = (String) session.getAttribute("captchaCode");
+        if (!captchaCode.equals(code)) {
+            throw new SystemException(ResponseCode.CAPTCHA_ERROR);
+        }
         return userService.login(uid, password);
     }
 }

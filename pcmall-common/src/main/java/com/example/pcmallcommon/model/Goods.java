@@ -1,21 +1,19 @@
 package com.example.pcmallcommon.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,4 +45,28 @@ public class Goods {
     private String description;//商品描述
     private Integer status;//商品状态（0正常、1缺货、2下架）
     private Integer isDelete;//是否删除（0正常 1删除）
+
+    @AllArgsConstructor
+    @ToString
+    @Getter
+    public enum GoodsState {
+        NORMAL(0, "正常"),
+        OUT_OF_STOCK(1, "缺货"),
+        OFF_SHELF(2, "下架");
+
+        @JsonValue
+        @EnumValue
+        private final Integer code;
+        private final String name;
+
+        @JsonCreator
+        public static GoodsState fromCode(Integer code) {
+            for (GoodsState state : values()) {
+                if (Objects.equals(state.code, code)) {
+                    return state;
+                }
+            }
+            return null;
+        }
+    }
 }

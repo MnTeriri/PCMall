@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -35,8 +36,13 @@ public class ImageController {
         return ResponseResult.ok(fileName);
     }
 
-    @RequestMapping("/getImage")
+    @PostMapping("/getImage")
     public String getImage() {
         return "这是获取照片接口（获取Base64）";
+    }
+
+    @PostMapping("/getADImageList")
+    public ResponseResult<List<String>> getADImageList(){
+        return ResponseResult.ok(List.of("IMG_6717.png","IMG_6717.png","IMG_6717.png","IMG_6717.png","IMG_6717.png"));
     }
 }
