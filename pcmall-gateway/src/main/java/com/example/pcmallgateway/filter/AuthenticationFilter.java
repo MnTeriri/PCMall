@@ -2,47 +2,52 @@ package com.example.pcmallgateway.filter;
 
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.response.ResponseCode;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.Ordered;
-import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import java.util.List;
+import java.io.IOException;
 
 @Slf4j
 @Component
-public class AuthenticationFilter implements GlobalFilter, Ordered {
+public class AuthenticationFilter extends OncePerRequestFilter implements Ordered {
+
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver resolver;
+
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.debug("进入AuthenticationFilter");
-        ServerHttpRequest request = exchange.getRequest();
-        ServerHttpResponse response = exchange.getResponse();
-        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        String path = request.getURI().getPath();
-        log.debug("访问的链接是：{}", path);
-        if ("/api/login".equals(path)
-                || "/api/register".equals(path)
-                || "/api/captcha.jpg".equals(path)
-                || path.startsWith("/api/image")
-                || path.startsWith("/api/mobile/goods")
-                || path.startsWith("/api/mobile/category")
-                || path.startsWith("/api/mobile/brand")) {
-            log.debug("是{}，放行", path);
-            return chain.filter(exchange);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.debug("进入 AuthenticationFilter");
+        String uri = request.getRequestURI();
+        log.debug("访问的链接是：{}", uri);
+        if ("/api/login".equals(uri)
+                || "/api/register".equals(uri)
+                || "/api/captcha.jpg".equals(uri)
+                || uri.startsWith("/api/image")
+                || uri.startsWith("/api/mobile/goods")
+                || uri.startsWith("/api/mobile/category")
+                || uri.startsWith("/api/mobile/brand")) {
+            log.debug("访问 {}，无需 token", uri);
+            filterChain.doFilter(request, response);
+            return;
         }
-        List<String> token = request.getHeaders().get("token");
+        String token = request.getHeader("token");
         if (token == null) {
-            log.error(ResponseCode.NO_TOKEN_ERROR.toString());
-            throw new SystemException(ResponseCode.NO_TOKEN_ERROR);
+            log.error("访问 {}，但无 token", uri);
+            resolver.resolveException(request, response, null, new SystemException(ResponseCode.NO_TOKEN_ERROR));
+            return;
         }
-        log.debug("token:{}", request.getHeaders().get("token"));
-        return chain.filter(exchange);
+        log.debug("访问 {}，token：{}", uri, token);
+        filterChain.doFilter(request, response);
     }
 
     @Override

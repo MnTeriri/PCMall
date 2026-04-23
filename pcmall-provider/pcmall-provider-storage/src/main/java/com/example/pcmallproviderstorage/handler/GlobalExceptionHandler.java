@@ -18,21 +18,21 @@ import java.nio.charset.StandardCharsets;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     public GlobalExceptionHandler() {
-        log.debug("创建全局异常处理对象：GlobalExceptionHandler");
+        log.debug("创建 GlobalExceptionHandler：{}", this);
     }
 
     //处理自定义异常
     @ExceptionHandler(SystemException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseResult<String> handlerSystemException(SystemException exception) {
-        log.error("发生自定义SystemException异常：{}", exception.getResponseStatus());
+        log.error("发生自定义SystemException异常：", exception);
         return ResponseResult.error(exception.getResponseStatus());
     }
 
     @ExceptionHandler(FeignException.BadRequest.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseResult<String> handlerSystemException(FeignException.BadRequest exception) {
-        log.error("发生FeignException.BadRequest异常：{}", exception.getMessage());
+        log.error("发生FeignException.BadRequest异常：", exception);
         ByteBuffer byteBuffer = exception.responseBody().get();
         Charset charset = StandardCharsets.UTF_8;
         String json = charset.decode(byteBuffer).toString();

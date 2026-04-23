@@ -5,12 +5,11 @@
     <parent>
         <groupId>com.example</groupId>
         <artifactId>pcmall-consumer</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
 
     </parent>
 
     <artifactId>pcmall-consumer-mobile</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>pcmall-consumer-mobile</name>
     <description>pcmall-consumer-mobile</description>
 

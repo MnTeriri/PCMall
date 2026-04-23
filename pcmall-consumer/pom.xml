@@ -5,11 +5,10 @@
     <parent>
         <groupId>com.example</groupId>
         <artifactId>PCMall</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>pcmall-consumer</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>pcmall-consumer</name>
     <description>pcmall-consumer</description>
 
@@ -24,11 +23,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
         <!--SpringCloud ailibaba nacos -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -62,7 +56,6 @@
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>pcmall-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

@@ -18,24 +18,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/order")
 public class OrderController {
+
     @Qualifier("orderServiceImpl")
     @Autowired
     private IOrderService orderService;
+
     @Qualifier("seataOrderServiceImpl")
     @Autowired
     private IOrderService seataOrderService;
+
     @Qualifier("rocketMQOrderServiceImpl")
     @Autowired
     private IOrderService rocketMQOrderService;
-
-    public OrderController() {
-        log.debug("创建Controller对象：OrderController");
-    }
-
-    @PostMapping("/test")
-    void test() {
-        rocketMQOrderService.createOrder("", 1);
-    }
 
     @PostMapping("/searchOrderList")
     public ResponseResult<List<Order>> searchOrderList(String searchValue, String uid, Integer type, Integer currentPage, Integer pageSize) {

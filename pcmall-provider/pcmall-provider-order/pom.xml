@@ -5,11 +5,10 @@
     <parent>
         <groupId>com.example</groupId>
         <artifactId>pcmall-provider</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>pcmall-provider-order</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>pcmall-provider-order</name>
     <description>pcmall-provider-order</description>
 
@@ -24,25 +23,13 @@
             <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
 
-        <!-- Openfeign -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
-        <!-- Loadbalancer -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-        </dependency>
-
         <!-- Redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
-        <!-- Spring Cloud Ailibaba Seata -->
+        <!-- Spring Cloud Alibaba Seata -->
         <dependency>
             <groupId>org.apache.seata</groupId>
             <artifactId>seata-spring-boot-starter</artifactId>
@@ -58,7 +45,7 @@
             </exclusions>
         </dependency>
 
-        <!-- Spring Cloud Ailibaba RocketMQ -->
+        <!-- Spring Cloud Alibaba RocketMQ -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-stream-rocketmq</artifactId>

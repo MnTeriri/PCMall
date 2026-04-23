@@ -8,8 +8,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,13 +21,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/address")
 @Tag(name = "address参数")
+@RequiredArgsConstructor
 public class AddressController {
-    @Autowired
-    private IAddressService addressService;
 
-    public AddressController() {
-        log.debug("创建Controller对象：{}", this);
-    }
+    private final IAddressService addressService;
 
     @PostMapping("/searchAddressById")
     @Operation(summary = "查询地址信息")

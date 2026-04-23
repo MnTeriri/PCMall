@@ -9,12 +9,12 @@ import com.example.pcmallcommon.model.User;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallcommon.utils.JwtUtils;
+import com.example.pcmallcommon.utils.RedisUtils;
 import com.example.pcmalluserservice.dao.IUserDao;
 import com.example.pcmalluserservice.dao.IUserRoleDao;
 import com.example.pcmalluserservice.service.IUserService;
-import com.example.pcmalluserservice.utils.RedisUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,13 +26,14 @@ import java.util.HashMap;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private IUserDao userDao;
-    @Autowired
-    private IUserRoleDao userRoleDao;
+
+    private final AuthenticationManager authenticationManager;
+
+    private final IUserDao userDao;
+
+    private final IUserRoleDao userRoleDao;
 
     @Override
     public ResponseResult<User> login(String uid, String password) {

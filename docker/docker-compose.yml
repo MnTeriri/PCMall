@@ -33,7 +33,7 @@ services:
       - "8091:8091"
     environment:
       - STORE_MODE=db
-      - SEATA_IP=10.9.183.232 #不能是127.0.0.1 可以是宿主机地址
+      - SEATA_IP=10.9.45.165 #不能是127.0.0.1 可以是宿主机地址
       - SEATA_PORT=8091
     volumes:
       - pcmall-seata-data:/seata-server
@@ -41,6 +41,17 @@ services:
       - "/usr/share/zoneinfo/Asia/Shanghai:/etc/timezone"   #设置时区
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+  pcmall-seata-naming-server:
+    image: apache/seata-naming-server:2.6.0.jdk25
+    container_name: pcmall-seata-naming-server
+    ports:
+      - "8082:8081" #宿主：容器
+      - "10055:10055"
+    environment:
+      - SERVER_PORT=8081
+      - SEATA_SECURITY_SECRETKEY=TXlDdXN0b21TZWNyZXRLZXlGb3JTZWF0YUpXVDIwMjQ=
+      - SEATA_SECURITY_TOKEN_VALIDITY=1800000
 
   pcmall-sentinel:
     container_name: pcmall-sentinel

@@ -1,4 +1,4 @@
-package com.example.pcmalluserservice.config;
+package com.example.pcmallconsumeradmin.config;
 
 import com.example.pcmallcommon.annotation.EnableRedisUtils;
 import lombok.extern.slf4j.Slf4j;

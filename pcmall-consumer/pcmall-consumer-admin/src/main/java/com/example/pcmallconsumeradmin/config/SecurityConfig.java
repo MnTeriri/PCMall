@@ -1,8 +1,7 @@
 package com.example.pcmallconsumeradmin.config;
 
-import com.example.pcmallconsumeradmin.filter.JwtAuthenticationTokenFilter;
+import com.example.pcmallcommon.filter.JwtAuthenticationTokenFilter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,21 +17,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    @Autowired
-    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     public SecurityConfig() {
-        log.debug("创建配置类对象：SecurityConfig");
+        log.debug("创建 SecurityConfig：{}", this);
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()//放行所有OPTIONS请求,要不然连header里面的token都获取不了
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable);
         return http.build();

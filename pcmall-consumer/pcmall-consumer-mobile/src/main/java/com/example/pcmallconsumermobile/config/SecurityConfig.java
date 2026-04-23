@@ -1,6 +1,6 @@
 package com.example.pcmallconsumermobile.config;
 
-import com.example.pcmallconsumermobile.filter.JwtAuthenticationTokenFilter;
+import com.example.pcmallcommon.filter.JwtAuthenticationTokenFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,15 +18,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-//    @Autowired
-//    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     public SecurityConfig() {
-        log.debug("创建配置类对象：SecurityConfig");
+        log.debug("创建 SecurityConfig：{}", this);
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/goods/**").permitAll()

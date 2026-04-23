@@ -2,6 +2,7 @@ package com.example.pcmallprovidercategory.handler;
 
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.response.ResponseResult;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,17 +10,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
+@Hidden
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     public GlobalExceptionHandler() {
-        log.debug("创建全局异常处理对象：GlobalExceptionHandler");
+        log.debug("创建 GlobalExceptionHandler：{}", this);
     }
 
     //处理自定义异常
     @ExceptionHandler(SystemException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseResult<String> handlerSystemException(SystemException exception) {
-        log.error("发生自定义SystemException异常：{}", exception.getResponseStatus());
+        log.error("发生自定义SystemException异常：", exception);
         return ResponseResult.error(exception.getResponseStatus());
     }
 }

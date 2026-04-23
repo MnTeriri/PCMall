@@ -1,4 +1,4 @@
-package com.example.pcmallconsumermobile.utils;
+package com.example.pcmallcommon.utils;
 
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ public class RedisUtils {
 
     @Autowired
     public RedisUtils(StringRedisTemplate stringRedisTemplate) {
-        log.debug("StringRedisTemplate已装配");
+        log.debug("创建 RedisUtils：StringRedisTemplate 已装配");
         RedisUtils.stringRedisTemplate = stringRedisTemplate;
     }
 

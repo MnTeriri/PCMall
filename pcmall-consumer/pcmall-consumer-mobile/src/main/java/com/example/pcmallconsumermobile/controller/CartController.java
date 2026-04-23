@@ -3,8 +3,8 @@ package com.example.pcmallconsumermobile.controller;
 import com.example.pcmallcommon.client.CartClient;
 import com.example.pcmallcommon.model.Cart;
 import com.example.pcmallcommon.response.ResponseResult;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/cart")
 @PreAuthorize("hasRole('USER')")
+@RequiredArgsConstructor
 public class CartController {
-    @Autowired
-    private CartClient cartClient;
 
-    public CartController() {
-        log.debug("创建Controller对象：{}", this);
-    }
+    private final CartClient cartClient;
 
     @PostMapping("/searchAllCart")
     public ResponseResult<List<Cart>> searchAllCart(

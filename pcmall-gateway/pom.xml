@@ -5,11 +5,10 @@
     <parent>
         <groupId>com.example</groupId>
         <artifactId>PCMall</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>pcmall-gateway</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>pcmall-gateway</name>
     <description>pcmall-gateway</description>
 
@@ -18,32 +17,29 @@
     </properties>
 
     <dependencies>
-        <!--SpringCloud ailibaba nacos -->
+        <!-- Spring Cloud Alibaba Nacos Discovery-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 
+        <!-- Spring Cloud Gateway WebMVC -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <artifactId>spring-cloud-starter-gateway-server-webmvc</artifactId>
         </dependency>
 
+        <!-- Loadbalancer -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
 
+        <!-- 公共依赖 -->
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>pcmall-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.boot</groupId>-->
-        <!--            <artifactId>spring-boot-starter-security</artifactId>-->
-        <!--        </dependency>-->
 
     </dependencies>
 

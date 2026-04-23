@@ -3,11 +3,11 @@ package com.example.pcmallprovidergoods.aspect;
 import com.example.pcmallcommon.client.BrandClient;
 import com.example.pcmallcommon.client.CategoryClient;
 import com.example.pcmallcommon.model.Goods;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -19,17 +19,14 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 @Component
 @Aspect
+@RequiredArgsConstructor
 public class GoodsServiceAspect {
-    @Autowired
-    private BrandClient brandClient;
-    @Autowired
-    private CategoryClient categoryClient;
-    @Autowired
-    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-    public GoodsServiceAspect() {
-        log.debug("创建切面类对象：{}", this);
-    }
+    private final BrandClient brandClient;
+
+    private final CategoryClient categoryClient;
+
+    private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Around("execution(* com.example.pcmallprovidergoods.service.IGoodsService.searchGoodsById(..))")
     public Object searchGoodsAround(ProceedingJoinPoint joinPoint) throws Throwable {

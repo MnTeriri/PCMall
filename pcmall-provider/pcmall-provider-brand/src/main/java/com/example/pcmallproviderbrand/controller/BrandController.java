@@ -8,8 +8,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -19,13 +19,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/brand")
 @Tag(name = "brand参数")
+@RequiredArgsConstructor
 public class BrandController {
-    @Autowired
-    private IBrandService brandService;
 
-    public BrandController() {
-        log.debug("创建Controller对象：{}", this);
-    }
+    private final IBrandService brandService;
 
     @PostMapping("/searchBrandById")
     @Operation(summary = "查询品牌信息")

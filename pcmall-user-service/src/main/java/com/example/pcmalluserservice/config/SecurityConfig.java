@@ -1,6 +1,6 @@
 package com.example.pcmalluserservice.config;
 
-import com.example.pcmalluserservice.filter.JwtAuthenticationTokenFilter;
+import com.example.pcmallcommon.filter.JwtAuthenticationTokenFilter;
 import com.example.pcmalluserservice.service.impl.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,19 +27,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     @Autowired
     private UserDetailsServiceImpl userService;
-//    @Autowired
-//    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
-//    @Autowired
-//    private SimpleAuthenticationEntryPoint authenticationEntryPoint;
-//    @Autowired
-//    private SimpleAccessDeniedHandler accessDeniedHandler;
 
     public SecurityConfig() {
-        log.debug("创建配置类对象：SecurityConfig");
+        log.debug("创建 SecurityConfig：{}", this);
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/login").permitAll()
@@ -51,17 +45,12 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable);
-//                .exceptionHandling(config -> {
-//                    config.authenticationEntryPoint(authenticationEntryPoint);
-//                    config.accessDeniedHandler(accessDeniedHandler);
-//                });
         return http.build();
     }
 
     @Bean
     public AuthenticationManager authenticationManager() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userService);
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(userService);
         return new ProviderManager(daoAuthenticationProvider);
     }
 
@@ -75,6 +64,14 @@ public class SecurityConfig {
         return (web) -> web.ignoring()
                 .requestMatchers("/api/login")
                 .requestMatchers("/api/register")
-                .requestMatchers("/api/captcha.jpg");
+                .requestMatchers("/api/captcha.jpg")
+                .requestMatchers(
+                        "/doc.html",
+                        "/webjars/**",
+                        "/v3/api-docs/**",
+                        "/swagger-resources/**",
+                        "/swagger-ui/**"
+//                        "/favicon.ico"
+                );
     }
 }

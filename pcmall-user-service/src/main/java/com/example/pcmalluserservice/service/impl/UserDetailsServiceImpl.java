@@ -7,8 +7,8 @@ import com.example.pcmallcommon.model.User;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmalluserservice.dao.IUserDao;
 import com.example.pcmalluserservice.dao.IUserRoleDao;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,11 +19,12 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
-    private IUserDao userDao;
-    @Autowired
-    private IUserRoleDao userRoleDao;
+
+    private final IUserDao userDao;
+
+    private final IUserRoleDao userRoleDao;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

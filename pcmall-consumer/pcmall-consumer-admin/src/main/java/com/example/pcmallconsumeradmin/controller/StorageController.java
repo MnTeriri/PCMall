@@ -3,8 +3,8 @@ package com.example.pcmallconsumeradmin.controller;
 import com.example.pcmallcommon.client.StorageClient;
 import com.example.pcmallcommon.model.Storage;
 import com.example.pcmallcommon.response.ResponseResult;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/storage")
 @PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor
 public class StorageController {
-    @Autowired
-    private StorageClient storageClient;
 
-    public StorageController() {
-        log.debug("创建Controller对象：StorageController");
-    }
+    private final StorageClient storageClient;
 
     @PostMapping("/getStorageList")
     public ResponseResult<List<Storage>> getStorageList(

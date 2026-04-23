@@ -11,24 +11,21 @@ import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallprovidercart.dao.ICartDao;
 import com.example.pcmallprovidercart.service.ICartService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CartServiceImpl implements ICartService {
-    @Autowired
-    private ICartDao cartDao;
-    @Autowired
-    private GoodsClient goodsClient;
 
-    public CartServiceImpl() {
-        log.debug("创建Service对象：{}", this);
-    }
+    private final ICartDao cartDao;
+
+    private final GoodsClient goodsClient;
 
     @Override
     public Cart searchCartById(Integer id) {

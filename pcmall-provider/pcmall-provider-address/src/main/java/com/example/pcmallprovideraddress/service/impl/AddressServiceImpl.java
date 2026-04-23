@@ -6,8 +6,8 @@ import com.example.pcmallcommon.model.Address;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallprovideraddress.dao.IAddressDao;
 import com.example.pcmallprovideraddress.service.IAddressService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +16,10 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AddressServiceImpl implements IAddressService {
-    @Autowired
-    private IAddressDao addressDao;
 
-    public AddressServiceImpl() {
-        log.debug("创建Service对象：{}", this);
-    }
+    private final IAddressDao addressDao;
 
     @Override
     public Address searchAddressById(Integer id) {

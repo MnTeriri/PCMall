@@ -3,8 +3,8 @@ package com.example.pcmallconsumermobile.controller;
 import com.example.pcmallcommon.client.GoodsClient;
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseResult;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,13 +15,10 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/goods")
+@RequiredArgsConstructor
 public class GoodsController {
-    @Autowired
-    private GoodsClient goodsClient;
 
-    public GoodsController() {
-        log.debug("创建Controller对象：{}", this);
-    }
+    private final GoodsClient goodsClient;
 
     @RequestMapping("/searchGoodsByValue")
     public ResponseResult<List<Goods>> searchGoodsByValue(

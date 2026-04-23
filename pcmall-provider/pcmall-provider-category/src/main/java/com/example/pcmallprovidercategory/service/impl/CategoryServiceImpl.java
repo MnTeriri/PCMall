@@ -7,8 +7,8 @@ import com.example.pcmallcommon.model.Category;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallprovidercategory.dao.ICategoryDao;
 import com.example.pcmallprovidercategory.service.ICategoryService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -19,13 +19,10 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements ICategoryService {
-    @Autowired
-    private ICategoryDao categoryDao;
 
-    public CategoryServiceImpl() {
-        log.debug("创建Service对象：{}", this);
-    }
+    private final ICategoryDao categoryDao;
 
     @Cacheable(cacheNames = "category", key = "#id", sync = true)
     @Override

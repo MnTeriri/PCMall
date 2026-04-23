@@ -3,8 +3,8 @@ package com.example.pcmallconsumermobile.controller;
 import com.example.pcmallcommon.client.AddressClient;
 import com.example.pcmallcommon.model.Address;
 import com.example.pcmallcommon.response.ResponseResult;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,13 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/address")
 @PreAuthorize("hasRole('USER')")
+@RequiredArgsConstructor
 public class AddressController {
-    @Autowired
-    private AddressClient addressClient;
 
-    public AddressController() {
-        log.debug("创建AddressController对象：AddressController");
-    }
+    private final AddressClient addressClient;
 
     @PostMapping("/searchAddressList")
     public ResponseResult<List<Address>> searchAddressList(String uid) {

@@ -5,26 +5,19 @@
     <parent>
         <groupId>com.example</groupId>
         <artifactId>PCMall</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>pcmall-user-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>pcmall-user-service</name>
     <description>pcmall-user-service</description>
+
     <properties>
         <java.version>17</java.version>
     </properties>
 
     <dependencies>
-        <!-- Spring Web依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!-- Spring Cloud ailibaba nacos -->
+        <!-- Spring Cloud Alibaba Nacos Discovery-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
@@ -52,14 +45,19 @@
         <!-- Mybatis-Plus -->
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-            <version>3.5.5</version>
+            <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
         </dependency>
 
+        <!-- Knife4j -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 公共依赖 -->
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>pcmall-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

@@ -16,8 +16,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class OrderJob implements Job {
+
     @Autowired
     private IOrderDao orderDao;
+
     @Qualifier("orderServiceImpl")
     @Autowired
     private IOrderService orderService;

@@ -3,8 +3,8 @@ package com.example.pcmallconsumermobile.controller;
 import com.example.pcmallcommon.client.UserClient;
 import com.example.pcmallcommon.model.User;
 import com.example.pcmallcommon.response.ResponseResult;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,13 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user")
 @PreAuthorize("hasRole('USER')")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserClient userClient;
 
-    public UserController() {
-        log.debug("创建UserController对象：UserController");
-    }
+    private final UserClient userClient;
 
     @PostMapping("/updateInformation")
     public ResponseResult<User> updateInformation(@RequestBody User user) {

@@ -5,33 +5,19 @@
     <parent>
         <groupId>com.example</groupId>
         <artifactId>pcmall-provider</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>pcmall-provider-cart</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>pcmall-provider-cart</name>
     <description>pcmall-provider-cart</description>
-
 
     <properties>
         <java.version>17</java.version>
     </properties>
 
     <dependencies>
-        <!-- Openfeign -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
-        <!-- Loadbalancer -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-        </dependency>
-
-        <!-- Spring Cloud Ailibaba Seata -->
+        <!-- Spring Cloud Alibaba Seata -->
         <dependency>
             <groupId>org.apache.seata</groupId>
             <artifactId>seata-spring-boot-starter</artifactId>

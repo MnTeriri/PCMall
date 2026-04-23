@@ -8,15 +8,16 @@ import com.example.pcmallcommon.model.User;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallprovideruser.dao.IUserDao;
 import com.example.pcmallprovideruser.service.IUserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
-    @Autowired
-    private IUserDao userDao;
+
+    private final IUserDao userDao;
 
     @Override
     public User updateInformation(User user) {

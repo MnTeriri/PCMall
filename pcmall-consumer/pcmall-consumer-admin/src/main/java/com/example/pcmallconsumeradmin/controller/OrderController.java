@@ -3,8 +3,8 @@ package com.example.pcmallconsumeradmin.controller;
 import com.example.pcmallcommon.client.OrderClient;
 import com.example.pcmallcommon.model.Order;
 import com.example.pcmallcommon.response.ResponseResult;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/order")
 @PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor
 public class OrderController {
-    @Autowired
-    private OrderClient orderClient;
 
-    public OrderController() {
-        log.debug("创建Controller对象：OrderController");
-    }
+    private final OrderClient orderClient;
 
     @PostMapping("/getOrderList")
     public ResponseResult<List<Order>> getOrderList(

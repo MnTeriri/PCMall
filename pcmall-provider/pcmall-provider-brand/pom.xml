@@ -5,11 +5,10 @@
     <parent>
         <groupId>com.example</groupId>
         <artifactId>pcmall-provider</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>pcmall-provider-brand</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>pcmall-provider-brand</name>
     <description>pcmall-provider-brand</description>
 
@@ -29,7 +28,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>

@@ -8,8 +8,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,13 +18,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/cart")
 @Tag(name = "cart参数")
+@RequiredArgsConstructor
 public class CartController {
-    @Autowired
-    private ICartService cartService;
 
-    public CartController() {
-        log.debug("创建Controller对象：{}", this);
-    }
+    private final ICartService cartService;
 
     @PostMapping("/searchAllCart")
     @Operation(summary = "查询购物车信息")

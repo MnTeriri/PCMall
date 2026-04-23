@@ -8,24 +8,21 @@ import com.example.pcmallcommon.model.Storage;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallproviderstorage.dao.IStorageDao;
 import com.example.pcmallproviderstorage.service.IStorageService;
-import io.seata.spring.annotation.GlobalTransactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.seata.spring.annotation.GlobalTransactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class StorageServiceImpl implements IStorageService {
-    @Autowired
-    private IStorageDao storageDao;
-    @Autowired
-    private GoodsClient goodsClient;
 
-    public StorageServiceImpl() {
-        log.debug("创建Service对象：{}", this);
-    }
+    private final IStorageDao storageDao;
+
+    private final GoodsClient goodsClient;
 
     //@Cacheable(cacheNames = "storage", key = "#gid+':'+#currentPage+':'+#pageSize", sync = true)
     @Override

@@ -7,9 +7,9 @@ import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallprovidergoods.dao.IGoodsDao;
 import com.example.pcmallprovidergoods.service.IGoodsService;
-import io.seata.spring.annotation.GlobalLock;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.seata.spring.annotation.GlobalLock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +18,10 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class GoodsServiceImpl implements IGoodsService {
-    @Autowired
-    private IGoodsDao goodsDao;
 
-    public GoodsServiceImpl() {
-        log.debug("创建Service对象：{}", this);
-    }
+    private final IGoodsDao goodsDao;
 
     @Override
     public Goods searchGoodsById(Integer id, Boolean isSearchCategory, Boolean isSearchBrand) {

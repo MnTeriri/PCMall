@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     public GlobalExceptionHandler() {
-        log.debug("创建全局异常处理对象：GlobalExceptionHandler");
+        log.debug("创建 GlobalExceptionHandler：{}", this);
     }
 
     //处理自定义异常
     @ExceptionHandler(SystemException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseResult<String> handlerSystemException(SystemException exception) {
-        log.error("发生自定义SystemException异常：{}", exception.getResponseStatus());
+        log.error("发生自定义SystemException异常：", exception);
         return ResponseResult.error(exception.getResponseStatus());
     }
 
@@ -32,8 +32,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseResult<String> handlerAccessDeniedException(AccessDeniedException e) {
-        log.error("发生AccessDeniedException异常：{}", e.getMessage());
-        log.error("Class：{}", e.getClass());
+        log.error("发生AccessDeniedException异常：", e);
         ResponseResult<String> message = ResponseResult.error(ResponseCode.FORBIDDEN_ERROR);
         log.error(message.toString());
         return message;
@@ -43,8 +42,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseResult<String> handlerAuthenticationException(AuthenticationException e) {
-        log.error("发生AuthenticationException异常：{}", e.getMessage());
-        log.error("Class：{}", e.getClass());
+        log.error("发生AuthenticationException异常：", e);
         ResponseResult<String> message = ResponseResult.error(ResponseCode.AUTHORIZED_ERROR);
         log.error(message.toString());
         return message;
@@ -54,7 +52,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FeignException.BadRequest.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseResult<String> handlerBadRequestException(FeignException.BadRequest e) {
-        log.error("发生FeignException.BadRequest异常：{}", e.contentUTF8());
+        log.error("发生FeignException.BadRequest异常：", e);
         return JSON.parseObject(e.contentUTF8(), ResponseResult.class);
     }
 
