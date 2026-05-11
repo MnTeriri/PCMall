@@ -25,7 +25,7 @@ public class LoginUser implements UserDetails {
         //把permissions中字符串类型的权限信息转换成GrantedAuthority对象存入authorities中
         List<GrantedAuthority> list = new ArrayList<>();
         for (String role : roles) {
-            list.add(new SimpleGrantedAuthority("ROLE_"+role));
+            list.add(new SimpleGrantedAuthority("ROLE_" + role));
         }
         return list;
     }
@@ -40,23 +40,4 @@ public class LoginUser implements UserDetails {
         return user.getUid();
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

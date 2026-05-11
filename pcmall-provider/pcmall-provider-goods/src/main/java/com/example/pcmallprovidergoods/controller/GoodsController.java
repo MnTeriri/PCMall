@@ -1,6 +1,7 @@
 package com.example.pcmallprovidergoods.controller;
 
 import com.example.pcmallcommon.model.Goods;
+import com.example.pcmallcommon.model.dto.GoodsAiSearchRequest;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallprovidergoods.service.IGoodsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -78,6 +79,15 @@ public class GoodsController {
         return ResponseResult.ok(goodsService.searchGoodsByCidAndBid(cid, bid, currentPage, pageSize));
     }
 
+    @PostMapping("/searchGoodsByAiIntent")
+    @Operation(summary = "使用Ai生成购买意图搜索商品")
+    @Parameters({
+            @Parameter(name = "aiSearchRequest", description = "Ai生成购买意图", required = true, in = ParameterIn.QUERY),
+    })
+    public ResponseResult<List<Goods>> searchGoodsByAiIntent(@RequestBody GoodsAiSearchRequest aiSearchRequest) {
+        return ResponseResult.ok(goodsService.searchGoodsByAiIntent(aiSearchRequest));
+    }
+
     @PostMapping("/getTotalCount")
     @Operation(summary = "查询商品信息总个数")
     public ResponseResult<Long> getTotalCount() {
@@ -146,7 +156,7 @@ public class GoodsController {
             @Parameter(name = "status", description = "商品状态", required = true, in = ParameterIn.QUERY)
     })
     public ResponseResult<String> updateGoodsStatus(Integer id, Integer status) {
-        Goods goods = new Goods().setId(id).setStatus(status);
+        Goods goods = new Goods().setId(id).setStatus(Goods.GoodsState.fromCode(status));
         goodsService.updateGoodsStatus(goods);
         return ResponseResult.ok();
     }

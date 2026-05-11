@@ -1,6 +1,7 @@
 package com.example.pcmallprovidergoods.service;
 
 import com.example.pcmallcommon.model.Goods;
+import com.example.pcmallcommon.model.dto.GoodsAiSearchRequest;
 
 import java.util.List;
 
@@ -24,6 +25,8 @@ public interface IGoodsService {
      * 使用cid和bid搜索状态正常商品，使用分页
      */
     List<Goods> searchGoodsByCidAndBid(Integer bid, Integer cid, Integer currentPage, Integer pageSize);
+
+    List<Goods> searchGoodsByAiIntent(GoodsAiSearchRequest aiSearchRequest);
 
     Long getTotalCount();
 

@@ -29,7 +29,7 @@ public class OrderJob implements Job {
         JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
         String oid = jobDataMap.getString("orderOid");//获取创建订单的订单号
         Order order = orderDao.selectOne(new QueryWrapper<Order>().eq("oid", oid));
-        if (order.getStatus() == 0) {//如果订单未付款
+        if (order.getStatus() == Order.OrderState.PENDING_PAYMENT) {//如果订单未付款
             Integer result = orderService.cancelOrder(oid, 4);//取消订单
             if (result == 1) {
                 log.debug("当前时间：{}，订单：{}付款超时，被取消！", jobExecutionContext.getFireTime(), oid);

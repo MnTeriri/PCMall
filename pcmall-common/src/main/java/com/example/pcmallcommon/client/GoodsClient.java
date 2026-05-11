@@ -1,6 +1,7 @@
 package com.example.pcmallcommon.client;
 
 import com.example.pcmallcommon.model.Goods;
+import com.example.pcmallcommon.model.dto.GoodsAiSearchRequest;
 import com.example.pcmallcommon.response.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +36,9 @@ public interface GoodsClient {
             @RequestParam("bid") Integer bid,
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam("pageSize") Integer pageSize);
+
+    @PostMapping("/goods/searchGoodsByAiIntent")
+    ResponseResult<List<Goods>> searchGoodsByAiIntent(@RequestBody GoodsAiSearchRequest aiSearchRequest);
 
     @PostMapping("/goods/getTotalCount")
     ResponseResult<Long> getTotalCount();

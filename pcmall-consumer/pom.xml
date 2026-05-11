@@ -53,6 +53,7 @@
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
 
+        <!-- 公共依赖 -->
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>pcmall-common</artifactId>

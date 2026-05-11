@@ -70,11 +70,15 @@ public class SeataOrderServiceImpl extends OrderServiceImpl {
         }
         for (Cart cart : cartList) {
             Goods goods = goodsClient.searchGoodsById(cart.getGid(), false, false).getData();
-            if (goods.getStatus() != 0) {
+            if (goods.getStatus() != Goods.GoodsState.NORMAL) {
                 throw new SystemException(ResponseCode.CART_GOODS_ERROR);//购物车商品状态异常
             }
             if (goods.getCount() >= cart.getCount()) {
-                Storage storage = new Storage().setGid(cart.getGid()).setUid(uid).setCount(cart.getCount()).setStatus(2);
+                Storage storage = new Storage()
+                        .setGid(cart.getGid())
+                        .setUid(uid)
+                        .setCount(cart.getCount())
+                        .setStatus(Storage.StorageState.SOLD);
                 storageClient.outboundDelivery(storage);
             } else {
                 throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);//商品缺货

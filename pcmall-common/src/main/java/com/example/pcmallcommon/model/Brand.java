@@ -25,14 +25,17 @@ public class Brand {
     @TableId(type = IdType.AUTO)
     private Integer id;//品牌id
     private String bname;//品牌名称
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createdTime;//创建时间
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime updateTime;//修改时间
+
     @TableField(exist = false)
     private Long categoryCount;
     private String image;

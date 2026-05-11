@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.model.Goods;
+import com.example.pcmallcommon.model.dto.GoodsAiSearchRequest;
 import com.example.pcmallcommon.response.ResponseCode;
+import com.example.pcmallprovidergoods.annotation.EnableExtraSearch;
 import com.example.pcmallprovidergoods.dao.IGoodsDao;
 import com.example.pcmallprovidergoods.service.IGoodsService;
 import lombok.RequiredArgsConstructor;
@@ -28,20 +30,29 @@ public class GoodsServiceImpl implements IGoodsService {
         return goodsDao.selectById(id);
     }
 
+    @EnableExtraSearch
     @Override
     public List<Goods> searchAllGoods(Integer currentPage, Integer pageSize) {
         Page<Goods> page = new Page<>(currentPage, pageSize);
         return goodsDao.selectPage(page, null).getRecords();
     }
 
+    @EnableExtraSearch
     @Override
     public List<Goods> searchGoodsByValue(String searchValue, Integer currentPage, Integer pageSize) {
         return goodsDao.searchGoodsList(searchValue, (currentPage - 1) * pageSize, pageSize);
     }
 
+    @EnableExtraSearch
     @Override
     public List<Goods> searchGoodsByCidAndBid(Integer bid, Integer cid, Integer currentPage, Integer pageSize) {
         return goodsDao.searchGoodsByCidAndBid(cid, bid, (currentPage - 1) * pageSize, pageSize);
+    }
+
+    @EnableExtraSearch
+    @Override
+    public List<Goods> searchGoodsByAiIntent(GoodsAiSearchRequest aiSearchRequest) {
+        return goodsDao.searchGoodsByAiIntent(aiSearchRequest);
     }
 
     @Override
@@ -82,9 +93,9 @@ public class GoodsServiceImpl implements IGoodsService {
     @Override
     public void updateGoodsStatus(Goods goods) {
         Goods searched = searchGoodsById(goods.getId(),false,false);
-        if (goods.getStatus() == 0 && searched.getCount() == 0) {
+        if (goods.getStatus() == Goods.GoodsState.NORMAL && searched.getCount() == 0) {
             //上架操作如果商品没货，设置为缺货
-            goods.setStatus(1);
+            goods.setStatus(Goods.GoodsState.OUT_OF_STOCK);
         }
         updateGoods(goods);
     }
@@ -97,8 +108,8 @@ public class GoodsServiceImpl implements IGoodsService {
         if (goods == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);//不存在该商品
         }
-        if (goods.getStatus() == 1) {
-            goods.setStatus(0);//如果商品状态为缺货，设置为正常
+        if (goods.getStatus() == Goods.GoodsState.OUT_OF_STOCK) {
+            goods.setStatus(Goods.GoodsState.NORMAL);//如果商品状态为缺货，设置为正常
         }
         goods.setCount(goods.getCount() + count);
         updateGoods(goods);
@@ -117,7 +128,7 @@ public class GoodsServiceImpl implements IGoodsService {
         }
         goods.setCount(goods.getCount() - count);
         if (goods.getCount() == 0) {
-            goods.setStatus(1);//如果商品数量为0，设置状态为缺货
+            goods.setStatus(Goods.GoodsState.OUT_OF_STOCK);//如果商品数量为0，设置状态为缺货
         }
         updateGoods(goods);
     }

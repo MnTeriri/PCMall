@@ -28,7 +28,8 @@ public class Storage {
     private Integer gid;//商品编号
     private String uid;//用户编号
     private Integer count;//数量
-    private Integer status;//状态 0入库、1出库、2卖出、3退货、4取消订单
+    private StorageState status;//状态 0入库、1出库、2卖出、3退货、4取消订单
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)

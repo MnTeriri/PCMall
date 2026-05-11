@@ -63,10 +63,10 @@ public class CartServiceImpl implements ICartService {
         if (brand.getIsDelete() == 1 || category.getIsDelete() == 1 || goods.getIsDelete() == 1) {
             throw new SystemException(ResponseCode.CART_GOODS_ERROR);//商品状态异常
         }
-        if (goods.getStatus() == 1) {
+        if (goods.getStatus() == Goods.GoodsState.OUT_OF_STOCK) {
             throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);//商品缺货
         }
-        if (goods.getStatus() == 2) {
+        if (goods.getStatus() == Goods.GoodsState.OFF_SHELF) {
             throw new SystemException(ResponseCode.GOODS_OFF_SHELF_ERROR);//商品下架
         }
         QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>()
@@ -109,10 +109,10 @@ public class CartServiceImpl implements ICartService {
         if (brand.getIsDelete() == 1 || category.getIsDelete() == 1 || goods.getIsDelete() == 1) {
             throw new SystemException(ResponseCode.CART_GOODS_ERROR);
         }
-        if (goods.getStatus() == 1) {
+        if (goods.getStatus() == Goods.GoodsState.OUT_OF_STOCK) {
             throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
         }
-        if (goods.getStatus() == 2) {
+        if (goods.getStatus() == Goods.GoodsState.OFF_SHELF) {
             throw new SystemException(ResponseCode.GOODS_OFF_SHELF_ERROR);
         }
         if (data.getCount() >= goods.getCount()) {
@@ -134,10 +134,10 @@ public class CartServiceImpl implements ICartService {
         if (brand.getIsDelete() == 1 || category.getIsDelete() == 1 || goods.getIsDelete() == 1) {
             throw new SystemException(ResponseCode.CART_GOODS_ERROR);
         }
-        if (goods.getStatus() == 1) {
+        if (goods.getStatus() == Goods.GoodsState.OUT_OF_STOCK) {
             throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);
         }
-        if (goods.getStatus() == 2) {
+        if (goods.getStatus() == Goods.GoodsState.OFF_SHELF) {
             throw new SystemException(ResponseCode.GOODS_OFF_SHELF_ERROR);
         }
         if (data.getCount() <= 1) {
@@ -158,7 +158,7 @@ public class CartServiceImpl implements ICartService {
         Category category = goods.getCategory();
         if (brand.getIsDelete() == 1 ||
                 category.getIsDelete() == 1 ||
-                goods.getStatus() != 0 ||
+                goods.getStatus() != Goods.GoodsState.NORMAL ||
                 goods.getIsDelete() == 1) {
             throw new SystemException(ResponseCode.CART_GOODS_ERROR);
         }

@@ -2,7 +2,11 @@ package com.example.pcmallprovidergoods.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.pcmallcommon.model.Goods;
+import com.example.pcmallcommon.model.dto.GoodsAiSearchRequest;
+import com.example.pcmallprovidergoods.provider.GoodsSqlProvider;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,7 +19,7 @@ public interface IGoodsDao extends BaseMapper<Goods> {
     @Select("SELECT goods.* FROM goods " +
             "INNER JOIN category ON goods.cid = category.id " +
             "INNER JOIN brand ON goods.bid = brand.id " +
-            "WHERE status=0 AND goods.is_delete=0 " +
+            "WHERE goods.status=0 AND goods.is_delete=0 " +
             "AND (" +
                 "gname LIKE CONCAT('%', #{searchValue}, '%')" +
                 "OR description LIKE CONCAT('%', #{searchValue}, '%')" +
@@ -30,10 +34,13 @@ public interface IGoodsDao extends BaseMapper<Goods> {
             "LIMIT #{start},#{pageSize};")
     List<Goods> searchGoodsByCidAndBid(Integer cid, Integer bid, Integer start, Integer pageSize);
 
+    @SelectProvider(type = GoodsSqlProvider.class, method = "aiSearchSql")
+    List<Goods> searchGoodsByAiIntent(@Param("request") GoodsAiSearchRequest request);
+
     @Select("SELECT COUNT(goods.id) FROM goods " +
             "INNER JOIN category ON goods.cid = category.id " +
             "INNER JOIN brand ON goods.bid = brand.id " +
-            "WHERE status=0 AND goods.is_delete=0 " +
+            "WHERE goods.status=0 AND goods.is_delete=0 " +
             "AND (" +
                 "gname LIKE CONCAT('%', #{searchValue}, '%')" +
                 "OR description LIKE CONCAT('%', #{searchValue}, '%')" +
