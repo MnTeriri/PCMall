@@ -22,11 +22,6 @@ public class MilvusConfig {
     @Value("${milvus.port}")
     private Integer milvusPort;
 
-    @Value("${milvus.static.collection-name}")
-    private String staticCollectionName;
-    @Value("${milvus.static.dimension}")
-    private Integer staticDimension;
-
     @Bean
     public MilvusServiceClient milvusServiceClient() {
         ConnectParam build = ConnectParam.newBuilder()
@@ -37,11 +32,15 @@ public class MilvusConfig {
     }
 
     @Bean
-    public EmbeddingStore<TextSegment> milvusStaticEmbeddingStore(MilvusServiceClient milvusServiceClient) {
+    public EmbeddingStore<TextSegment> milvusStaticEmbeddingStore(
+            MilvusServiceClient milvusServiceClient,
+            @Value("${milvus.static.collection-name}") String collectionName,
+            @Value("${milvus.static.dimension}") Integer dimension
+    ) {
         return MilvusEmbeddingStore.builder()
                 .milvusClient(milvusServiceClient)          // Use an existing Milvus client
-                .collectionName(staticCollectionName)             // Name of the collection
-                .dimension(staticDimension)                       // Dimension of vectors
+                .collectionName(collectionName)             // Name of the collection
+                .dimension(dimension)                       // Dimension of vectors
                 .indexType(IndexType.FLAT)                 // Index type
                 .metricType(MetricType.COSINE)             // Metric type
                 .consistencyLevel(ConsistencyLevelEnum.EVENTUALLY)  // Consistency level
@@ -51,5 +50,26 @@ public class MilvusConfig {
                 .metadataFieldName("metadata")             // Metadata field name
                 .vectorFieldName("vector")                 // Vector field name
                 .build();                                  // Build the MilvusEmbeddingStore instance
+    }
+
+    @Bean
+    public EmbeddingStore<TextSegment> milvusGoodsEmbeddingStore(
+            MilvusServiceClient milvusServiceClient,
+            @Value("${milvus.goods.collection-name}") String collectionName,
+            @Value("${milvus.goods.dimension}") Integer dimension
+    ) {
+        return MilvusEmbeddingStore.builder()
+                .milvusClient(milvusServiceClient)
+                .collectionName(collectionName)
+                .dimension(dimension)
+                .indexType(IndexType.FLAT)
+                .metricType(MetricType.COSINE)
+                .consistencyLevel(ConsistencyLevelEnum.EVENTUALLY)
+                .autoFlushOnInsert(true)
+                .idFieldName("id")
+                .textFieldName("text")
+                .metadataFieldName("metadata")
+                .vectorFieldName("vector")
+                .build();
     }
 }

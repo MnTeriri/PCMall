@@ -10,6 +10,8 @@ import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.filter.Filter;
 import dev.langchain4j.store.embedding.filter.MetadataFilterBuilder;
+import io.milvus.client.MilvusServiceClient;
+import io.milvus.param.dml.DeleteParam;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
@@ -33,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @Service
-public class StaticKnowledgeDocumentService implements ApplicationRunner {
+public class StaticKnowledgeService implements ApplicationRunner {
     private static final String OLD_DIR_NAME = "old";
     private static final String NEW_DIR_NAME = "new";
 
@@ -43,8 +45,14 @@ public class StaticKnowledgeDocumentService implements ApplicationRunner {
     @Value("${rag.static.refresh-on-startup:true}")
     private Boolean fullRefreshOnStartup;
 
+    @Value("${milvus.static.collection-name}")
+    private String staticCollectionName;
+
     @Autowired
     private EmbeddingModel ollamaEmbeddingModel;
+
+    @Autowired
+    private MilvusServiceClient milvusClient;
 
     @Autowired
     @Qualifier("milvusStaticEmbeddingStore")
@@ -56,7 +64,7 @@ public class StaticKnowledgeDocumentService implements ApplicationRunner {
     public void run(@NonNull ApplicationArguments args) throws Exception {
         if (fullRefreshOnStartup) {
             log.info("执行任务，启动时加载静态知识库文件夹");
-            loadDocument(getOldPath());
+            fullRefreshDocument();
         }
     }
 
@@ -111,8 +119,24 @@ public class StaticKnowledgeDocumentService implements ApplicationRunner {
         }
     }
 
-    public void fullRefreshDocument(){
-        //全量刷新方法，等会再实现
+    public void fullRefreshDocument() {
+        if (!refreshing.compareAndSet(false, true)) {
+            log.debug("静态知识库正在刷新，跳过本次请求");
+            return;
+        }
+        try {
+            //1.删除数据库内容
+            DeleteParam deleteParam = DeleteParam.newBuilder()
+                    .withCollectionName(staticCollectionName)
+                    .withExpr("id != ''")
+                    .build();
+            milvusClient.delete(deleteParam);
+
+            //2.重新加载静态知识库
+            loadDocument(getOldPath());
+        } finally {
+            refreshing.set(false);
+        }
     }
 
     public void loadDocument(Path path) {
@@ -169,8 +193,5 @@ public class StaticKnowledgeDocumentService implements ApplicationRunner {
         //移动到target文件夹
         log.debug("目录：{} 下的内容移动到目录：{} 中", source, target);
         FileUtil.moveContent(source, target, true);
-        //清空source文件夹
-        log.debug("目录：{} 内容被清空", source);
-        FileUtil.clean(source.toString());
     }
 }

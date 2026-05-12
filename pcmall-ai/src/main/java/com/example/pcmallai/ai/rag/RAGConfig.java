@@ -13,24 +13,35 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RAGConfig {
+
     @Autowired
     private EmbeddingModel ollamaEmbeddingModel;
 
-    @Value("${rag.static.max-results}")
-    private Integer staticMaxResults;
-    @Value("${rag.static.min-score}")
-    private Double staticMinScore;
-
     @Bean
-    public ContentRetriever contentRetriever(
-            @Qualifier("milvusStaticEmbeddingStore") EmbeddingStore<TextSegment> milvusStaticEmbeddingStore
+    public ContentRetriever staticContentRetriever(
+            @Qualifier("milvusStaticEmbeddingStore") EmbeddingStore<TextSegment> embeddingStore,
+            @Value("${rag.static.max-results}") Integer maxResults,
+            @Value("${rag.static.min-score}") Double minScore
     ) {
         return EmbeddingStoreContentRetriever.builder()
-                .embeddingStore(milvusStaticEmbeddingStore)
+                .embeddingStore(embeddingStore)
                 .embeddingModel(ollamaEmbeddingModel)
-                .maxResults(staticMaxResults) // 最多 5 个检索结果
-                .minScore(staticMinScore) // 过滤掉分数小于 0.75 的结果
+                .maxResults(maxResults) // 最多 5 个检索结果
+                .minScore(minScore) // 过滤掉分数小于 0.75 的结果
                 .build();
+    }
 
+    @Bean
+    public ContentRetriever goodsContentRetriever(
+            @Qualifier("milvusGoodsEmbeddingStore") EmbeddingStore<TextSegment> embeddingStore,
+            @Value("${rag.goods.max-results}") Integer maxResults,
+            @Value("${rag.goods.min-score}") Double minScore
+    ) {
+        return EmbeddingStoreContentRetriever.builder()
+                .embeddingStore(embeddingStore)
+                .embeddingModel(ollamaEmbeddingModel)
+                .maxResults(maxResults)
+                .minScore(minScore)
+                .build();
     }
 }

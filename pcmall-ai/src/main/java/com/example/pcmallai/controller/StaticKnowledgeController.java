@@ -1,6 +1,6 @@
 package com.example.pcmallai.controller;
 
-import com.example.pcmallai.service.StaticKnowledgeDocumentService;
+import com.example.pcmallai.service.StaticKnowledgeService;
 import com.example.pcmallcommon.response.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "静态知识库接口")
 public class StaticKnowledgeController {
-    private final StaticKnowledgeDocumentService documentService;
+    private final StaticKnowledgeService staticKnowledgeService;
 
     @Operation(summary = "上传静态知识文件")
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -30,9 +30,9 @@ public class StaticKnowledgeController {
             @RequestParam("files") MultipartFile[] files,
             @RequestParam(defaultValue = "false") Boolean refreshNow
     ) throws IOException {
-        List<String> savedFileNames = documentService.saveUploadedFiles(files);
+        List<String> savedFileNames = staticKnowledgeService.saveUploadedFiles(files);
         if (refreshNow) {
-            documentService.refreshDocument();
+            staticKnowledgeService.refreshDocument();
         }
         return ResponseResult.ok(savedFileNames, "上传成功");
     }
@@ -41,7 +41,7 @@ public class StaticKnowledgeController {
     @PostMapping("/refresh")
     public ResponseResult<String> refresh() {
         log.debug("进行增量刷新静态知识库");
-        documentService.refreshDocument();
+        staticKnowledgeService.refreshDocument();
         return ResponseResult.ok("静态知识库增量刷新完成");
     }
 
@@ -49,7 +49,7 @@ public class StaticKnowledgeController {
     @PostMapping("/refreshAll")
     public ResponseResult<String> refreshAll() {
         log.debug("进行全量刷新静态知识库");
-        documentService.fullRefreshDocument();
+        staticKnowledgeService.fullRefreshDocument();
         return ResponseResult.ok("静态知识库全量刷新完成");
     }
 }

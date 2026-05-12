@@ -26,7 +26,8 @@ public class ShoppingAiServiceFactory {
     private StreamingChatModel deepSeekStreamingChatModel;
 
     @Autowired
-    private ContentRetriever contentRetriever;
+    @Qualifier("staticContentRetriever")
+    private ContentRetriever staticContentRetriever;
 
     @Bean
     public ChatMemoryProvider chatMemoryProvider() {
@@ -46,7 +47,7 @@ public class ShoppingAiServiceFactory {
                 .chatModel(deepseekChatModel)
                 .streamingChatModel(deepSeekStreamingChatModel)
                 .chatMemoryProvider(chatMemoryProvider)
-                .contentRetriever(contentRetriever)
+                .contentRetriever(staticContentRetriever)
                 .build();
     }
 }
