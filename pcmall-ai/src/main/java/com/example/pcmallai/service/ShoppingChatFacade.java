@@ -28,6 +28,7 @@ public class ShoppingChatFacade {
         PurchaseIntent intent = shoppingIntentAiService.parseIntent(request.getMessage());
         log.debug("AI分析的购买意图：{}", intent);
         List<Goods> goodsList = goodsQueryService.queryCandidateGoods(intent, request.getTopK());
+        log.debug("查询出的商品：{}", goodsList);
 
         String prompt = buildPrompt(request.getMessage(), intent, goodsList);
 
