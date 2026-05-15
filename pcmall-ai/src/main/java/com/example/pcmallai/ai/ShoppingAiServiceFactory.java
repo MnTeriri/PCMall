@@ -6,7 +6,7 @@ import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
-import dev.langchain4j.rag.content.retriever.ContentRetriever;
+import dev.langchain4j.rag.RetrievalAugmentor;
 import dev.langchain4j.service.AiServices;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +26,7 @@ public class ShoppingAiServiceFactory {
     private StreamingChatModel deepSeekStreamingChatModel;
 
     @Autowired
-    @Qualifier("staticContentRetriever")
-    private ContentRetriever staticContentRetriever;
+    private RetrievalAugmentor retrievalAugmentor;
 
     @Bean
     public ChatMemoryProvider chatMemoryProvider() {
@@ -47,7 +46,7 @@ public class ShoppingAiServiceFactory {
                 .chatModel(deepseekChatModel)
                 .streamingChatModel(deepSeekStreamingChatModel)
                 .chatMemoryProvider(chatMemoryProvider)
-                .contentRetriever(staticContentRetriever)
+                .retrievalAugmentor(retrievalAugmentor)
                 .build();
     }
 }
