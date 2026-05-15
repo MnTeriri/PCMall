@@ -42,7 +42,7 @@ public class StaticKnowledgeController {
     public ResponseResult<String> refresh() {
         log.debug("进行增量刷新静态知识库");
         staticKnowledgeService.refreshDocument();
-        return ResponseResult.ok("静态知识库增量刷新完成");
+        return ResponseResult.ok("静态知识库增量刷新任务已提交");
     }
 
     @Operation(summary = "全量刷新静态知识库（从已保存知识库文件夹）")
@@ -50,6 +50,6 @@ public class StaticKnowledgeController {
     public ResponseResult<String> refreshAll() {
         log.debug("进行全量刷新静态知识库");
         staticKnowledgeService.fullRefreshDocument();
-        return ResponseResult.ok("静态知识库全量刷新完成");
+        return ResponseResult.ok("静态知识库全量刷新任务已提交");
     }
 }

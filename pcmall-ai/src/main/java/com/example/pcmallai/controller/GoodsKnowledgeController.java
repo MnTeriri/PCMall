@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/ai/goods-knowledge")
 @RequiredArgsConstructor
-@Tag(name = "商品动态知识库")
+@Tag(name = "商品动态知识库接口")
 public class GoodsKnowledgeController {
 
     private final GoodsKnowledgeService goodsKnowledgeService;

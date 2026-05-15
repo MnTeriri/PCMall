@@ -9,35 +9,26 @@ import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
+import dev.langchain4j.store.embedding.filter.Filter;
+import dev.langchain4j.store.embedding.filter.MetadataFilterBuilder;
 import io.milvus.client.MilvusServiceClient;
 import io.milvus.param.dml.DeleteParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
 @Service
 public class GoodsKnowledgeService {
-
     private static final String PROGRESS_KEY = "goods:embed:progress";
-
-    @Autowired
-    private GoodsClient goodsClient;
-
-    @Autowired
-    private EmbeddingModel ollamaEmbeddingModel;
-
-    @Autowired
-    private MilvusServiceClient milvusClient;
-
-    @Autowired
-    @Qualifier("milvusGoodsEmbeddingStore")
-    private EmbeddingStore<TextSegment> goodsEmbeddingStore;
 
     @Value("${milvus.goods.collection-name}")
     private String goodsCollectionName;
@@ -54,7 +45,25 @@ public class GoodsKnowledgeService {
     @Value("${rag.goods.init.embed-batch-size:100}")
     private Integer embedBatchSize;
 
+    @Autowired
+    private GoodsClient goodsClient;
+
+    @Autowired
+    private EmbeddingModel ollamaEmbeddingModel;
+
+    @Autowired
+    private MilvusServiceClient milvusClient;
+
+    @Autowired
+    @Qualifier("milvusGoodsEmbeddingStore")
+    private EmbeddingStore<TextSegment> goodsEmbeddingStore;
+
     private volatile boolean stopRequested = false;
+
+    /**
+     * 初始化锁：保证 startInit 线程安全（多实例需要换成分布式锁）
+     */
+    private final ReentrantLock initLock = new ReentrantLock(true);
 
     /**
      * 查询当前处理进度
@@ -68,13 +77,14 @@ public class GoodsKnowledgeService {
         RedisUtils.setCacheObject(PROGRESS_KEY, progress);
     }
 
+    @Async("threadPoolTaskExecutor")
     public void startInit() {
-        GoodsEmbedProgress current = getProgress();
-        if (current.getStatus() == GoodsEmbedProgress.ProgressStatus.RUNNING) {
-            log.warn("全量初始化已在运行中, 忽略重复请求");
+        if (!initLock.tryLock()) {
+            log.warn("获得锁失败，已有初始化在运行");
             return;
         }
 
+        log.debug("获得锁，开始初始化");
         stopRequested = false;
         //修改初始化进度为正在运行
         GoodsEmbedProgress progress = new GoodsEmbedProgress();
@@ -105,8 +115,7 @@ public class GoodsKnowledgeService {
             clearCollection();
 
             // 3. 分页处理
-            // 支持断点续传：如果之前跑过并中断，从上次的 currentPage 继续（但清空集合后不需要，这里保留逻辑完整性）
-            for (int page = 0; page < totalPages; page++) {
+            for (int page = 1; page <= totalPages; page++) {
                 if (stopRequested) {
                     log.info("收到停止信号, 当前页={}, 总页数={}", page, totalPages);
                     progress.setCurrentPage(page);
@@ -115,7 +124,7 @@ public class GoodsKnowledgeService {
                     return;
                 }
 
-                log.info("处理第 {} / {} 页, 已处理 {}/{}", page + 1, totalPages, progress.getProcessedCount(), totalCount);
+                log.info("处理第 {} / {} 页, 已处理 {}/{}", page, totalPages, progress.getProcessedCount(), totalCount);
 
                 List<Goods> goodsList = goodsClient.searchAllGoods(page, batchSize).getData();
                 if (goodsList == null || goodsList.isEmpty()) {
@@ -123,13 +132,29 @@ public class GoodsKnowledgeService {
                     continue;
                 }
 
-                // 构建 TextSegment + 分批 Embedding + 写入
-                processBatch(goodsList);
+                List<Goods> list = goodsList.stream().filter(
+                        goods -> Objects.equals(goods.getIsDelete(), 0)
+                                && goods.getStatus() == Goods.GoodsState.NORMAL
+                ).toList();//过滤掉状态不正常的数据
 
-                progress.setProcessedCount(progress.getProcessedCount() + goodsList.size());
-                progress.setCurrentPage(page + 1);
+                int errorCount = goodsList.size() - list.size();
+                if (errorCount != 0) {
+                    log.debug("出现商品状态异常数据（非正常状态），过滤数量：{}", errorCount);
+                    progress.setErrorCount(progress.getErrorCount() + errorCount);
+                }
+
+                // 构建 TextSegment + 分批 Embedding + 写入
+                processBatch(list);
+
+                progress.setProcessedCount(progress.getProcessedCount() + list.size());
+                progress.setCurrentPage(page);
                 saveProgress(progress);
             }
+
+            log.debug("全量刷新完成");
+            progress.setStatus(GoodsEmbedProgress.ProgressStatus.COMPLETED);
+            progress.setEndTime(LocalDateTime.now());
+            saveProgress(progress);
 
         } catch (Exception e) {
             progress = getProgress();
@@ -138,14 +163,9 @@ public class GoodsKnowledgeService {
             progress.setErrorMessage(e.getMessage());
             saveProgress(progress);
             log.error("商品向量化初始化失败", e);
-        }
-
-        if (!stopRequested) {
-            //刷新完成
-            log.debug("全量刷新完成");
-            progress.setStatus(GoodsEmbedProgress.ProgressStatus.COMPLETED);
-            progress.setEndTime(LocalDateTime.now());
-            saveProgress(progress);
+        } finally {
+            log.debug("任务结束，释放锁");
+            initLock.unlock();
         }
     }
 
@@ -161,6 +181,27 @@ public class GoodsKnowledgeService {
             saveProgress(progress);
         }
     }
+
+    /**
+     * 单条商品 upsert：先删后插
+     */
+    public void upsertGoods(Goods goods) {
+        deleteById(goods.getId());
+        TextSegment segment = TextSegment.from(buildGoodsText(goods), buildGoodsMetadata(goods));
+        Embedding embedding = ollamaEmbeddingModel.embed(segment).content();
+        goodsEmbeddingStore.add(embedding, segment);
+        log.debug("商品向量 upsert 完成: goodsId={}, name={}", goods.getId(), goods.getGname());
+    }
+
+    /**
+     * 按 goodsId 从 Milvus 删除向量
+     */
+    public void deleteById(Integer goodsId) {
+        Filter filter = MetadataFilterBuilder.metadataKey("id").isEqualTo(goodsId);
+        goodsEmbeddingStore.removeAll(filter);
+        log.debug("商品向量已删除: goodsId={}", goodsId);
+    }
+
 
     /**
      * 整页数据分 embedBatchSize 批次进行 embedding 并写入

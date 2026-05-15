@@ -40,6 +40,10 @@ public interface IGoodsService {
 
     void updateGoodsStatus(Goods goods);
 
+    void deleteGoods(Integer id);
+
+    void recoverGoods(Integer id);
+
     void addGoodsCount(Integer id, Integer count);
 
     void divGoodsCount(Integer id, Integer count);

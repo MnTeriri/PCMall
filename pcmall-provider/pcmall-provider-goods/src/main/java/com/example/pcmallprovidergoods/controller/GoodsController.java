@@ -133,8 +133,7 @@ public class GoodsController {
             @Parameter(name = "id", description = "商品ID", required = true, in = ParameterIn.QUERY)
     })
     public ResponseResult<String> deleteGoods(Integer id) {
-        Goods goods = new Goods().setId(id).setIsDelete(1);
-        goodsService.updateGoods(goods);
+        goodsService.deleteGoods(id);
         return ResponseResult.ok();
     }
 
@@ -144,8 +143,7 @@ public class GoodsController {
             @Parameter(name = "id", description = "商品ID", required = true, in = ParameterIn.QUERY)
     })
     public ResponseResult<String> recoverGoods(Integer id) {
-        Goods goods = new Goods().setId(id).setIsDelete(0);
-        goodsService.updateGoods(goods);
+        goodsService.recoverGoods(id);
         return ResponseResult.ok();
     }
 

@@ -106,6 +106,7 @@ services:
 
 networks:
   rocketmq:
+    name: rocketmq
     driver: bridge
 
 volumes:

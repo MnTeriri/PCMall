@@ -17,6 +17,7 @@ public class GoodsEmbedProgress {
     private ProgressStatus status = ProgressStatus.IDLE;
     private Long totalCount = 0L;             // 商品总数
     private Long processedCount = 0L;         // 已处理数量（已入库向量数）
+    private Long errorCount = 0L;             // 商品商品状态错误导致无法入库的个数
     private Integer currentPage = 0;          // 当前页码
     private LocalDateTime startTime;          // 开始时间
     private LocalDateTime endTime;            // 结束时间

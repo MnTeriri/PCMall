@@ -14,13 +14,10 @@ import io.milvus.client.MilvusServiceClient;
 import io.milvus.param.dml.DeleteParam;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,19 +28,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
 @Service
-public class StaticKnowledgeService implements ApplicationRunner {
+public class StaticKnowledgeService {
     private static final String OLD_DIR_NAME = "old";
     private static final String NEW_DIR_NAME = "new";
 
     @Value("${rag.static.base-dir}")
     private String baseDir;
-
-    @Value("${rag.static.refresh-on-startup:true}")
-    private Boolean fullRefreshOnStartup;
 
     @Value("${milvus.static.collection-name}")
     private String staticCollectionName;
@@ -58,35 +52,26 @@ public class StaticKnowledgeService implements ApplicationRunner {
     @Qualifier("milvusStaticEmbeddingStore")
     private EmbeddingStore<TextSegment> milvusStaticEmbeddingStore;
 
-    private final AtomicBoolean refreshing = new AtomicBoolean(false);
-
-    @Override
-    public void run(@NonNull ApplicationArguments args) throws Exception {
-        if (fullRefreshOnStartup) {
-            log.info("执行任务，启动时加载静态知识库文件夹");
-            fullRefreshDocument();
-        }
-    }
-
-    @Scheduled(cron = "${rag.static.refresh-cron}")
-    private void scheduledRefresh() {
-        log.debug("执行定时刷新静态知识库任务");
-        refreshDocument();
-    }
+    /**
+     * 刷新锁：保证 refreshDocument 和 fullRefreshDocument 互斥（多实例需要换成分布式锁）
+     */
+    private final ReentrantLock refreshLock = new ReentrantLock(true);
 
     @PostConstruct
-    public void init() throws IOException {
+    private void init() throws IOException {
         log.debug("创建静态知识库文件夹");
         Files.createDirectories(getOldPath());
         Files.createDirectories(getNewPath());
     }
 
+    @Async("threadPoolTaskExecutor")
     public void refreshDocument() {
-        if (!refreshing.compareAndSet(false, true)) {
-            log.debug("静态知识库正在刷新，跳过本次请求");
+        if (!refreshLock.tryLock()) {
+            log.debug("静态知识库刷新正在运行中，跳过本次请求");
             return;
         }
 
+        log.debug("获得锁，开始刷新");
         try {
             Path oldPath = getOldPath();
             Path newPath = getNewPath();
@@ -115,15 +100,19 @@ public class StaticKnowledgeService implements ApplicationRunner {
             //将加载过的文档移动到已加载路径
             moveFiles(newPath, oldPath);
         } finally {
-            refreshing.set(false);
+            log.debug("任务结束，释放锁");
+            refreshLock.unlock();
         }
     }
 
+    @Async("threadPoolTaskExecutor")
     public void fullRefreshDocument() {
-        if (!refreshing.compareAndSet(false, true)) {
-            log.debug("静态知识库正在刷新，跳过本次请求");
+        if (!refreshLock.tryLock()) {
+            log.debug("静态知识库全量刷新正在运行中，跳过本次请求");
             return;
         }
+
+        log.debug("获得锁，开始全量刷新");
         try {
             //1.删除数据库内容
             DeleteParam deleteParam = DeleteParam.newBuilder()
@@ -135,11 +124,12 @@ public class StaticKnowledgeService implements ApplicationRunner {
             //2.重新加载静态知识库
             loadDocument(getOldPath());
         } finally {
-            refreshing.set(false);
+            log.debug("任务结束，释放锁");
+            refreshLock.unlock();
         }
     }
 
-    public void loadDocument(Path path) {
+    private void loadDocument(Path path) {
         log.debug("加载静态知识库，路径：{}", path);
         // ------ RAG ------
         // 1. 加载文档
@@ -162,11 +152,11 @@ public class StaticKnowledgeService implements ApplicationRunner {
         ingestor.ingest(documents);
     }
 
-    public Path getOldPath() {
+    private Path getOldPath() {
         return Paths.get(baseDir, OLD_DIR_NAME);
     }
 
-    public Path getNewPath() {
+    private Path getNewPath() {
         return Paths.get(baseDir, NEW_DIR_NAME);
     }
 
@@ -189,7 +179,7 @@ public class StaticKnowledgeService implements ApplicationRunner {
         return savedFileNames;
     }
 
-    public void moveFiles(Path source, Path target) {
+    private void moveFiles(Path source, Path target) {
         //移动到target文件夹
         log.debug("目录：{} 下的内容移动到目录：{} 中", source, target);
         FileUtil.moveContent(source, target, true);
