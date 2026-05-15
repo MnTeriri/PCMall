@@ -13,6 +13,7 @@
 * 订单管理
 * 评价以及评论功能（当前任务）
 * 用户基本信息管理
+* AI 助手根据用户需求帮助用户挑选商品
 * ...
 
 Android App项目说明：[PCMall-Mobile](https://github.com/MnTeriri/PCMall-Mobile)<br>
@@ -22,6 +23,10 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 
 * Spring Boot
 * Spring Cloud
+* LangChain4j（LLM 集成 / RAG 检索增强）
+* Milvus（向量数据库）
+* Ollama（本地 Embedding 与推理）
+* DeepSeek API（远程对话模型）
 * Nacos
 * Seata
 * Sentinel
@@ -65,6 +70,10 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 6. 使用CompletableFuture和ThreadPoolTaskExecutor完成异步远程调用
 7. 使用Knife4j，完成API文档编写
 8. 使用Docker部署相关依赖环境以及项目代码
+9. 新增 pcmall-ai 模块，集成 LangChain4j + DeepSeek/Ollama，实现 AI 购物助手
+10. 搭建 Milvus 向量数据库，构建静态知识库（帮助文档 RAG）与动态知识库（百万级商品语义检索）
+11. 实现商品信息变更的 RocketMQ 通知机制，驱动向量库增量更新
+12. 实现全量商品向量化初始化管线，支持分页拉取、批量 Embedding、Redis 进度持久化与断点续传
 
 ## 架构图
 
@@ -134,6 +143,7 @@ PCMall
 ├── pcmall-gateway        // 网关模块 [10000]
 ├── pcmall-user-service   // 认证中心 [10001]
 ├── pcmall-image          // 图片中心 [10002]
+├── pcmall-ai             // AI 模块 [10003]
 ├── pcmall-consumer       // 服务消费者模块
 │      └── pcmall-consumer-admin                 // 管理端模块 [12000]
 │      └── pcmall-consumer-mobile                // 移动端模块 [12001]
