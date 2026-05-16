@@ -1,4 +1,4 @@
-package com.example.pcmallai.service;
+package com.example.pcmallai.service.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

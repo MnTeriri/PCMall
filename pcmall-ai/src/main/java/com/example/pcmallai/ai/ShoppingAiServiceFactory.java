@@ -3,7 +3,6 @@ package com.example.pcmallai.ai;
 import com.example.pcmallai.ai.service.ShoppingIntentAiService;
 import com.example.pcmallai.ai.service.ShoppingReplyAiService;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
-import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.rag.RetrievalAugmentor;
@@ -27,11 +26,6 @@ public class ShoppingAiServiceFactory {
 
     @Autowired
     private RetrievalAugmentor retrievalAugmentor;
-
-    @Bean
-    public ChatMemoryProvider chatMemoryProvider() {
-        return memoryId -> MessageWindowChatMemory.withMaxMessages(20);
-    }
 
     @Bean
     public ShoppingIntentAiService shoppingIntentAiService() {

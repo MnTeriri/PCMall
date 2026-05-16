@@ -1,7 +1,7 @@
 package com.example.pcmallai.controller;
 
 import com.example.pcmallai.model.GoodsEmbedProgress;
-import com.example.pcmallai.service.GoodsKnowledgeService;
+import com.example.pcmallai.service.impl.GoodsKnowledgeService;
 import com.example.pcmallcommon.response.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

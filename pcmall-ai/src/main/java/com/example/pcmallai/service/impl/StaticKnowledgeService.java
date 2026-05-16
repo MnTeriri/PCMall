@@ -1,4 +1,4 @@
-package com.example.pcmallai.service;
+package com.example.pcmallai.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import dev.langchain4j.data.document.Document;

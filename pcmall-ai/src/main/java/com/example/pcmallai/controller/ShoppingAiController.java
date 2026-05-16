@@ -1,6 +1,6 @@
 package com.example.pcmallai.controller;
 
-import com.example.pcmallai.service.ShoppingChatFacade;
+import com.example.pcmallai.service.impl.ShoppingChatFacade;
 import com.example.pcmallcommon.model.ai.AiChatEvent;
 import com.example.pcmallcommon.model.ai.AiChatRequest;
 import io.swagger.v3.oas.annotations.Operation;

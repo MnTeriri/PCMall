@@ -1,6 +1,6 @@
 package com.example.pcmallai.listener;
 
-import com.example.pcmallai.service.GoodsKnowledgeService;
+import com.example.pcmallai.service.impl.GoodsKnowledgeService;
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.model.message.GoodsChangeMessage;
 import lombok.RequiredArgsConstructor;

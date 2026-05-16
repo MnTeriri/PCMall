@@ -8,6 +8,7 @@ import dev.langchain4j.rag.RetrievalAugmentor;
 import dev.langchain4j.rag.content.aggregator.DefaultContentAggregator;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
+import dev.langchain4j.rag.query.router.DefaultQueryRouter;
 import dev.langchain4j.rag.query.router.LanguageModelQueryRouter;
 import dev.langchain4j.rag.query.router.QueryRouter;
 import dev.langchain4j.store.embedding.EmbeddingStore;
@@ -65,11 +66,11 @@ public class RAGConfig {
         retrieverToDescription.put(staticRetriever, "商品挑选规则、推荐偏好、退换货政策、售后规则、保修条款、配送说明等商场帮助文档");
         retrieverToDescription.put(goodsRetriever, "商品名称、品牌、分类、价格、配置参数、搜索关键词等商品数据");
 
-        // LanguageModelQueryRouter 利用 LLM 决定查询的路由位置
-        QueryRouter queryRouter = new LanguageModelQueryRouter(chatModel, retrieverToDescription);
+//        // LanguageModelQueryRouter 利用 LLM 决定查询的路由位置
+//        QueryRouter queryRouter = new LanguageModelQueryRouter(chatModel, retrieverToDescription);
 
         // 将每个查询路由到所有配置好的 ContentRetriever
-//        QueryRouter queryRouter = new DefaultQueryRouter(staticRetriever, goodsRetriever);
+        QueryRouter queryRouter = new DefaultQueryRouter(staticRetriever, goodsRetriever);
 
         return DefaultRetrievalAugmentor.builder()
                 .queryRouter(queryRouter)

@@ -1,4 +1,4 @@
-package com.example.pcmallai.service;
+package com.example.pcmallai.service.impl;
 
 import com.alibaba.nacos.common.utils.StringUtils;
 import com.example.pcmallcommon.model.Goods;

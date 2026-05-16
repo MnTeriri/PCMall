@@ -1,4 +1,4 @@
-package com.example.pcmallai.service;
+package com.example.pcmallai.service.impl;
 
 import com.example.pcmallai.model.GoodsEmbedProgress;
 import com.example.pcmallcommon.client.GoodsClient;

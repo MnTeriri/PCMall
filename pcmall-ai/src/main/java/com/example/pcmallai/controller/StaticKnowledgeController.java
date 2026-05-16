@@ -1,6 +1,6 @@
 package com.example.pcmallai.controller;
 
-import com.example.pcmallai.service.StaticKnowledgeService;
+import com.example.pcmallai.service.impl.StaticKnowledgeService;
 import com.example.pcmallcommon.response.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

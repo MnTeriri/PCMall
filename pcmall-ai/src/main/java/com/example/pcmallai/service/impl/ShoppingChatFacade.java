@@ -1,11 +1,14 @@
-package com.example.pcmallai.service;
+package com.example.pcmallai.service.impl;
 
 import com.example.pcmallai.ai.service.ShoppingIntentAiService;
 import com.example.pcmallai.ai.service.ShoppingReplyAiService;
+import com.example.pcmallai.service.IChatHistoryService;
+import com.example.pcmallcommon.model.ChatHistory;
 import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.model.ai.AiChatEvent;
 import com.example.pcmallcommon.model.ai.AiChatRequest;
 import com.example.pcmallcommon.model.ai.PurchaseIntent;
+import dev.langchain4j.data.message.ChatMessageSerializer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,24 +23,35 @@ public class ShoppingChatFacade {
 
     private final ShoppingIntentAiService shoppingIntentAiService;
     private final ShoppingReplyAiService shoppingReplyAiService;
+    private final IChatHistoryService chatHistoryService;
     private final GoodsQueryService goodsQueryService;
 
     public Flux<AiChatEvent> chatFlux(AiChatRequest request) {
-//        String memoryId = buildMemoryId(request.getUserId(), request.getSessionId());
+        String memoryId = request.getUserId() + ":" + request.getSessionId();
+        String userMessage = request.getMessage();
+        log.debug("memoryId：{}", memoryId);
 
-        PurchaseIntent intent = shoppingIntentAiService.parseIntent(request.getMessage());
+        PurchaseIntent intent = shoppingIntentAiService.parseIntent(userMessage);
         log.debug("AI分析的购买意图：{}", intent);
         List<Goods> goodsList = goodsQueryService.queryCandidateGoods(intent, request.getTopK());
         log.debug("查询出的商品：{}", goodsList);
 
-        String prompt = buildPrompt(request.getMessage(), intent, goodsList);
+        ChatHistory chatHistory = new ChatHistory()
+                .setMemoryId(memoryId)
+                .setMsgIndex(0)
+                .setType(ChatHistory.ChatHistoryType.USER)
+                .setContent(userMessage)
+                .setRawJson("");
+        chatHistoryService.insertChatHistory(chatHistory);
+
+        String prompt = buildPrompt(userMessage, intent, goodsList);
 
         return Flux.concat(
                 Flux.just(
                         new AiChatEvent(AiChatEvent.AiChatEventType.START, "开始处理"),
                         new AiChatEvent(AiChatEvent.AiChatEventType.GOODS, goodsList)
                 ),
-                shoppingReplyAiService.chatFlux(prompt)
+                shoppingReplyAiService.chatFlux(memoryId, prompt)
                         .map(text -> new AiChatEvent(AiChatEvent.AiChatEventType.TEXT, text)),
                 Flux.just(new AiChatEvent(AiChatEvent.AiChatEventType.DONE, "完成"))
         );
