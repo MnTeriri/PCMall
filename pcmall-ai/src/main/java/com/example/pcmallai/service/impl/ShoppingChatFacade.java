@@ -36,16 +36,17 @@ public class ShoppingChatFacade {
         List<Goods> goodsList = goodsQueryService.queryCandidateGoods(intent, request.getTopK());
         log.debug("查询出的商品：{}", goodsList);
 
+        // MySQL增量存储（原始用户 prompt）
         ChatHistory chatHistory = new ChatHistory()
                 .setMemoryId(memoryId)
-                .setMsgIndex(0)
+                .setMsgIndex(-1L)
                 .setType(ChatHistory.ChatHistoryType.USER)
                 .setContent(userMessage)
-                .setRawJson("");
+                .setRawJson(null);
         chatHistoryService.insertChatHistory(chatHistory);
+        log.debug("MySQL 增量追加: memoryId = {} , type = {}, msg_index = {}", memoryId, chatHistory.getType(), -1);
 
         String prompt = buildPrompt(userMessage, intent, goodsList);
-
         return Flux.concat(
                 Flux.just(
                         new AiChatEvent(AiChatEvent.AiChatEventType.START, "开始处理"),

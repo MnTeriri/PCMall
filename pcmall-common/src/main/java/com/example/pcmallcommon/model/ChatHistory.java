@@ -18,7 +18,7 @@ public class ChatHistory {
     @TableId(type = IdType.AUTO)
     private Long id;
     private String memoryId;
-    private Integer msgIndex;           // 这条消息在会话中的顺序编号
+    private Long msgIndex;              // 这条消息在会话中的顺序编号
     private ChatHistoryType type;       // 消息类型
     private String content;             // 可读文本，快速浏览用
     private String rawJson;             // ChatMessage 完整 JSON
@@ -30,7 +30,7 @@ public class ChatHistory {
     public enum ChatHistoryType {
         SYSTEM(0, "系统消息"),
         USER(1, "用户原始消息"),
-        RAW_USER(2, "用户消息包装后的 prompt"),
+        PACK_USER(2, "用户消息包装后的 prompt"),
         AI(3, "AI消息");
 
         @JsonValue
