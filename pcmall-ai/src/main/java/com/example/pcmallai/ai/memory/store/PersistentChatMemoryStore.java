@@ -7,6 +7,7 @@ import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -17,11 +18,31 @@ public class PersistentChatMemoryStore implements ChatMemoryStore {
 
     private final ChatMemoryStore redisMemoryStore;
     private final IChatHistoryService chatHistoryService;
+    private final Integer maxMessages;
     private final ConcurrentMap<Object, Long> counter = new ConcurrentHashMap<>();
 
     @Override
     public List<ChatMessage> getMessages(Object memoryId) {
+        // 1、先搜 Redis
         List<ChatMessage> messages = redisMemoryStore.getMessages(memoryId);
+        if (messages.isEmpty()) {
+            // 2、Redis 为空，搜 MySQL
+            log.debug("Redis 历史记忆数据为空，尝试搜索 MySQL，memoryId = {}", memoryId);
+            List<ChatHistory> memoryWindow = chatHistoryService.listMemoryWindow(memoryId.toString(), maxMessages);
+            if (memoryWindow == null || memoryWindow.isEmpty()) {
+                // 3、MySQL 为空，是新对话
+                log.debug("MySQL 历史记忆数据为空，此轮对话为新对话，memoryId = {}", memoryId);
+                return new ArrayList<>();
+            } else {
+                // 4、MySQL 不为空，保存到 Redis
+                messages = memoryWindow
+                        .stream()
+                        .map(this::toChatMessage)
+                        .toList();
+                redisMemoryStore.updateMessages(memoryId, messages);
+                log.debug("MySQL 历史记忆数据为不为空，恢复记忆，memoryId = {}, messages = {}", memoryId, messages.size());
+            }
+        }
         log.debug("getMessages: memoryId = {}, messages = {}", memoryId, messages.size());
         return messages;
     }
@@ -84,5 +105,9 @@ public class PersistentChatMemoryStore implements ChatMemoryStore {
             }
             default -> throw new IllegalStateException("Unexpected value: " + chatMessage);
         }
+    }
+
+    private ChatMessage toChatMessage(ChatHistory chatHistory) {
+        return ChatMessageDeserializer.messageFromJson(chatHistory.getRawJson());
     }
 }

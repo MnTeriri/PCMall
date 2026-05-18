@@ -43,8 +43,25 @@ public class ChatHistoryServiceImpl implements IChatHistoryService {
     }
 
     @Override
-    public List<ChatHistory> listMemoryWindow(String memoryId) {
-        return List.of();
+    public List<ChatHistory> listMemoryWindow(String memoryId, Integer maxMessages) {
+        QueryWrapper<ChatHistory> queryWrapper = new QueryWrapper<ChatHistory>()
+                .eq("memory_id", memoryId)
+                .eq("type", ChatHistory.ChatHistoryType.SYSTEM);
+
+        List<ChatHistory> chatMemory = chatHistoryDao.selectList(queryWrapper);
+        if (chatMemory == null || chatMemory.isEmpty()) {
+            return chatMemory;
+        }
+
+        queryWrapper = new QueryWrapper<ChatHistory>()
+                .eq("memory_id", memoryId)
+                .notIn("type", ChatHistory.ChatHistoryType.SYSTEM, ChatHistory.ChatHistoryType.USER)
+                .orderByDesc("id")
+                .last("LIMIT " + (maxMessages - 1));
+        List<ChatHistory> recent = chatHistoryDao.selectList(queryWrapper);
+        chatMemory.addAll(recent.reversed());
+
+        return chatMemory;
     }
 
     @Override

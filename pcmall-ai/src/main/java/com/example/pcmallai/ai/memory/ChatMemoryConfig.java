@@ -31,7 +31,7 @@ public class ChatMemoryConfig {
             @Qualifier("redisChatMemoryStore") ChatMemoryStore chatMemoryStore,
             @Qualifier("chatHistoryServiceImpl") IChatHistoryService chatHistoryService
     ) {
-        return new PersistentChatMemoryStore(chatMemoryStore, chatHistoryService);
+        return new PersistentChatMemoryStore(chatMemoryStore, chatHistoryService, 20);
     }
 
     @Bean

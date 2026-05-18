@@ -74,6 +74,7 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 10. 搭建 Milvus 向量数据库，构建静态知识库（帮助文档 RAG）与动态知识库（百万级商品语义检索）
 11. 实现商品信息变更的 RocketMQ 通知机制，驱动向量库增量更新
 12. 实现全量商品向量化初始化管线，支持分页拉取、批量 Embedding、Redis 进度持久化与断点续传
+13. 实现对话记忆的持久化存储（Redis、MySQL），保证会话记忆的可靠查询与恢复
 
 ## 架构图
 

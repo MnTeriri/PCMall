@@ -8,7 +8,6 @@ import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.model.ai.AiChatEvent;
 import com.example.pcmallcommon.model.ai.AiChatRequest;
 import com.example.pcmallcommon.model.ai.PurchaseIntent;
-import dev.langchain4j.data.message.ChatMessageSerializer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

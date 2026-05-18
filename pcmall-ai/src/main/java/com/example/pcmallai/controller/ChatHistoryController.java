@@ -1,7 +1,6 @@
 package com.example.pcmallai.controller;
 
 import com.example.pcmallai.service.IChatHistoryService;
-import com.example.pcmallcommon.model.ChatHistory;
 import com.example.pcmallcommon.model.vo.ChatHistoryVO;
 import com.example.pcmallcommon.response.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
