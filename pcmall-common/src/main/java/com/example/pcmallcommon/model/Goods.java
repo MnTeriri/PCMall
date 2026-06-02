@@ -37,7 +37,7 @@ public class Goods {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private LocalDateTime createdTime;//创建时间
+    private LocalDateTime createTime;//创建时间
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

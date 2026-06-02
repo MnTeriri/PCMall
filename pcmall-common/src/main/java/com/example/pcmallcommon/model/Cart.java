@@ -28,7 +28,7 @@ public class Cart {
     private Integer count;//选购数量
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime createdTime;//创建时间
+    private LocalDateTime createTime;//创建时间
 
     private Integer isSelect;//0为未选购，1为选购
 }

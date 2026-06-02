@@ -33,7 +33,7 @@ public class Order {
     private OrderState status;//状态（0待付款、1待发货、2待收货、3交易成功、4交易取消、5退货中、6退货成功）
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime createdTime;//创建时间
+    private LocalDateTime createTime;//创建时间
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime payTime;//付款时间

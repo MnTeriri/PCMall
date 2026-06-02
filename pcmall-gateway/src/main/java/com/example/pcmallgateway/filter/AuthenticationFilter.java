@@ -35,7 +35,8 @@ public class AuthenticationFilter extends OncePerRequestFilter implements Ordere
                 || uri.startsWith("/api/image")
                 || uri.startsWith("/api/mobile/goods")
                 || uri.startsWith("/api/mobile/category")
-                || uri.startsWith("/api/mobile/brand")) {
+                || uri.startsWith("/api/mobile/brand")
+                || uri.startsWith("/api/ai")) {
             log.debug("访问 {}，无需 token", uri);
             filterChain.doFilter(request, response);
             return;

@@ -28,7 +28,7 @@ public class Address {
     private String phone;//手机号码
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime createdTime;//创建时间
+    private LocalDateTime createTime;//创建时间
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime updateTime;//修改时间

@@ -1,4 +1,4 @@
-name: "pcmall-docker-milvus"
+name: "milvus"
 
 services:
   milvus-etcd:
