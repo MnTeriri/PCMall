@@ -70,7 +70,7 @@ public class RocketMQOrderServiceImpl extends OrderServiceImpl {
             String oid = (String) message.getHeaders().get("ORDER_ID");
             Order order = orderDao.selectOne(new QueryWrapper<Order>().eq("oid", oid));
             if (order.getStatus() == Order.OrderState.PENDING_PAYMENT) {//如果订单未付款
-                Integer result = cancelOrder(oid, 4);//取消订单
+                Integer result = cancelOrder(oid, Order.OrderState.CANCELED.getCode());//取消订单
                 if (result == 1) {
                     log.debug("当前时间：{}，订单：{}付款超时，被取消！", LocalDateTime.now(), oid);
                 } else {

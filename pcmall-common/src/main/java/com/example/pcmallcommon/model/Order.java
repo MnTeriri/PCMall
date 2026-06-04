@@ -24,10 +24,10 @@ public class Order {
     private String uid;//用户编号
 
     @TableField(exist = false)
-    private List<Goods> goodsList;//订单商品信息
+    private List<OrderGoods> goodsList;//订单商品信息
 
     @TableField(exist = false)
-    private Address address;//地址信息
+    private OrderAddress address;//地址信息
 
     private BigDecimal price;//总金额
     private OrderState status;//状态（0待付款、1待发货、2待收货、3交易成功、4交易取消、5退货中、6退货成功）

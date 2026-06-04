@@ -2,8 +2,8 @@ package com.example.pcmallproviderorder.aspect;
 
 import com.example.pcmallcommon.client.BrandClient;
 import com.example.pcmallcommon.client.CategoryClient;
-import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.model.Order;
+import com.example.pcmallcommon.model.OrderGoods;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -43,8 +43,8 @@ public class OrderServiceAspect {
         log.debug("结果类名：{}", result.getClass());
         log.debug("结果：{}", result);
         for (Order order : result) {
-            List<Goods> goodsList = order.getGoodsList();
-            for (Goods goods : goodsList) {
+            List<OrderGoods> goodsList = order.getGoodsList();
+            for (OrderGoods goods : goodsList) {
                 List<CompletableFuture<Void>> futures = new ArrayList<>();
                 CompletableFuture<Void> brandFuture = CompletableFuture
                         .supplyAsync(() -> brandClient.searchBrandById(goods.getBid()).getData(), threadPoolTaskExecutor)

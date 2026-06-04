@@ -1,6 +1,6 @@
 package com.example.pcmallproviderorder.dao;
 
-import com.example.pcmallcommon.model.Goods;
+import com.example.pcmallcommon.model.OrderGoods;
 import com.example.pcmallproviderorder.cache.OrderInfoCache;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Insert;
@@ -17,7 +17,7 @@ public interface IOrderGoodsDao {
             "order_goods.count, order_goods.price, order_goods.discount " +
             "FROM order_goods INNER JOIN goods ON order_goods.gid = goods.id " +
             "WHERE oid=#{oid}")
-    List<Goods> searchOrderGoods(String oid);
+    List<OrderGoods> searchOrderGoods(String oid);
 
     @Insert("INSERT INTO order_goods(oid, gid, count, price, discount) VALUES (#{oid}, #{gid}, #{count}, #{price}, #{discount});")
     Integer insertOrderGoods(String oid, Integer gid, Integer count, BigDecimal price, BigDecimal discount);
