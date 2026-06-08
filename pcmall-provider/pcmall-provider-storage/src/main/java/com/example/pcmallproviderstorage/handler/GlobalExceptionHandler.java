@@ -1,18 +1,12 @@
 package com.example.pcmallproviderstorage.handler;
 
-import com.alibaba.fastjson2.JSON;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.response.ResponseResult;
-import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @RestControllerAdvice
@@ -27,15 +21,5 @@ public class GlobalExceptionHandler {
     public ResponseResult<String> handlerSystemException(SystemException exception) {
         log.error("发生自定义SystemException异常：", exception);
         return ResponseResult.error(exception.getResponseStatus());
-    }
-
-    @ExceptionHandler(FeignException.BadRequest.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseResult<String> handlerSystemException(FeignException.BadRequest exception) {
-        log.error("发生FeignException.BadRequest异常：", exception);
-        ByteBuffer byteBuffer = exception.responseBody().get();
-        Charset charset = StandardCharsets.UTF_8;
-        String json = charset.decode(byteBuffer).toString();
-        return JSON.parseObject(json, ResponseResult.class);
     }
 }

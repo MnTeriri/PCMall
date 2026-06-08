@@ -2,46 +2,52 @@ package com.example.pcmallcommon.client;
 
 import com.example.pcmallcommon.model.Cart;
 import com.example.pcmallcommon.response.ResponseResult;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.service.annotation.PostExchange;
 
 import java.util.List;
 
-@FeignClient(contextId = "cartClient", value = "pcmall-provider-cart")
+@HttpExchange("/cart")
 public interface CartClient {
-    @PostMapping("/cart/searchAllCart")
+    @PostExchange("/searchAllCart")
     ResponseResult<List<Cart>> searchAllCart(
             @RequestParam("uid") String uid,
             @RequestParam("currentPage") Integer currentPage,
-            @RequestParam("pageSize") Integer pageSize);
+            @RequestParam("pageSize") Integer pageSize
+    );
 
-    @PostMapping("/cart/searchSelectCart")
+    @PostExchange("/searchSelectCart")
     ResponseResult<List<Cart>> searchSelectCart(
             @RequestParam("uid") String uid,
-            @RequestParam("isSearchGoods") Boolean isSearchGoods);
+            @RequestParam("isSearchGoods") Boolean isSearchGoods
+    );
 
-    @PostMapping("/cart/getTotalCount")
+    @PostExchange("/getTotalCount")
     ResponseResult<Long> getTotalCount(@RequestParam("uid") String uid);
 
-    @PostMapping("/cart/addCart")
+    @PostExchange("/addCart")
     ResponseResult<String> addCart(@RequestBody Cart cart);
 
-    @PostMapping("/cart/addCartCount")
+    @PostExchange("/addCartCount")
     ResponseResult<String> addCartCount(@RequestParam("id") Integer id);
 
-    @PostMapping("/cart/subCartCount")
+    @PostExchange("/subCartCount")
     ResponseResult<String> subCartCount(@RequestParam("id") Integer id);
 
-    @PostMapping("/cart/selectCart")
-    ResponseResult<String> selectCart(@RequestParam("id") Integer id,
-                                      @RequestParam("isSelect") Integer isSelect);
+    @PostExchange("/selectCart")
+    ResponseResult<String> selectCart(
+            @RequestParam("id") Integer id,
+            @RequestParam("isSelect") Integer isSelect
+    );
 
-    @PostMapping("/cart/selectAllCart")
-    ResponseResult<String> selectAllCart(@RequestParam("uid") String uid,
-                                         @RequestParam("isSelect") Integer isSelect);
+    @PostExchange("/selectAllCart")
+    ResponseResult<String> selectAllCart(
+            @RequestParam("uid") String uid,
+            @RequestParam("isSelect") Integer isSelect
+    );
 
-    @PostMapping("/cart/deleteCart")
+    @PostExchange("/deleteCart")
     ResponseResult<String> deleteCart(@RequestParam("id") Integer id);
 }

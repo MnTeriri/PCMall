@@ -1,15 +1,15 @@
 package com.example.pcmallai;
 
 import cn.hutool.extra.spring.EnableSpringUtil;
+import com.example.pcmallcommon.annotation.EnableHttpClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableSpringUtil
-@EnableFeignClients(basePackages = "com.example.pcmallcommon.client")
+@EnableHttpClients
 @EnableScheduling
 @EnableAsync
 public class PcmallAiApplication {

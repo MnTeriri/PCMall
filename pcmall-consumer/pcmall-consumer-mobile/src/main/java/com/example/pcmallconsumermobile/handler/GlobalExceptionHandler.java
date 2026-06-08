@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSON;
 import com.example.pcmallcommon.exception.SystemException;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.response.ResponseResult;
-import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Slf4j
 @RestControllerAdvice
@@ -49,11 +49,11 @@ public class GlobalExceptionHandler {
     }
 
     //处理FeignException.BadRequest异常
-    @ExceptionHandler(FeignException.BadRequest.class)
+    @ExceptionHandler(HttpClientErrorException.BadRequest.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseResult<String> handlerBadRequestException(FeignException.BadRequest e) {
+    public ResponseResult<String> handlerBadRequestException(HttpClientErrorException.BadRequest e) {
         log.error("发生FeignException.BadRequest异常：", e);
-        return JSON.parseObject(e.contentUTF8(), ResponseResult.class);
+        return JSON.parseObject(e.getResponseBodyAsString(), ResponseResult.class);
     }
 
 //    //处理Exception异常

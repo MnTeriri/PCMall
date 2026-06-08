@@ -2,38 +2,39 @@ package com.example.pcmallcommon.client;
 
 import com.example.pcmallcommon.model.Category;
 import com.example.pcmallcommon.response.ResponseResult;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.service.annotation.PostExchange;
 
 import java.util.List;
 
-@FeignClient(contextId = "categoryClient", value = "pcmall-provider-category")
+@HttpExchange("/category")
 public interface CategoryClient {
-    @PostMapping("/category/searchCategoryById")
+    @PostExchange("/searchCategoryById")
     ResponseResult<Category> searchCategoryById(@RequestParam("id") Integer id);
 
-    @PostMapping("/category/getCategoryList")
+    @PostExchange("/getCategoryList")
     ResponseResult<List<Category>> getCategoryList(
             @RequestParam("currentPage") Integer currentPage,
-            @RequestParam("pageSize") Integer pageSize);
+            @RequestParam("pageSize") Integer pageSize
+    );
 
-    @PostMapping("/category/getTotalCount")
+    @PostExchange("/getTotalCount")
     ResponseResult<Long> getTotalCount();
 
-    @PostMapping("/category/searchCategoryList")
+    @PostExchange("/searchCategoryList")
     ResponseResult<List<Category>> searchCategoryList();
 
-    @PostMapping(value = "/category/addCategory")
+    @PostExchange(value = "/addCategory")
     ResponseResult<String> addCategory(@RequestBody Category category);
 
-    @PostMapping("/category/updateCategory")
+    @PostExchange("/updateCategory")
     ResponseResult<String> updateCategory(@RequestBody Category category);
 
-    @PostMapping("/category/deleteCategory")
+    @PostExchange("/deleteCategory")
     ResponseResult<String> deleteCategory(@RequestParam("id") Integer id);
 
-    @PostMapping("/category/recoverCategory")
+    @PostExchange("/recoverCategory")
     ResponseResult<String> recoverCategory(@RequestParam("id") Integer id);
 }

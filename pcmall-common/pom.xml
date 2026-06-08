@@ -31,11 +31,10 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Openfeign -->
+        <!-- Loadbalancer -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <optional>true</optional>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
 
         <!-- MyBatis Plus -->

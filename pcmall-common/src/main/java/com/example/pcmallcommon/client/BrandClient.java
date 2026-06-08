@@ -2,47 +2,49 @@ package com.example.pcmallcommon.client;
 
 import com.example.pcmallcommon.model.Brand;
 import com.example.pcmallcommon.response.ResponseResult;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.service.annotation.PostExchange;
 
 import java.util.List;
 
-@FeignClient(contextId = "brandClient", value = "pcmall-provider-brand")
+@HttpExchange("/brand")
 public interface BrandClient {
-    @PostMapping("/brand/searchBrandById")
+    @PostExchange("/searchBrandById")
     ResponseResult<Brand> searchBrandById(@RequestParam("id") Integer id);
 
-    @PostMapping("/brand/getBrandList")
+    @PostExchange("/getBrandList")
     ResponseResult<List<Brand>> getBrandList(
             @RequestParam("currentPage") Integer currentPage,
-            @RequestParam("pageSize") Integer pageSize);
+            @RequestParam("pageSize") Integer pageSize
+    );
 
-    @PostMapping("/brand/getTotalCount")
+    @PostExchange("/getTotalCount")
     ResponseResult<Long> getTotalCount();
 
-    @PostMapping("/brand/searchBrandByCid")
+    @PostExchange("/searchBrandByCid")
     ResponseResult<List<Brand>> searchBrandByCid(@RequestParam("cid") Integer cid);
 
-    @PostMapping("/brand/searchSelectedCategoryId")
+    @PostExchange("/searchSelectedCategoryId")
     ResponseResult<List<Integer>> searchSelectedCategoryId(@RequestParam("bid") Integer bid);
 
-    @PostMapping("/brand/addBrand")
+    @PostExchange("/addBrand")
     ResponseResult<String> addBrand(@RequestBody Brand brand);
 
-    @PostMapping("/brand/updateBrand")
+    @PostExchange("/updateBrand")
     ResponseResult<String> updateBrand(@RequestBody Brand brand);
 
-    @PostMapping("/brand/deleteBrand")
+    @PostExchange("/deleteBrand")
     ResponseResult<String> deleteBrand(@RequestParam("id") Integer id);
 
-    @PostMapping("/brand/recoverBrand")
+    @PostExchange("/recoverBrand")
     ResponseResult<String> recoverBrand(@RequestParam("id") Integer id);
 
-    @PostMapping("/brand/brandCategoryChange")
+    @PostExchange("/brandCategoryChange")
     ResponseResult<String> brandCategoryChange(
             @RequestParam("bid") Integer bid,
             @RequestParam("cid") Integer cid,
-            @RequestParam("selected") Boolean selected);
+            @RequestParam("selected") Boolean selected
+    );
 }
