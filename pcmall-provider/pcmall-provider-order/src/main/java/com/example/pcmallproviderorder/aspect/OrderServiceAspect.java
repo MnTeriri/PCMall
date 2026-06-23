@@ -2,8 +2,8 @@ package com.example.pcmallproviderorder.aspect;
 
 import com.example.pcmallcommon.client.BrandClient;
 import com.example.pcmallcommon.client.CategoryClient;
-import com.example.pcmallcommon.model.Order;
-import com.example.pcmallcommon.model.OrderGoods;
+import com.example.pcmallcommon.model.dto.Order;
+import com.example.pcmallcommon.model.dto.OrderGoods;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -29,7 +29,7 @@ public class OrderServiceAspect {
 
     private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-    @Around("execution(java.util.List<com.example.pcmallcommon.model.Order> com.example.pcmallproviderorder.service.IOrderService.searchOrderList(..))")
+    @Around("execution(java.util.List<com.example.pcmallcommon.model.dto.Order> com.example.pcmallproviderorder.service.IOrderService.searchOrderList(..))")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         log.debug("进入切面");
         Object[] args = joinPoint.getArgs();

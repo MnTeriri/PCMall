@@ -2,7 +2,9 @@ package com.example.pcmallprovideraddress.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.Address;
+import com.example.pcmallcommon.model.dto.Address;
+import com.example.pcmallcommon.model.entity.AddressEntity;
+import com.example.pcmallcommon.model.mapper.AddressMapper;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallprovideraddress.dao.IAddressDao;
 import com.example.pcmallprovideraddress.service.IAddressService;
@@ -23,24 +25,27 @@ public class AddressServiceImpl implements IAddressService {
 
     @Override
     public Address searchAddressById(Integer id) {
-        return addressDao.selectById(id);
+        AddressEntity data = addressDao.selectById(id);
+        return AddressMapper.INSTANCE.toDto(data);
     }
 
     @Override
     public List<Address> searchAddressList(String uid) {
-        QueryWrapper<Address> queryWrapper = new QueryWrapper<Address>()
+        QueryWrapper<AddressEntity> queryWrapper = new QueryWrapper<AddressEntity>()
                 .eq("uid", uid)
                 .orderByDesc("is_default")
                 .orderByDesc("id");
-        return addressDao.selectList(queryWrapper);
+        List<AddressEntity> list = addressDao.selectList(queryWrapper);
+        return AddressMapper.INSTANCE.toDtoList(list);
     }
 
     @Override
     public Address searchDefaultAddress(String uid) {
-        QueryWrapper<Address> queryWrapper = new QueryWrapper<Address>()
+        QueryWrapper<AddressEntity> queryWrapper = new QueryWrapper<AddressEntity>()
                 .eq("uid", uid)
                 .eq("is_default", 1);
-        return addressDao.selectOne(queryWrapper);
+        AddressEntity data = addressDao.selectOne(queryWrapper);
+        return AddressMapper.INSTANCE.toDto(data);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -50,7 +55,9 @@ public class AddressServiceImpl implements IAddressService {
         if (address.getIsDefault() == 1) {
             addressDao.cleanUserDefaultAddress(address.getUid());//清除原默认地址
         }
-        if (addressDao.insert(address) != 1) {
+
+        AddressEntity entity = AddressMapper.INSTANCE.toEntity(address);
+        if (addressDao.insert(entity) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
     }
@@ -63,7 +70,9 @@ public class AddressServiceImpl implements IAddressService {
         if (address.getIsDefault() == 1) {
             addressDao.cleanUserDefaultAddress(address.getUid());//清除原默认地址
         }
-        if (addressDao.updateById(address) != 1) {
+
+        AddressEntity entity = AddressMapper.INSTANCE.toEntity(address);
+        if (addressDao.updateById(entity) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
     }

@@ -1,6 +1,5 @@
-package com.example.pcmallcommon.model.dto;
+package com.example.pcmallcommon.model.ai;
 
-import com.example.pcmallcommon.model.ai.PurchaseIntent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

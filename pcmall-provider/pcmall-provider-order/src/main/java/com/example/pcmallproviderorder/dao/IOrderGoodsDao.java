@@ -1,6 +1,6 @@
 package com.example.pcmallproviderorder.dao;
 
-import com.example.pcmallcommon.model.OrderGoods;
+import com.example.pcmallcommon.model.dto.OrderGoods;
 import com.example.pcmallproviderorder.cache.OrderInfoCache;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Insert;

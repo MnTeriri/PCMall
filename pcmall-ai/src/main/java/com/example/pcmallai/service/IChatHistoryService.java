@@ -1,6 +1,6 @@
 package com.example.pcmallai.service;
 
-import com.example.pcmallcommon.model.ChatHistory;
+import com.example.pcmallcommon.model.dto.ChatHistory;
 import com.example.pcmallcommon.model.vo.ChatHistoryVO;
 
 import java.util.List;

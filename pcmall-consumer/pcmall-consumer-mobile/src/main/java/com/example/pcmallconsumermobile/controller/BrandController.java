@@ -1,7 +1,7 @@
 package com.example.pcmallconsumermobile.controller;
 
 import com.example.pcmallcommon.client.BrandClient;
-import com.example.pcmallcommon.model.Brand;
+import com.example.pcmallcommon.model.dto.Brand;
 import com.example.pcmallcommon.response.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

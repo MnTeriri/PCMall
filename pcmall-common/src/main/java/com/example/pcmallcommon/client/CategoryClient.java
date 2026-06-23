@@ -1,6 +1,6 @@
 package com.example.pcmallcommon.client;
 
-import com.example.pcmallcommon.model.Category;
+import com.example.pcmallcommon.model.dto.Category;
 import com.example.pcmallcommon.response.ResponseResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;

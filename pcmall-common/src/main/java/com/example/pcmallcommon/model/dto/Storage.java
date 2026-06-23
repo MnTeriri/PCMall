@@ -1,9 +1,6 @@
-package com.example.pcmallcommon.model;
+package com.example.pcmallcommon.model.dto;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -21,9 +18,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-@TableName("storage")
 public class Storage {
-    @TableId(type = IdType.AUTO)
     private Integer id;//库存编号
     private Integer gid;//商品编号
     private String uid;//用户编号

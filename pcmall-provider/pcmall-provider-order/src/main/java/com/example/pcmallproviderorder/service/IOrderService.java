@@ -1,6 +1,6 @@
 package com.example.pcmallproviderorder.service;
 
-import com.example.pcmallcommon.model.Order;
+import com.example.pcmallcommon.model.dto.Order;
 
 import java.util.List;
 

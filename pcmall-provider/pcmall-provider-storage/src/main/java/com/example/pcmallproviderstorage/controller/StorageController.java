@@ -1,6 +1,6 @@
 package com.example.pcmallproviderstorage.controller;
 
-import com.example.pcmallcommon.model.Storage;
+import com.example.pcmallcommon.model.dto.Storage;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallproviderstorage.service.IStorageService;
 import io.swagger.v3.oas.annotations.Operation;

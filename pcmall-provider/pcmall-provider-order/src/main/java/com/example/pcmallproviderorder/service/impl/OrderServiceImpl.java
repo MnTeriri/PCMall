@@ -4,7 +4,9 @@ import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.Order;
+import com.example.pcmallcommon.model.dto.Order;
+import com.example.pcmallcommon.model.entity.OrderEntity;
+import com.example.pcmallcommon.model.mapper.OrderMapper;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallproviderorder.dao.IOrderDao;
 import com.example.pcmallproviderorder.job.OrderJob;
@@ -37,7 +39,8 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public List<Order> searchOrderList(String searchValue, String uid, Integer type, Integer currentPage, Integer pageSize) {
-        return orderDao.searchOrderList(searchValue, uid, type, (currentPage - 1) * pageSize, pageSize);
+        List<OrderEntity> list = orderDao.searchOrderList(searchValue, uid, type, (currentPage - 1) * pageSize, pageSize);
+        return OrderMapper.INSTANCE.toDtoList(list);
     }
 
     @Override
@@ -48,7 +51,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public String createOrder(String uid, Integer aid) {
         String oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
-        while (orderDao.selectCount(new QueryWrapper<Order>().eq("oid", oid)) != 0) {//如果生成的订单号存在，则重新生成，直到不存在
+        while (orderDao.selectCount(new QueryWrapper<OrderEntity>().eq("oid", oid)) != 0) {//如果生成的订单号存在，则重新生成，直到不存在
             oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
         }
         Map<String, Object> data = new HashMap<>();
@@ -93,7 +96,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public void payOrder(String oid) {
-        UpdateWrapper<Order> updateWrapper = new UpdateWrapper<Order>()
+        UpdateWrapper<OrderEntity> updateWrapper = new UpdateWrapper<OrderEntity>()
                 .set("pay_time", LocalDateTime.now())
                 .set("status", 1)
                 .eq("oid", oid);
@@ -110,7 +113,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public void sendOrder(String oid) {
-        UpdateWrapper<Order> updateWrapper = new UpdateWrapper<Order>()
+        UpdateWrapper<OrderEntity> updateWrapper = new UpdateWrapper<OrderEntity>()
                 .set("send_time", LocalDateTime.now())
                 .set("status", 2)
                 .eq("oid", oid);
@@ -121,7 +124,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public void finishOrder(String oid) {
-        UpdateWrapper<Order> updateWrapper = new UpdateWrapper<Order>()
+        UpdateWrapper<OrderEntity> updateWrapper = new UpdateWrapper<OrderEntity>()
                 .set("finish_time", LocalDateTime.now())
                 .set("status", 3)
                 .eq("oid", oid);
@@ -132,7 +135,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public void refundOrder(String oid) {
-        UpdateWrapper<Order> updateWrapper = new UpdateWrapper<Order>()
+        UpdateWrapper<OrderEntity> updateWrapper = new UpdateWrapper<OrderEntity>()
                 .set("status", 5)
                 .eq("oid", oid);
         if (orderDao.update(updateWrapper) != 1) {

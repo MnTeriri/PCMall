@@ -3,7 +3,7 @@ package com.example.pcmallcommon.filter;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.jwt.JWT;
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.LoginUser;
+import com.example.pcmallcommon.model.dto.LoginUser;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.utils.JwtUtils;
 import com.example.pcmallcommon.utils.RedisUtils;

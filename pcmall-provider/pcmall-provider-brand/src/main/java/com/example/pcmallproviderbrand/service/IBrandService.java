@@ -1,6 +1,6 @@
 package com.example.pcmallproviderbrand.service;
 
-import com.example.pcmallcommon.model.Brand;
+import com.example.pcmallcommon.model.dto.Brand;
 
 import java.util.List;
 import java.util.Map;

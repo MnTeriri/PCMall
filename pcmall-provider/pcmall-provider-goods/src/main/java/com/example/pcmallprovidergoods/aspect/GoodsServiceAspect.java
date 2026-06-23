@@ -2,7 +2,7 @@ package com.example.pcmallprovidergoods.aspect;
 
 import com.example.pcmallcommon.client.BrandClient;
 import com.example.pcmallcommon.client.CategoryClient;
-import com.example.pcmallcommon.model.Goods;
+import com.example.pcmallcommon.model.dto.Goods;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

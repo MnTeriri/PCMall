@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.pcmallcommon.client.GoodsClient;
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.Brand;
-import com.example.pcmallcommon.model.Cart;
-import com.example.pcmallcommon.model.Category;
-import com.example.pcmallcommon.model.Goods;
+import com.example.pcmallcommon.model.dto.Brand;
+import com.example.pcmallcommon.model.dto.Cart;
+import com.example.pcmallcommon.model.dto.Category;
+import com.example.pcmallcommon.model.dto.Goods;
+import com.example.pcmallcommon.model.entity.CartEntity;
+import com.example.pcmallcommon.model.mapper.CartMapper;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallprovidercart.dao.ICartDao;
 import com.example.pcmallprovidercart.service.ICartService;
@@ -29,30 +31,31 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public Cart searchCartById(Integer id) {
-        return cartDao.selectById(id);
+        CartEntity entity = cartDao.selectById(id);
+        return CartMapper.INSTANCE.toDto(entity);
     }
 
     @Override
     public List<Cart> searchAllCart(String uid, Integer currentPage, Integer pageSize) {
-        QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>()
+        QueryWrapper<CartEntity> queryWrapper = new QueryWrapper<CartEntity>()
                 .eq("uid", uid)
                 .orderByDesc("id");
-        Page<Cart> page = new Page<>(currentPage, pageSize);
-        return cartDao.selectPage(page, queryWrapper).getRecords();
+        Page<CartEntity> page = new Page<>(currentPage, pageSize);
+        return CartMapper.INSTANCE.toDtoList(cartDao.selectPage(page, queryWrapper).getRecords());
     }
 
     @Override
     public List<Cart> searchSelectCart(String uid, Boolean isSearchGoods) {
-        QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>()
+        QueryWrapper<CartEntity> queryWrapper = new QueryWrapper<CartEntity>()
                 .eq("uid", uid)
                 .eq("is_select", 1)
                 .orderByDesc("id");
-        return cartDao.selectList(queryWrapper);
+        return CartMapper.INSTANCE.toDtoList(cartDao.selectList(queryWrapper));
     }
 
     @Override
     public Long getTotalCount(String uid) {
-        return cartDao.selectCount(new QueryWrapper<Cart>().eq("uid", uid));
+        return cartDao.selectCount(new QueryWrapper<CartEntity>().eq("uid", uid));
     }
 
     @Override
@@ -69,13 +72,13 @@ public class CartServiceImpl implements ICartService {
         if (goods.getStatus() == Goods.GoodsState.OFF_SHELF) {
             throw new SystemException(ResponseCode.GOODS_OFF_SHELF_ERROR);//商品下架
         }
-        QueryWrapper<Cart> queryWrapper = new QueryWrapper<Cart>()
+        QueryWrapper<CartEntity> queryWrapper = new QueryWrapper<CartEntity>()
                 .eq("uid", cart.getUid())
                 .eq("gid", cart.getGid());
-        Cart data = cartDao.selectOne(queryWrapper);//查询是否有购物车信息
+        CartEntity data = cartDao.selectOne(queryWrapper);
         if (data == null) {
-            //如果没添加过
-            if (cartDao.insert(cart) != 1) {
+            CartEntity entity = CartMapper.INSTANCE.toEntity(cart);
+            if (cartDao.insert(entity) != 1) {
                 throw new SystemException(ResponseCode.ERROR);
             }
         } else {
@@ -92,7 +95,8 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public void updateCart(Cart cart) {
-        if (cartDao.updateById(cart) != 1) {
+        CartEntity entity = CartMapper.INSTANCE.toEntity(cart);
+        if (cartDao.updateById(entity) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
     }

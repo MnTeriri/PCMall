@@ -1,7 +1,7 @@
 package com.example.pcmallproviderorder.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.pcmallcommon.model.Order;
+import com.example.pcmallcommon.model.entity.OrderEntity;
 import com.example.pcmallproviderorder.provider.OrderSqlProvider;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.StatementType;
@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface IOrderDao extends BaseMapper<Order> {
+public interface IOrderDao extends BaseMapper<OrderEntity> {
     @SelectProvider(type = OrderSqlProvider.class, method = "searchOrderListSql")
     @Results({
             @Result(property = "oid", column = "oid", javaType = String.class, jdbcType = JdbcType.CHAR),
             @Result(property = "goodsList", column = "oid", many = @Many(select = "com.example.pcmallproviderorder.dao.IOrderGoodsDao.searchOrderGoods")),
             @Result(property = "address", column = "oid", one = @One(select = "com.example.pcmallproviderorder.dao.IOrderAddressDao.searchOrderAddress"))
     })
-    List<Order> searchOrderList(
+    List<OrderEntity> searchOrderList(
             @Param("searchValue") String searchValue,
             @Param("uid") String uid,
             @Param("type") Integer type,

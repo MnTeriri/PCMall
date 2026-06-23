@@ -1,9 +1,9 @@
 package com.example.pcmallai.service.impl;
 
 import com.example.pcmallcommon.client.GoodsClient;
-import com.example.pcmallcommon.model.Goods;
+import com.example.pcmallcommon.model.ai.GoodsAiSearchRequest;
 import com.example.pcmallcommon.model.ai.PurchaseIntent;
-import com.example.pcmallcommon.model.dto.GoodsAiSearchRequest;
+import com.example.pcmallcommon.model.dto.Goods;
 import com.example.pcmallcommon.response.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

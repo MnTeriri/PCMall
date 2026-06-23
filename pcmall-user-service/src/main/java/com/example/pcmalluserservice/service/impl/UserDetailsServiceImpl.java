@@ -2,8 +2,9 @@ package com.example.pcmalluserservice.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.pcmallcommon.model.LoginUser;
-import com.example.pcmallcommon.model.User;
+import com.example.pcmallcommon.model.dto.LoginUser;
+import com.example.pcmallcommon.model.entity.UserEntity;
+import com.example.pcmallcommon.model.mapper.UserMapper;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmalluserservice.dao.IUserDao;
 import com.example.pcmalluserservice.dao.IUserRoleDao;
@@ -28,16 +29,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<User>()
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<UserEntity>()
                 .eq("uid", username);
-        User user = userDao.selectOne(queryWrapper);
-        if (user == null) {
+        UserEntity entity = userDao.selectOne(queryWrapper);
+        if (entity == null) {
             throw new UsernameNotFoundException(ResponseCode.ACCOUNT_ERROR.toString());//账号错误
         }
-        log.debug("用户信息查询成功！，信息为：{}", user);
-        user.setPassword("{bcrypt}" + new BCryptPasswordEncoder().encode(user.getPassword()));
+        log.debug("用户信息查询成功！，信息为：{}", entity);
+        entity.setPassword("{bcrypt}" + new BCryptPasswordEncoder().encode(entity.getPassword()));
         List<String> roles = userRoleDao.findUserRole(username);
-        LoginUser loginUser = new LoginUser(user, roles);
+        LoginUser loginUser = new LoginUser(UserMapper.INSTANCE.toDto(entity), roles);
         log.debug("用户权限信息为：{}", JSON.toJSONString(loginUser));
         return loginUser;
     }

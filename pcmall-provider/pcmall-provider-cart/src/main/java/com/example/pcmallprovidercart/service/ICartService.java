@@ -1,6 +1,6 @@
 package com.example.pcmallprovidercart.service;
 
-import com.example.pcmallcommon.model.Cart;
+import com.example.pcmallcommon.model.dto.Cart;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.example.pcmallcommon.client;
 
-import com.example.pcmallcommon.model.Storage;
+import com.example.pcmallcommon.model.dto.Storage;
 import com.example.pcmallcommon.response.ResponseResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;

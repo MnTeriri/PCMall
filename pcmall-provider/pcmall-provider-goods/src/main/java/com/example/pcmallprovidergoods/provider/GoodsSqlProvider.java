@@ -1,7 +1,7 @@
 package com.example.pcmallprovidergoods.provider;
 
+import com.example.pcmallcommon.model.ai.GoodsAiSearchRequest;
 import com.example.pcmallcommon.model.ai.PurchaseIntent;
-import com.example.pcmallcommon.model.dto.GoodsAiSearchRequest;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

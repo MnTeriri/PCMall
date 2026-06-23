@@ -1,7 +1,7 @@
 package com.example.pcmallprovidergoods.service;
 
-import com.example.pcmallcommon.model.Goods;
-import com.example.pcmallcommon.model.dto.GoodsAiSearchRequest;
+import com.example.pcmallcommon.model.ai.GoodsAiSearchRequest;
+import com.example.pcmallcommon.model.dto.Goods;
 
 import java.util.List;
 

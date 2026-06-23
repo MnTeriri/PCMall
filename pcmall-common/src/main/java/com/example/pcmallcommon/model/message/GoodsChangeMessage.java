@@ -1,6 +1,6 @@
 package com.example.pcmallcommon.model.message;
 
-import com.example.pcmallcommon.model.Goods;
+import com.example.pcmallcommon.model.dto.Goods;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

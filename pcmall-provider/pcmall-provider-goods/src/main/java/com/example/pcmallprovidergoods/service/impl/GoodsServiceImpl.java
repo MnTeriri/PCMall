@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.pcmallcommon.client.BrandClient;
 import com.example.pcmallcommon.client.CategoryClient;
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.Goods;
-import com.example.pcmallcommon.model.dto.GoodsAiSearchRequest;
+import com.example.pcmallcommon.model.ai.GoodsAiSearchRequest;
+import com.example.pcmallcommon.model.dto.Goods;
+import com.example.pcmallcommon.model.entity.GoodsEntity;
+import com.example.pcmallcommon.model.mapper.GoodsMapper;
 import com.example.pcmallcommon.model.message.GoodsChangeMessage;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallprovidergoods.annotation.EnableExtraSearch;
@@ -45,7 +47,8 @@ public class GoodsServiceImpl implements IGoodsService {
 
     @Override
     public Goods searchGoodsById(Integer id, Boolean isSearchCategory, Boolean isSearchBrand) {
-        Goods goods = goodsDao.selectById(id);
+        GoodsEntity entity = goodsDao.selectById(id);
+        Goods goods = GoodsMapper.INSTANCE.toDto(entity);
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         if (isSearchCategory) {
             CompletableFuture<Void> categoryFuture = CompletableFuture
@@ -68,26 +71,30 @@ public class GoodsServiceImpl implements IGoodsService {
     @EnableExtraSearch
     @Override
     public List<Goods> searchAllGoods(Integer currentPage, Integer pageSize) {
-        Page<Goods> page = new Page<>(currentPage, pageSize);
-        return goodsDao.selectPage(page, null).getRecords();
+        Page<GoodsEntity> page = new Page<>(currentPage, pageSize);
+        List<GoodsEntity> list = goodsDao.selectPage(page, null).getRecords();
+        return GoodsMapper.INSTANCE.toDtoList(list);
     }
 
     @EnableExtraSearch
     @Override
     public List<Goods> searchGoodsByValue(String searchValue, Integer currentPage, Integer pageSize) {
-        return goodsDao.searchGoodsList(searchValue, (currentPage - 1) * pageSize, pageSize);
+        List<GoodsEntity> list = goodsDao.searchGoodsList(searchValue, (currentPage - 1) * pageSize, pageSize);
+        return GoodsMapper.INSTANCE.toDtoList(list);
     }
 
     @EnableExtraSearch
     @Override
     public List<Goods> searchGoodsByCidAndBid(Integer bid, Integer cid, Integer currentPage, Integer pageSize) {
-        return goodsDao.searchGoodsByCidAndBid(cid, bid, (currentPage - 1) * pageSize, pageSize);
+        List<GoodsEntity> list = goodsDao.searchGoodsByCidAndBid(cid, bid, (currentPage - 1) * pageSize, pageSize);
+        return GoodsMapper.INSTANCE.toDtoList(list);
     }
 
     @EnableExtraSearch
     @Override
     public List<Goods> searchGoodsByAiIntent(GoodsAiSearchRequest aiSearchRequest) {
-        return goodsDao.searchGoodsByAiIntent(aiSearchRequest);
+        List<GoodsEntity> list = goodsDao.searchGoodsByAiIntent(aiSearchRequest);
+        return GoodsMapper.INSTANCE.toDtoList(list);
     }
 
     @Override
@@ -102,7 +109,7 @@ public class GoodsServiceImpl implements IGoodsService {
 
     @Override
     public Long getTotalCountByCidAndBid(Integer bid, Integer cid) {
-        QueryWrapper<Goods> queryWrapper = new QueryWrapper<Goods>()
+        QueryWrapper<GoodsEntity> queryWrapper = new QueryWrapper<GoodsEntity>()
                 .eq("cid", cid)
                 .eq("bid", bid)
                 .eq("status", 0)
@@ -113,7 +120,8 @@ public class GoodsServiceImpl implements IGoodsService {
     @Transactional
     @Override
     public void addGoods(Goods goods) {
-        if (goodsDao.insert(goods) != 1) {
+        GoodsEntity entity = GoodsMapper.INSTANCE.toEntity(goods);
+        if (goodsDao.insert(entity) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
         // insert 后 goods.getId() 已回填，再查一次拿 category/brand
@@ -130,7 +138,7 @@ public class GoodsServiceImpl implements IGoodsService {
     @Override
     public void updateGoods(Goods goods) {
         //更新商品信息到数据库
-        doUpdateGoods(goods);
+        doUpdateGoods(GoodsMapper.INSTANCE.toEntity(goods));
         //获取最新数据
         Goods data = searchGoodsById(goods.getId(), true, true);
         //发送更新消息
@@ -150,7 +158,7 @@ public class GoodsServiceImpl implements IGoodsService {
             //上架操作如果商品没货，设置为缺货
             goods.setStatus(Goods.GoodsState.OUT_OF_STOCK);
         }
-        doUpdateGoods(goods);
+        doUpdateGoods(GoodsMapper.INSTANCE.toEntity(goods));
 
         data = searchGoodsById(goods.getId(), true, true);
         //发送更新消息
@@ -166,7 +174,7 @@ public class GoodsServiceImpl implements IGoodsService {
     @Override
     public void deleteGoods(Integer id) {
         Goods goods = new Goods().setId(id).setIsDelete(1);
-        doUpdateGoods(goods);
+        doUpdateGoods(GoodsMapper.INSTANCE.toEntity(goods));
 
         //发送更新消息
         GoodsChangeMessage message = new GoodsChangeMessage()
@@ -181,7 +189,7 @@ public class GoodsServiceImpl implements IGoodsService {
     @Override
     public void recoverGoods(Integer id) {
         Goods goods = new Goods().setId(id).setIsDelete(0);
-        doUpdateGoods(goods);
+        doUpdateGoods(GoodsMapper.INSTANCE.toEntity(goods));
 
         //获取最新数据
         Goods data = searchGoodsById(id, true, true);
@@ -198,21 +206,21 @@ public class GoodsServiceImpl implements IGoodsService {
     @Transactional
     @Override
     public void addGoodsCount(Integer id, Integer count) {
-        Goods goods = goodsDao.searchGoodsForUpdate(id);
-        if (goods == null) {
-            throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);//不存在该商品
+        GoodsEntity entity = goodsDao.searchGoodsForUpdate(id);
+        if (entity == null) {
+            throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);
         }
 
-        Goods.GoodsState oldStatus = goods.getStatus();
+        Goods.GoodsState oldStatus = entity.getStatus();
 
-        if (goods.getStatus() == Goods.GoodsState.OUT_OF_STOCK) {
-            goods.setStatus(Goods.GoodsState.NORMAL);//如果商品状态为缺货，设置为正常
+        if (entity.getStatus() == Goods.GoodsState.OUT_OF_STOCK) {
+            entity.setStatus(Goods.GoodsState.NORMAL);//如果商品状态为缺货，设置为正常
         }
-        goods.setCount(goods.getCount() + count);
-        doUpdateGoods(goods);
+        entity.setCount(entity.getCount() + count);
+        doUpdateGoods(entity);
 
         // 仅状态变化时通知（count 不影响知识库文本）
-        if (goods.getStatus() != oldStatus) {
+        if (entity.getStatus() != oldStatus) {
             Goods data = searchGoodsById(id, true, true);
             //发送更新消息
             GoodsChangeMessage message = new GoodsChangeMessage()
@@ -228,24 +236,24 @@ public class GoodsServiceImpl implements IGoodsService {
     @Transactional
     @Override
     public void divGoodsCount(Integer id, Integer count) {
-        Goods goods = goodsDao.searchGoodsForUpdate(id);
-        if (goods == null) {
+        GoodsEntity entity = goodsDao.searchGoodsForUpdate(id);
+        if (entity == null) {
             throw new SystemException(ResponseCode.ENTITY_NOT_FOUND);//不存在该商品
         }
-        if (goods.getCount() < count) {
+        if (entity.getCount() < count) {
             throw new SystemException(ResponseCode.GOODS_NOT_ENOUGH_ERROR);//库存不足
         }
 
-        Goods.GoodsState oldStatus = goods.getStatus();
+        Goods.GoodsState oldStatus = entity.getStatus();
 
-        goods.setCount(goods.getCount() - count);
-        if (goods.getCount() == 0) {
-            goods.setStatus(Goods.GoodsState.OUT_OF_STOCK);//如果商品数量为0，设置状态为缺货
+        entity.setCount(entity.getCount() - count);
+        if (entity.getCount() == 0) {
+            entity.setStatus(Goods.GoodsState.OUT_OF_STOCK);//如果商品数量为0，设置状态为缺货
         }
-        doUpdateGoods(goods);
+        doUpdateGoods(entity);
 
         // 仅状态变化时通知（count 不影响知识库文本）
-        if (goods.getStatus() != oldStatus) {
+        if (entity.getStatus() != oldStatus) {
             Goods data = searchGoodsById(id, true, true);
             //发送更新消息
             GoodsChangeMessage message = new GoodsChangeMessage()
@@ -260,9 +268,9 @@ public class GoodsServiceImpl implements IGoodsService {
     /**
      * 纯 DB 更新：设置 updateTime 后执行 updateById，不发 MQ。
      */
-    private void doUpdateGoods(Goods goods) {
-        goods.setUpdateTime(LocalDateTime.now());
-        if (goodsDao.updateById(goods) != 1) {
+    private void doUpdateGoods(GoodsEntity entity) {
+        entity.setUpdateTime(LocalDateTime.now());
+        if (goodsDao.updateById(entity) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
     }

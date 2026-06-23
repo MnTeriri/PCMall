@@ -1,6 +1,6 @@
 package com.example.pcmallprovideruser.controller;
 
-import com.example.pcmallcommon.model.User;
+import com.example.pcmallcommon.model.dto.User;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallprovideruser.service.IUserService;
 import lombok.RequiredArgsConstructor;

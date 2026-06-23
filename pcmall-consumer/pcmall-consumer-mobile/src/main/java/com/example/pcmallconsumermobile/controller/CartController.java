@@ -1,7 +1,7 @@
 package com.example.pcmallconsumermobile.controller;
 
 import com.example.pcmallcommon.client.CartClient;
-import com.example.pcmallcommon.model.Cart;
+import com.example.pcmallcommon.model.dto.Cart;
 import com.example.pcmallcommon.response.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

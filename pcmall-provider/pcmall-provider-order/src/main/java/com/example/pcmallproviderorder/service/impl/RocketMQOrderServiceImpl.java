@@ -3,7 +3,8 @@ package com.example.pcmallproviderorder.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.Order;
+import com.example.pcmallcommon.model.dto.Order;
+import com.example.pcmallcommon.model.entity.OrderEntity;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallproviderorder.dao.IOrderDao;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class RocketMQOrderServiceImpl extends OrderServiceImpl {
     @Override
     public String createOrder(String uid, Integer aid) {
         String oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
-        while (orderDao.selectCount(new QueryWrapper<Order>().eq("oid", oid)) != 0) {//如果生成的订单号存在，则重新生成，直到不存在
+        while (orderDao.selectCount(new QueryWrapper<OrderEntity>().eq("oid", oid)) != 0) {//如果生成的订单号存在，则重新生成，直到不存在
             oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
         }
         Map<String, Object> data = new HashMap<>();
@@ -68,8 +69,8 @@ public class RocketMQOrderServiceImpl extends OrderServiceImpl {
     public Consumer<Message<String>> cancelOrder() {
         return message -> {
             String oid = (String) message.getHeaders().get("ORDER_ID");
-            Order order = orderDao.selectOne(new QueryWrapper<Order>().eq("oid", oid));
-            if (order.getStatus() == Order.OrderState.PENDING_PAYMENT) {//如果订单未付款
+            OrderEntity entity = orderDao.selectOne(new QueryWrapper<OrderEntity>().eq("oid", oid));
+            if (entity.getStatus() == Order.OrderState.PENDING_PAYMENT) {//如果订单未付款
                 Integer result = cancelOrder(oid, Order.OrderState.CANCELED.getCode());//取消订单
                 if (result == 1) {
                     log.debug("当前时间：{}，订单：{}付款超时，被取消！", LocalDateTime.now(), oid);

@@ -1,6 +1,6 @@
 package com.example.pcmallprovidercategory.controller;
 
-import com.example.pcmallcommon.model.Category;
+import com.example.pcmallcommon.model.dto.Category;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallprovidercategory.service.ICategoryService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,8 +1,8 @@
 package com.example.pcmallai.service.impl;
 
 import com.alibaba.nacos.common.utils.StringUtils;
-import com.example.pcmallcommon.model.Goods;
 import com.example.pcmallcommon.model.ai.PurchaseIntent;
+import com.example.pcmallcommon.model.dto.Goods;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

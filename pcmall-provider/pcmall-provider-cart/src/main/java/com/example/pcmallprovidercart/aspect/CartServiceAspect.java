@@ -1,7 +1,7 @@
 package com.example.pcmallprovidercart.aspect;
 
 import com.example.pcmallcommon.client.GoodsClient;
-import com.example.pcmallcommon.model.Cart;
+import com.example.pcmallcommon.model.dto.Cart;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

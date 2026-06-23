@@ -1,7 +1,7 @@
 package com.example.pcmallprovidergoods.controller;
 
-import com.example.pcmallcommon.model.Goods;
-import com.example.pcmallcommon.model.dto.GoodsAiSearchRequest;
+import com.example.pcmallcommon.model.ai.GoodsAiSearchRequest;
+import com.example.pcmallcommon.model.dto.Goods;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallprovidergoods.service.IGoodsService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,6 +1,6 @@
 package com.example.pcmallprovidercart.controller;
 
-import com.example.pcmallcommon.model.Cart;
+import com.example.pcmallcommon.model.dto.Cart;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallprovidercart.service.ICartService;
 import io.swagger.v3.oas.annotations.Operation;

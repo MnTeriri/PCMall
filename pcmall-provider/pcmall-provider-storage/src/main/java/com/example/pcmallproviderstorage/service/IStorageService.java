@@ -1,6 +1,6 @@
 package com.example.pcmallproviderstorage.service;
 
-import com.example.pcmallcommon.model.Storage;
+import com.example.pcmallcommon.model.dto.Storage;
 
 import java.util.List;
 

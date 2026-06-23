@@ -1,8 +1,8 @@
 package com.example.pcmallprovidergoods.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.pcmallcommon.model.Goods;
-import com.example.pcmallcommon.model.dto.GoodsAiSearchRequest;
+import com.example.pcmallcommon.model.ai.GoodsAiSearchRequest;
+import com.example.pcmallcommon.model.entity.GoodsEntity;
 import com.example.pcmallprovidergoods.provider.GoodsSqlProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IGoodsDao extends BaseMapper<Goods> {
+public interface IGoodsDao extends BaseMapper<GoodsEntity> {
     @Select("SELECT * FROM goods WHERE id=#{id} FOR UPDATE;")
-    Goods searchGoodsForUpdate(Integer id);
+    GoodsEntity searchGoodsForUpdate(Integer id);
 
     @Select("SELECT goods.* FROM goods " +
             "INNER JOIN category ON goods.cid = category.id " +
@@ -27,15 +27,15 @@ public interface IGoodsDao extends BaseMapper<Goods> {
                 "OR brand.bname LIKE CONCAT('%', #{searchValue}, '%')" +
             ") " +
             "LIMIT #{start},#{pageSize};")
-    List<Goods> searchGoodsList(String searchValue, Integer start, Integer pageSize);
+    List<GoodsEntity> searchGoodsList(String searchValue, Integer start, Integer pageSize);
 
     @Select("SELECT * FROM goods " +
             "WHERE cid=#{cid} AND bid=#{bid} AND status=0 AND is_delete=0 " +
             "LIMIT #{start},#{pageSize};")
-    List<Goods> searchGoodsByCidAndBid(Integer cid, Integer bid, Integer start, Integer pageSize);
+    List<GoodsEntity> searchGoodsByCidAndBid(Integer cid, Integer bid, Integer start, Integer pageSize);
 
     @SelectProvider(type = GoodsSqlProvider.class, method = "aiSearchSql")
-    List<Goods> searchGoodsByAiIntent(@Param("request") GoodsAiSearchRequest request);
+    List<GoodsEntity> searchGoodsByAiIntent(@Param("request") GoodsAiSearchRequest request);
 
     @Select("SELECT COUNT(goods.id) FROM goods " +
             "INNER JOIN category ON goods.cid = category.id " +

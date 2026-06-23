@@ -4,8 +4,9 @@ import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.LoginUser;
-import com.example.pcmallcommon.model.User;
+import com.example.pcmallcommon.model.dto.LoginUser;
+import com.example.pcmallcommon.model.dto.User;
+import com.example.pcmallcommon.model.entity.UserEntity;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallcommon.utils.JwtUtils;
@@ -48,7 +49,7 @@ public class UserServiceImpl implements IUserService {
         payload.put("uid", uid);
         String token = JwtUtils.createToken(payload, 10);
 
-        UpdateWrapper<User> updateWrapper = new UpdateWrapper<User>()
+        UpdateWrapper<UserEntity> updateWrapper = new UpdateWrapper<UserEntity>()
                 .eq("uid", uid)
                 .set("login_time", LocalDateTime.now());
         if (userDao.update(updateWrapper) != 1) {
@@ -61,15 +62,15 @@ public class UserServiceImpl implements IUserService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<String> register(String uid, String password) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<User>()
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<UserEntity>()
                 .eq("uid", uid);
-        User user = userDao.selectOne(queryWrapper);
-        if (user != null) {
+        UserEntity entity = userDao.selectOne(queryWrapper);
+        if (entity != null) {
             //用户存在
             throw new SystemException(ResponseCode.USER_EXIST_ERROR);
         }
-        user = new User().setUid(uid).setUname("未设置用户名").setPassword(DigestUtil.md5Hex(password));
-        if (userDao.insert(user) != 1) {
+        entity = new UserEntity().setUid(uid).setUname("未设置用户名").setPassword(DigestUtil.md5Hex(password));
+        if (userDao.insert(entity) != 1) {
             //插入用户失败，未知错误
             throw new SystemException(ResponseCode.INTERNAL_SERVER_ERROR);
         }

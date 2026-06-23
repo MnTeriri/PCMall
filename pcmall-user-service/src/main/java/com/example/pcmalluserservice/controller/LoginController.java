@@ -1,7 +1,7 @@
 package com.example.pcmalluserservice.controller;
 
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.User;
+import com.example.pcmallcommon.model.dto.User;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmalluserservice.service.IUserService;

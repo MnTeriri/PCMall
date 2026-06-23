@@ -8,7 +8,11 @@ import com.example.pcmallcommon.client.CartClient;
 import com.example.pcmallcommon.client.GoodsClient;
 import com.example.pcmallcommon.client.StorageClient;
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.*;
+import com.example.pcmallcommon.model.dto.Address;
+import com.example.pcmallcommon.model.dto.Cart;
+import com.example.pcmallcommon.model.dto.Goods;
+import com.example.pcmallcommon.model.dto.Storage;
+import com.example.pcmallcommon.model.entity.OrderEntity;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallproviderorder.dao.IOrderAddressDao;
 import com.example.pcmallproviderorder.dao.IOrderDao;
@@ -53,7 +57,7 @@ public class SeataOrderServiceImpl extends OrderServiceImpl {
     @Override
     public String createOrder(String uid, Integer aid) {
         String oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
-        while (orderDao.selectCount(new QueryWrapper<Order>().eq("oid", oid)) != 0) {//如果生成的订单号存在，则重新生成，直到不存在
+        while (orderDao.selectCount(new QueryWrapper<OrderEntity>().eq("oid", oid)) != 0) {//如果生成的订单号存在，则重新生成，直到不存在
             oid = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + RandomUtil.randomNumbers(6);
         }
 
@@ -96,7 +100,7 @@ public class SeataOrderServiceImpl extends OrderServiceImpl {
             throw new SystemException(ResponseCode.ERROR);
         }
         //添加订单信息
-        if (orderDao.insert(new Order().setOid(oid).setUid(uid).setPrice(totalPrice)) != 1) {
+        if (orderDao.insert(new OrderEntity().setOid(oid).setUid(uid).setPrice(totalPrice)) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
         //创建定时任务，15分钟自动关闭订单

@@ -1,6 +1,6 @@
 package com.example.pcmallproviderbrand.controller;
 
-import com.example.pcmallcommon.model.Brand;
+import com.example.pcmallcommon.model.dto.Brand;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallproviderbrand.service.IBrandService;
 import io.swagger.v3.oas.annotations.Operation;

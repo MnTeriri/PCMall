@@ -1,8 +1,5 @@
-package com.example.pcmallcommon.model;
+package com.example.pcmallcommon.model.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,9 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-@TableName("address")
 public class Address {
-    @TableId(type = IdType.AUTO)
     private Integer id;//地址编号
     private String uid;//用户编号
     private String province;//省

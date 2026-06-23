@@ -2,7 +2,7 @@ package com.example.pcmallai.service.impl;
 
 import com.example.pcmallai.model.GoodsEmbedProgress;
 import com.example.pcmallcommon.client.GoodsClient;
-import com.example.pcmallcommon.model.Goods;
+import com.example.pcmallcommon.model.dto.Goods;
 import com.example.pcmallcommon.utils.RedisUtils;
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.embedding.Embedding;

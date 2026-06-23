@@ -1,7 +1,7 @@
 package com.example.pcmallproviderorder.controller;
 
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.Order;
+import com.example.pcmallcommon.model.dto.Order;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallproviderorder.service.IOrderService;

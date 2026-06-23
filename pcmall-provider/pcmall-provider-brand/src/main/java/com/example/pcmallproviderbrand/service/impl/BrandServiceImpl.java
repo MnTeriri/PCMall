@@ -2,7 +2,9 @@ package com.example.pcmallproviderbrand.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.Brand;
+import com.example.pcmallcommon.model.dto.Brand;
+import com.example.pcmallcommon.model.entity.BrandEntity;
+import com.example.pcmallcommon.model.mapper.BrandMapper;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallproviderbrand.dao.IBrandDao;
 import com.example.pcmallproviderbrand.service.IBrandService;
@@ -26,7 +28,7 @@ public class BrandServiceImpl implements IBrandService {
     @Cacheable(cacheNames = "brand", key = "#id", sync = true)
     @Override
     public Brand searchBrandById(Integer id) {
-        return brandDao.selectById(id);
+        return BrandMapper.INSTANCE.toDto(brandDao.selectById(id));
     }
 
     @Override
@@ -34,11 +36,13 @@ public class BrandServiceImpl implements IBrandService {
         if (searchType == BrandSearchType.ALL) {
             Integer currentPage = (Integer) searchValue.get("currentPage");
             Integer pageSize = (Integer) searchValue.get("pageSize");
-            Page<Brand> page = new Page<>(currentPage, pageSize);
-            return brandDao.selectPage(page, null).getRecords();
+            Page<BrandEntity> page = new Page<>(currentPage, pageSize);
+            List<BrandEntity> list = brandDao.selectPage(page, null).getRecords();
+            return BrandMapper.INSTANCE.toDtoList(list);
         } else if (searchType == BrandSearchType.SEARCH_CID) {
             Integer cid = (Integer) searchValue.get("cid");
-            return brandDao.searchBrandByCid(cid);
+            List<BrandEntity> list = brandDao.searchBrandByCid(cid);
+            return BrandMapper.INSTANCE.toDtoList(list);
         }
         return List.of();
     }
@@ -68,7 +72,8 @@ public class BrandServiceImpl implements IBrandService {
 
     @Override
     public void addBrand(Brand brand) {
-        if (brandDao.insert(brand) != 1) {
+        BrandEntity entity = BrandMapper.INSTANCE.toEntity(brand);
+        if (brandDao.insert(entity) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
     }
@@ -77,7 +82,8 @@ public class BrandServiceImpl implements IBrandService {
     @Override
     public void updateBrand(Brand brand) {
         brand.setUpdateTime(LocalDateTime.now());
-        if (brandDao.updateById(brand) != 1) {
+        BrandEntity entity = BrandMapper.INSTANCE.toEntity(brand);
+        if (brandDao.updateById(entity) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
     }

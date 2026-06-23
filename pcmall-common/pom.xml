@@ -35,6 +35,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- MyBatis Plus -->

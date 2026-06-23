@@ -1,4 +1,4 @@
-package com.example.pcmallcommon.model;
+package com.example.pcmallcommon.model.dto;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.IdType;

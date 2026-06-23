@@ -1,6 +1,6 @@
-package com.example.pcmallcommon.model;
+package com.example.pcmallcommon.model.dto;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -19,19 +19,12 @@ import java.util.Objects;
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-@TableName("goods")
 public class Goods {
-    @TableId(type = IdType.AUTO)
     private Integer id;//商品编号
-
     private Integer cid;//分类编号，参考category的主键
-    @TableField(exist = false)
     private Category category;
-
     private Integer bid;//品牌编号，参考brand的主键
-    @TableField(exist = false)
     private Brand brand;
-
     private String gname;//商品名称
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

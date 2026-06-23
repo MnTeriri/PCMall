@@ -1,7 +1,7 @@
 package com.example.pcmallai.ai.memory.store;
 
 import com.example.pcmallai.service.IChatHistoryService;
-import com.example.pcmallcommon.model.ChatHistory;
+import com.example.pcmallcommon.model.dto.ChatHistory;
 import dev.langchain4j.data.message.*;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 import lombok.RequiredArgsConstructor;

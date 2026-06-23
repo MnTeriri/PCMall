@@ -1,6 +1,6 @@
 package com.example.pcmallcommon.client;
 
-import com.example.pcmallcommon.model.Order;
+import com.example.pcmallcommon.model.dto.Order;
 import com.example.pcmallcommon.response.ResponseResult;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.HttpExchange;

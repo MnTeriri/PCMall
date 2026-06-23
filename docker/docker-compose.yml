@@ -33,7 +33,7 @@ services:
       - "8091:8091"
     environment:
       - STORE_MODE=db
-      - SEATA_IP=172.20.10.2 #不能是127.0.0.1 可以是宿主机地址
+      - SEATA_IP=10.9.210.80 #不能是127.0.0.1 可以是宿主机地址
       - SEATA_PORT=8091
     volumes:
       - pcmall-seata-data:/seata-server

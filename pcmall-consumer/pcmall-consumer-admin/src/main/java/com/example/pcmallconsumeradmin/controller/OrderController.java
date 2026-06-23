@@ -1,7 +1,7 @@
 package com.example.pcmallconsumeradmin.controller;
 
 import com.example.pcmallcommon.client.OrderClient;
-import com.example.pcmallcommon.model.Order;
+import com.example.pcmallcommon.model.dto.Order;
 import com.example.pcmallcommon.response.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

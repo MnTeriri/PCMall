@@ -3,7 +3,7 @@ package com.example.pcmallai.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.pcmallai.dao.IChatHistoryDao;
 import com.example.pcmallai.service.IChatHistoryService;
-import com.example.pcmallcommon.model.ChatHistory;
+import com.example.pcmallcommon.model.dto.ChatHistory;
 import com.example.pcmallcommon.model.vo.ChatHistoryVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

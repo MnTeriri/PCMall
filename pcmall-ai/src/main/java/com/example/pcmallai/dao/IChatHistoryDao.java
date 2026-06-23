@@ -1,7 +1,7 @@
 package com.example.pcmallai.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.pcmallcommon.model.ChatHistory;
+import com.example.pcmallcommon.model.dto.ChatHistory;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 

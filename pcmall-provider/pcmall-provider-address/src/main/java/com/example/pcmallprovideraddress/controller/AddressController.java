@@ -1,6 +1,6 @@
 package com.example.pcmallprovideraddress.controller;
 
-import com.example.pcmallcommon.model.Address;
+import com.example.pcmallcommon.model.dto.Address;
 import com.example.pcmallcommon.response.ResponseResult;
 import com.example.pcmallprovideraddress.service.IAddressService;
 import io.swagger.v3.oas.annotations.Operation;

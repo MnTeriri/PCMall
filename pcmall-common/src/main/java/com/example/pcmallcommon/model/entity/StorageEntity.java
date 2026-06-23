@@ -1,10 +1,9 @@
-package com.example.pcmallcommon.model;
+package com.example.pcmallcommon.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.example.pcmallcommon.model.dto.Storage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,19 +15,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-@TableName("cart")
-public class Cart {
+@TableName("storage")
+public class StorageEntity {
     @TableId(type = IdType.AUTO)
-    private Integer id;//购物车信息编号
-    private String uid;//用户编号
+    private Integer id;//库存编号
     private Integer gid;//商品编号
-
-    @TableField(exist = false)
-    private Goods goods;
-    private Integer count;//选购数量
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private String uid;//用户编号
+    private Integer count;//数量
+    private Storage.StorageState status;//状态 0入库、1出库、2卖出、3退货、4取消订单
     private LocalDateTime createTime;//创建时间
-
-    private Integer isSelect;//0为未选购，1为选购
 }

@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.pcmallcommon.client.GoodsClient;
 import com.example.pcmallcommon.exception.SystemException;
-import com.example.pcmallcommon.model.Storage;
+import com.example.pcmallcommon.model.dto.Storage;
+import com.example.pcmallcommon.model.entity.StorageEntity;
+import com.example.pcmallcommon.model.mapper.StorageMapper;
 import com.example.pcmallcommon.response.ResponseCode;
 import com.example.pcmallproviderstorage.dao.IStorageDao;
 import com.example.pcmallproviderstorage.service.IStorageService;
@@ -27,16 +29,17 @@ public class StorageServiceImpl implements IStorageService {
     //@Cacheable(cacheNames = "storage", key = "#gid+':'+#currentPage+':'+#pageSize", sync = true)
     @Override
     public List<Storage> getStorageList(Integer gid, Integer currentPage, Integer pageSize) {
-        QueryWrapper<Storage> queryWrapper = new QueryWrapper<Storage>()
+        QueryWrapper<StorageEntity> queryWrapper = new QueryWrapper<StorageEntity>()
                 .eq("gid", gid)
                 .orderByDesc("id");
-        Page<Storage> page = new Page<>(currentPage, pageSize);
-        return storageDao.selectPage(page, queryWrapper).getRecords();
+        Page<StorageEntity> page = new Page<>(currentPage, pageSize);
+        List<StorageEntity> list = storageDao.selectPage(page, queryWrapper).getRecords();
+        return StorageMapper.INSTANCE.toDtoList(list);
     }
 
     @Override
     public Long getTotalCount(Integer gid) {
-        QueryWrapper<Storage> queryWrapper = new QueryWrapper<Storage>().eq("gid", gid);
+        QueryWrapper<StorageEntity> queryWrapper = new QueryWrapper<StorageEntity>().eq("gid", gid);
         return storageDao.selectCount(queryWrapper);
     }
 
@@ -45,7 +48,8 @@ public class StorageServiceImpl implements IStorageService {
     @Override
     public void inboundDelivery(Storage storage) {
         goodsClient.addGoodsCount(storage.getGid(), storage.getCount());
-        if (storageDao.insert(storage) != 1) {
+        StorageEntity entity = StorageMapper.INSTANCE.toEntity(storage);
+        if (storageDao.insert(entity) != 1) {
             throw new SystemException(ResponseCode.ERROR);//库存信息插入失败
         }
     }
@@ -56,7 +60,8 @@ public class StorageServiceImpl implements IStorageService {
     public void outboundDelivery(Storage storage) {
         goodsClient.divGoodsCount(storage.getGid(), storage.getCount());
         storage.setCount(-storage.getCount());
-        if (storageDao.insert(storage) != 1) {
+        StorageEntity entity = StorageMapper.INSTANCE.toEntity(storage);
+        if (storageDao.insert(entity) != 1) {
             throw new SystemException(ResponseCode.ERROR);//库存信息插入失败
         }
     }

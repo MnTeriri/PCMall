@@ -1,7 +1,7 @@
 package com.example.pcmallconsumeradmin.controller;
 
 import com.example.pcmallcommon.client.StorageClient;
-import com.example.pcmallcommon.model.Storage;
+import com.example.pcmallcommon.model.dto.Storage;
 import com.example.pcmallcommon.response.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

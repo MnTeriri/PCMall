@@ -1,6 +1,6 @@
 package com.example.pcmallprovideraddress.service;
 
-import com.example.pcmallcommon.model.Address;
+import com.example.pcmallcommon.model.dto.Address;
 
 import java.util.List;
 

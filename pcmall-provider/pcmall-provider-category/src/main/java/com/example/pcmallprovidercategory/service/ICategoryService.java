@@ -1,6 +1,6 @@
 package com.example.pcmallprovidercategory.service;
 
-import com.example.pcmallcommon.model.Category;
+import com.example.pcmallcommon.model.dto.Category;
 
 import java.util.List;
 import java.util.Map;

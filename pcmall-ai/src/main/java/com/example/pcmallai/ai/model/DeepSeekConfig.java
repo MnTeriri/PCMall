@@ -10,12 +10,20 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.web.client.RestClient;
 
 import java.util.Map;
 
 @Slf4j
 @Configuration
 public class DeepSeekConfig {
+
+    @Bean
+    @Primary
+    public RestClient.Builder aiRestClientBuilder() {
+        return RestClient.builder();
+    }
 
     @Bean
     public ChatModel deepSeekChatModel(
