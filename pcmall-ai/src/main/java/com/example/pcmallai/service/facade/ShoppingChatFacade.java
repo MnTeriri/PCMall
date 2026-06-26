@@ -1,25 +1,38 @@
-package com.example.pcmallai.service.impl;
+package com.example.pcmallai.service.facade;
 
+import com.example.pcmallai.ai.service.KnowledgeReplyAiService;
+import com.example.pcmallai.ai.service.QueryRouterAiService;
 import com.example.pcmallai.ai.service.ShoppingIntentAiService;
 import com.example.pcmallai.ai.service.ShoppingReplyAiService;
+import com.example.pcmallai.model.QueryRoute;
 import com.example.pcmallai.service.IChatHistoryService;
+import com.example.pcmallai.service.goods.GoodsQueryService;
 import com.example.pcmallcommon.model.ai.AiChatEvent;
 import com.example.pcmallcommon.model.ai.AiChatRequest;
 import com.example.pcmallcommon.model.ai.PurchaseIntent;
 import com.example.pcmallcommon.model.dto.ChatHistory;
 import com.example.pcmallcommon.model.dto.Goods;
+import dev.langchain4j.invocation.InvocationParameters;
+import dev.langchain4j.service.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+
+import static com.example.pcmallai.model.QueryRoute.QueryType.KNOWLEDGE;
+import static com.example.pcmallai.model.QueryRoute.QueryType.SHOPPING;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ShoppingChatFacade {
 
+    private final QueryRouterAiService queryRouterAiService;
+    private final KnowledgeReplyAiService knowledgeReplyAiService;
     private final ShoppingIntentAiService shoppingIntentAiService;
     private final ShoppingReplyAiService shoppingReplyAiService;
     private final IChatHistoryService chatHistoryService;
@@ -46,15 +59,54 @@ public class ShoppingChatFacade {
         log.debug("MySQL 增量追加: memoryId = {} , type = {}, msg_index = {}", memoryId, chatHistory.getType(), -1);
 
         String prompt = buildPrompt(userMessage, intent, goodsList);
+        InvocationParameters parameters = InvocationParameters.from(
+                Map.of("minPrice", intent.getMinPrice() == null ? BigDecimal.ZERO : intent.getMinPrice(),
+                        "maxPrice", intent.getMaxPrice() == null ? BigDecimal.valueOf(Integer.MAX_VALUE) : intent.getMaxPrice()
+                )
+        );
         return Flux.concat(
                 Flux.just(
                         new AiChatEvent(AiChatEvent.AiChatEventType.START, "开始处理"),
                         new AiChatEvent(AiChatEvent.AiChatEventType.GOODS, goodsList)
                 ),
-                shoppingReplyAiService.chatFlux(memoryId, prompt)
+                shoppingReplyAiService.chatFlux(memoryId, prompt, parameters)
                         .map(text -> new AiChatEvent(AiChatEvent.AiChatEventType.TEXT, text)),
                 Flux.just(new AiChatEvent(AiChatEvent.AiChatEventType.DONE, "完成"))
         );
+    }
+
+    public Result<String> testChat(AiChatRequest request) {
+        String memoryId = request.getUserId() + ":" + request.getSessionId();
+        String userMessage = request.getMessage();
+
+        QueryRoute route = queryRouterAiService.route(userMessage);
+        QueryRoute.QueryType type = route.getType();
+
+        log.debug("AI 路由结果: {}", route);
+
+        if (type == KNOWLEDGE) {
+            return knowledgeReplyAiService.chat(userMessage);
+        }
+
+        if (type == SHOPPING) {
+            PurchaseIntent intent = shoppingIntentAiService.parseIntent(userMessage);
+            log.debug("AI 分析的购买意图: {}", intent);
+
+            List<Goods> goodsList = goodsQueryService.queryCandidateGoods(intent, request.getTopK());
+            log.debug("查询出的候选商品数量: {}", goodsList.size());
+
+            InvocationParameters parameters = InvocationParameters.from(
+                    Map.of(
+                            "userMessage", userMessage,
+                            "purchaseIntent", intent,
+                            "goodsList", goodsList
+                    )
+            );
+
+            return shoppingReplyAiService.chat(buildPrompt(userMessage, intent, goodsList), parameters);
+        }
+
+        return knowledgeReplyAiService.chat(userMessage);
     }
 
     private String buildPrompt(String userMessage, PurchaseIntent intent, List<Goods> goodsList) {
@@ -67,13 +119,6 @@ public class ShoppingChatFacade {
 
                 候选商品列表：
                 %s
-
-                请你完成以下任务：
-                1. 先给出购买建议
-                2. 再结合候选商品说明推荐理由
-                3. 如果候选商品不够匹配，要明确指出不足
-                4. 不允许编造商品不存在的参数
-                5. 使用简洁、自然、适合前端流式展示的中文输出
                 """.formatted(userMessage, intent, goodsList);
     }
 

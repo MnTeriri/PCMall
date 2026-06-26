@@ -19,6 +19,7 @@ public class MilvusConfig {
 
     @Value("${milvus.host}")
     private String milvusHost;
+
     @Value("${milvus.port}")
     private Integer milvusPort;
 

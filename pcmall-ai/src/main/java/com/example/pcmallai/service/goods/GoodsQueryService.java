@@ -1,4 +1,4 @@
-package com.example.pcmallai.service.impl;
+package com.example.pcmallai.service.goods;
 
 import com.example.pcmallcommon.client.GoodsClient;
 import com.example.pcmallcommon.model.ai.GoodsAiSearchRequest;

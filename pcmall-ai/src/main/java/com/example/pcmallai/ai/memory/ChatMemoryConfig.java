@@ -36,7 +36,7 @@ public class ChatMemoryConfig {
 
     @Bean
     public ChatMemoryProvider chatMemoryProvider(
-            @Qualifier("persistentChatMemoryStore") ChatMemoryStore chatMemoryStore
+            @Qualifier("redisChatMemoryStore") ChatMemoryStore chatMemoryStore
     ) {
         return memoryId -> MessageWindowChatMemory.builder()
                 .id(memoryId)

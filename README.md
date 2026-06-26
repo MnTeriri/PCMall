@@ -76,15 +76,53 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 12. 实现全量商品向量化初始化管线，支持分页拉取、批量 Embedding、Redis 进度持久化与断点续传
 13. 实现对话记忆的持久化存储（Redis、MySQL），保证会话记忆的可靠查询与恢复
 
-## 架构图
+## Ai导购对话流程
+~~~
+User Message
+      │
+      ▼
+QueryRouterAiService      // 判断请求类型
+      │
+      ├──────────────┐
+      │              │
+      ▼              ▼
+KNOWLEDGE        SHOPPING
+      │              │
+      │       PurchaseIntentAiService
+      │              │
+      │       GoodsQueryService
+      │              │
+      └──────► ShoppingReplyAiService
+~~~
+* QueryRouterAiService：业务级路由，决定这次请求是 KNOWLEDGE、SHOPPING、ORDER、AFTER_SALE、CHAT
+* PurchaseIntentAiService：负责解析用户的购买意图
+* GoodsQueryService：负责数据库商品查询、过滤和排序。
+* ShoppingReplyAiService：负责基于商品结果生成自然语言回复。
 
-### v1.0：
+### 管理端
 
-![图片](image/架构图v1.0.jpg)
-
-### v2.0：
-
-![图片](image/架构图v2.0.jpg)
+## 项目结构
+~~~
+PCMall
+├── pcmall-common         // 通用模块
+├── pcmall-gateway        // 网关模块 [10000]
+├── pcmall-user-service   // 认证中心 [10001]
+├── pcmall-image          // 图片中心 [10002]
+├── pcmall-ai             // AI 模块 [10003]
+├── pcmall-consumer       // 服务消费者模块
+│      └── pcmall-consumer-admin                 // 管理端模块 [12000]
+│      └── pcmall-consumer-mobile                // 移动端模块 [12001]
+├── pcmall-provider       // 服务提供者模块
+│      └── pcmall-provider-address               // 地址模块 [11000]
+│      └── pcmall-provider-brand                 // 商品品牌模块 [11001]
+│      └── pcmall-provider-cart                  // 购物车模块 [11002]
+│      └── pcmall-provider-category              // 商品分类模块 [11003]
+│      └── pcmall-provider-goods                 // 商品模块 [11004]
+│      └── pcmall-provider-order                 // 订单模块 [11005]
+│      └── pcmall-provider-storage               // 商品库存模块 [11006]
+│      └── pcmall-provider-user                  // 用户模块 [11007]
+├──pom.xml                // 公共依赖
+~~~
 
 ## 界面效果
 
@@ -114,51 +152,6 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
     </tr>
 </table>
 
-### 管理端
-
-## 项目结构
-
-### v1.0：
-
-~~~
-PCMall
-├── pcmall-common         // 通用模块
-├── pcmall-gateway        // 网关模块 [10000]
-├── pcmall-user-service   // 认证中心 [10001]
-├── pcmall-image          // 图片中心 [10002]
-├── pcmall-consumer       // 服务消费者模块
-│      └── pcmall-consumer-admin                 // 管理端模块 [12000]
-│      └── pcmall-consumer-mobile                // 移动端模块 [12001]
-├── pcmall-provider       // 服务提供者模块
-│      └── pcmall-provider-goods                 // 商品中心 [11000]
-│      └── pcmall-provider-payment               // 订单中心 [11001]
-│      └── pcmall-provider-user                  // 用户中心 [11002]
-├──pom.xml                // 公共依赖
-~~~
-
-### v2.0：
-
-~~~
-PCMall
-├── pcmall-common         // 通用模块
-├── pcmall-gateway        // 网关模块 [10000]
-├── pcmall-user-service   // 认证中心 [10001]
-├── pcmall-image          // 图片中心 [10002]
-├── pcmall-ai             // AI 模块 [10003]
-├── pcmall-consumer       // 服务消费者模块
-│      └── pcmall-consumer-admin                 // 管理端模块 [12000]
-│      └── pcmall-consumer-mobile                // 移动端模块 [12001]
-├── pcmall-provider       // 服务提供者模块
-│      └── pcmall-provider-address               // 地址模块 [11000]
-│      └── pcmall-provider-brand                 // 商品品牌模块 [11001]
-│      └── pcmall-provider-cart                  // 购物车模块 [11002]
-│      └── pcmall-provider-category              // 商品分类模块 [11003]
-│      └── pcmall-provider-goods                 // 商品模块 [11004]
-│      └── pcmall-provider-order                 // 订单模块 [11005]
-│      └── pcmall-provider-storage               // 商品库存模块 [11006]
-│      └── pcmall-provider-user                  // 用户模块 [11007]
-├──pom.xml                // 公共依赖
-~~~
 
 ## 依赖框架部署
 
