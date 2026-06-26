@@ -1,6 +1,6 @@
 package com.example.pcmallai.listener;
 
-import com.example.pcmallai.service.impl.GoodsKnowledgeService;
+import com.example.pcmallai.service.impl.GoodsKnowledgeServiceImpl;
 import com.example.pcmallcommon.model.dto.Goods;
 import com.example.pcmallcommon.model.message.GoodsChangeMessage;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentMap;
 )
 public class GoodsChangeListener implements RocketMQListener<GoodsChangeMessage> {
 
-    private final GoodsKnowledgeService goodsKnowledgeService;
+    private final GoodsKnowledgeServiceImpl goodsKnowledgeService;
 
     /**
      * 每个 goodsId 最近一次处理的时间戳，用于防乱序
@@ -46,21 +46,21 @@ public class GoodsChangeListener implements RocketMQListener<GoodsChangeMessage>
             switch (action) {
                 case ADD, UPDATE, RECOVER -> {
                     log.debug("触发动作：{}，进行商品知识更新", action);
-                    goodsKnowledgeService.upsertGoods(message.getGoods());
+                    goodsKnowledgeService.incrementalRefresh(message.getGoods());
                 }
                 case DELETE -> {
                     log.debug("触发动作：{}，进行商品知识删除", action);
-                    goodsKnowledgeService.deleteById(message.getGoodsId());
+                    goodsKnowledgeService.deleteItem(String.valueOf(message.getGoodsId()));
                 }
                 case STATUS_CHANGE -> {
                     Goods goods = message.getGoods();
                     Goods.GoodsState status = goods.getStatus();
                     if (status == Goods.GoodsState.OUT_OF_STOCK || status == Goods.GoodsState.OFF_SHELF) {
                         log.debug("触发动作：{}，商品状态：{}，进行商品知识删除", action, goods.getStatus());
-                        goodsKnowledgeService.deleteById(message.getGoodsId());
+                        goodsKnowledgeService.deleteItem(String.valueOf(message.getGoodsId()));
                     } else {
                         log.debug("触发动作：{}，商品状态：{}，进行商品知识更新", action, goods.getStatus());
-                        goodsKnowledgeService.upsertGoods(message.getGoods());
+                        goodsKnowledgeService.incrementalRefresh(message.getGoods());
                     }
                 }
             }
