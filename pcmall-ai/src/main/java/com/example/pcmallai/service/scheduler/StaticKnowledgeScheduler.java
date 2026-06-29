@@ -1,5 +1,6 @@
-package com.example.pcmallai.service.impl;
+package com.example.pcmallai.service.scheduler;
 
+import com.example.pcmallai.service.impl.StaticKnowledgeServiceImpl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

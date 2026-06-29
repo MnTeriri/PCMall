@@ -62,6 +62,13 @@
             <version>${langchain4j.version}</version>
         </dependency>
 
+        <!-- LangChain4j MarkDown 文档解析 -->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-document-parser-markdown</artifactId>
+            <version>${langchain4j.version}</version>
+        </dependency>
+
         <!-- LangChain4j 流式 -->
         <dependency>
             <groupId>dev.langchain4j</groupId>

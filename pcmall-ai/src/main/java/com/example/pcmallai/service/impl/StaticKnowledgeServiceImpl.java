@@ -6,6 +6,7 @@ import com.example.pcmallai.service.IKnowledgeService;
 import com.example.pcmallcommon.utils.RedisUtils;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
+import dev.langchain4j.data.document.parser.markdown.MarkdownDocumentParser;
 import dev.langchain4j.data.document.splitter.DocumentByParagraphSplitter;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
@@ -226,7 +227,7 @@ public class StaticKnowledgeServiceImpl implements IKnowledgeService {
     private void loadDocument(Path path) {
         log.debug("加载静态知识库，路径：{}", path);
         // 1. 加载文档
-        List<Document> documents = FileSystemDocumentLoader.loadDocuments(path);
+        List<Document> documents = FileSystemDocumentLoader.loadDocuments(path, new MarkdownDocumentParser());
         // 2. 文档切割：将每个文档按每段进行分割，最大 1000 字符，每次重叠最多 200 个字符
         DocumentByParagraphSplitter paragraphSplitter = new DocumentByParagraphSplitter(1000, 200);
         // 3. 自定义文档加载器

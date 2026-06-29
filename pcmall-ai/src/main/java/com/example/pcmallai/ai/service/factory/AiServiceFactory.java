@@ -1,9 +1,6 @@
 package com.example.pcmallai.ai.service.factory;
 
-import com.example.pcmallai.ai.service.KnowledgeReplyAiService;
-import com.example.pcmallai.ai.service.QueryRouterAiService;
-import com.example.pcmallai.ai.service.ShoppingIntentAiService;
-import com.example.pcmallai.ai.service.ShoppingReplyAiService;
+import com.example.pcmallai.ai.service.*;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
@@ -26,6 +23,17 @@ public class AiServiceFactory {
 
     @Resource(name = "deepSeekStreamingChatModel")
     private StreamingChatModel deepSeekStreamingChatModel;
+
+    @Bean
+    public ChatReplyAiService chatReplyAiService(
+            @Qualifier("chatMemoryProvider") ChatMemoryProvider chatMemoryProvider
+    ) {
+        return AiServices.builder(ChatReplyAiService.class)
+                .chatModel(deepseekChatModel)
+                .systemMessageTransformer(systemMessage -> systemMessage + " 今天的日期是 " + LocalDate.now() + "。")
+                .chatMemoryProvider(chatMemoryProvider)
+                .build();
+    }
 
     @Bean
     public KnowledgeReplyAiService knowledgeReplyAiService(

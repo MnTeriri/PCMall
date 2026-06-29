@@ -12,5 +12,5 @@ public interface ShoppingReplyAiService {
     Flux<String> chatFlux(@MemoryId String memoryId, @UserMessage String prompt, InvocationParameters parameters);
 
     @SystemMessage(fromResource = "recommend-system-prompt.txt")
-    Result<String> chat(@UserMessage String prompt, InvocationParameters parameters);
+    Result<String> chat(@MemoryId String memoryId, @UserMessage String prompt, InvocationParameters parameters);
 }

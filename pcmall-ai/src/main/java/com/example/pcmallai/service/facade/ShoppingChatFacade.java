@@ -1,9 +1,6 @@
 package com.example.pcmallai.service.facade;
 
-import com.example.pcmallai.ai.service.KnowledgeReplyAiService;
-import com.example.pcmallai.ai.service.QueryRouterAiService;
-import com.example.pcmallai.ai.service.ShoppingIntentAiService;
-import com.example.pcmallai.ai.service.ShoppingReplyAiService;
+import com.example.pcmallai.ai.service.*;
 import com.example.pcmallai.model.QueryRoute;
 import com.example.pcmallai.service.IChatHistoryService;
 import com.example.pcmallai.service.goods.GoodsQueryService;
@@ -23,8 +20,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.pcmallai.model.QueryRoute.QueryType.KNOWLEDGE;
-import static com.example.pcmallai.model.QueryRoute.QueryType.SHOPPING;
+import static com.example.pcmallai.model.QueryRoute.QueryType.*;
 
 @Slf4j
 @Service
@@ -32,6 +28,7 @@ import static com.example.pcmallai.model.QueryRoute.QueryType.SHOPPING;
 public class ShoppingChatFacade {
 
     private final QueryRouterAiService queryRouterAiService;
+    private final ChatReplyAiService chatReplyAiService;
     private final KnowledgeReplyAiService knowledgeReplyAiService;
     private final ShoppingIntentAiService shoppingIntentAiService;
     private final ShoppingReplyAiService shoppingReplyAiService;
@@ -84,8 +81,12 @@ public class ShoppingChatFacade {
 
         log.debug("AI 路由结果: {}", route);
 
+        if (type == CHAT) {
+            return chatReplyAiService.chat(memoryId, userMessage);
+        }
+
         if (type == KNOWLEDGE) {
-            return knowledgeReplyAiService.chat(userMessage);
+            return knowledgeReplyAiService.chat(memoryId, userMessage);
         }
 
         if (type == SHOPPING) {
@@ -103,10 +104,10 @@ public class ShoppingChatFacade {
                     )
             );
 
-            return shoppingReplyAiService.chat(buildPrompt(userMessage, intent, goodsList), parameters);
+            return shoppingReplyAiService.chat(memoryId, buildPrompt(userMessage, intent, goodsList), parameters);
         }
 
-        return knowledgeReplyAiService.chat(userMessage);
+        return knowledgeReplyAiService.chat(memoryId, userMessage);
     }
 
     private String buildPrompt(String userMessage, PurchaseIntent intent, List<Goods> goodsList) {
