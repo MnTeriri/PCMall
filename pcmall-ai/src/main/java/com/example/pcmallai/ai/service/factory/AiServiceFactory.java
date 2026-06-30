@@ -30,6 +30,7 @@ public class AiServiceFactory {
     ) {
         return AiServices.builder(ChatReplyAiService.class)
                 .chatModel(deepseekChatModel)
+                .streamingChatModel(deepSeekStreamingChatModel)
                 .systemMessageTransformer(systemMessage -> systemMessage + " 今天的日期是 " + LocalDate.now() + "。")
                 .chatMemoryProvider(chatMemoryProvider)
                 .build();
@@ -42,6 +43,7 @@ public class AiServiceFactory {
     ) {
         return AiServices.builder(KnowledgeReplyAiService.class)
                 .chatModel(deepseekChatModel)
+                .streamingChatModel(deepSeekStreamingChatModel)
                 .systemMessageTransformer(systemMessage -> systemMessage + " 今天的日期是 " + LocalDate.now() + "。")
                 .chatMemoryProvider(chatMemoryProvider)
                 .contentRetriever(contentRetriever)

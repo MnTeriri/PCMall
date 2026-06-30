@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -62,10 +63,11 @@ public class RAGConfig {
 
     @Bean
     public RetrievalAugmentor retrievalAugmentor(
+            @Qualifier("deepSeekChatModel") ChatModel chatModel,
             @Qualifier("staticContentRetriever") ContentRetriever staticRetriever,
             @Qualifier("goodsContentRetriever") ContentRetriever goodsRetriever,
             @Qualifier("shoppingQueryTransformer") QueryTransformer queryTransformer,
-            @Qualifier("deepSeekChatModel") ChatModel chatModel
+            @Qualifier("threadPoolTaskExecutor") ThreadPoolTaskExecutor executor
     ) {
         // 把每个 retriever 包装成一个可路由的目标
         Map<ContentRetriever, String> retrieverToDescription = new LinkedHashMap<>();
@@ -103,6 +105,7 @@ public class RAGConfig {
                 .queryTransformer(queryTransformer)
                 .queryRouter(queryRouter)
                 .contentAggregator(new DefaultContentAggregator())
+                .executor(executor)
                 .build();
     }
 }
