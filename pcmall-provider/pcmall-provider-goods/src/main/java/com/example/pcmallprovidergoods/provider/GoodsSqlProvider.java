@@ -1,7 +1,6 @@
 package com.example.pcmallprovidergoods.provider;
 
 import com.example.pcmallcommon.model.ai.GoodsAiSearchRequest;
-import com.example.pcmallcommon.model.ai.PurchaseIntent;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,9 +14,8 @@ public class GoodsSqlProvider {
                 .append("INNER JOIN brand ON goods.bid = brand.id ")
                 .append("WHERE goods.status=0 AND goods.is_delete=0 ");
 
-        PurchaseIntent intent = request.getIntent();
-        String categoryKeyword = intent.getCategoryKeyword();
-        List<String> brandKeywords = intent.getBrandKeywords();
+        String categoryKeyword = request.getCategoryKeyword();
+        List<String> brandKeywords = request.getBrandKeywords();
 
         if (categoryKeyword != null && !categoryKeyword.isEmpty()) {
             sql.append("AND category.cname LIKE CONCAT('%', #{request.intent.categoryKeyword} '%')");
@@ -36,11 +34,11 @@ public class GoodsSqlProvider {
             sql.append(") ");
         }
 
-        if (intent.getMinPrice() != null) {
+        if (request.getMinPrice() != null) {
             sql.append("AND goods.price >= #{request.intent.minPrice} ");
         }
 
-        if (intent.getMaxPrice() != null) {
+        if (request.getMaxPrice() != null) {
             sql.append("AND goods.price <= #{request.intent.maxPrice} ");
         }
 

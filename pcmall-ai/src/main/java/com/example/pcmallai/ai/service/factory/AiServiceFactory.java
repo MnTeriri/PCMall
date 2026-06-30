@@ -51,6 +51,13 @@ public class AiServiceFactory {
     }
 
     @Bean
+    public OrderIntentAiService orderIntentAiService() {
+        return AiServices.builder(OrderIntentAiService.class)
+                .chatModel(deepseekChatModel)
+                .build();
+    }
+
+    @Bean
     public QueryRouterAiService queryRouterAiService() {
         return AiServices.builder(QueryRouterAiService.class)
                 .chatModel(deepseekChatModel)
@@ -58,8 +65,8 @@ public class AiServiceFactory {
     }
 
     @Bean
-    public ShoppingIntentAiService shoppingIntentAiService() {
-        return AiServices.builder(ShoppingIntentAiService.class)
+    public PurchaseIntentAiService shoppingIntentAiService() {
+        return AiServices.builder(PurchaseIntentAiService.class)
                 .chatModel(deepseekChatModel)
                 .build();
     }

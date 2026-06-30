@@ -13,7 +13,9 @@
     <description>pcmall-ai</description>
 
     <properties>
-        <langchain4j.version>1.16.0-beta26</langchain4j.version>
+        <langchain4j.version>1.17.0</langchain4j.version>
+        <langchain4j.community.version>1.17.0-beta27</langchain4j.community.version>
+        <langgraph4j.version>1.8.20</langgraph4j.version>
     </properties>
 
     <dependencies>
@@ -45,56 +47,60 @@
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-spring-boot4-starter</artifactId>
-            <version>${langchain4j.version}</version>
         </dependency>
 
         <!-- LangChain4j Open AI 模型 -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai-spring-boot4-starter</artifactId>
-            <version>${langchain4j.version}</version>
         </dependency>
 
         <!-- LangChain4j Ollama 模型 -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-ollama-spring-boot4-starter</artifactId>
-            <version>${langchain4j.version}</version>
         </dependency>
 
         <!-- LangChain4j MarkDown 文档解析 -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-document-parser-markdown</artifactId>
-            <version>${langchain4j.version}</version>
         </dependency>
 
         <!-- LangChain4j 流式 -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-reactor</artifactId>
-            <version>${langchain4j.version}</version>
         </dependency>
 
         <!-- LangChain4j Milvus 向量数据库 -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-milvus</artifactId>
-            <version>${langchain4j.version}</version>
         </dependency>
 
         <!-- LangChain4j MCP -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-mcp</artifactId>
-            <version>${langchain4j.version}</version>
         </dependency>
 
         <!-- LangChain4j Redis -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-community-redis</artifactId>
-            <version>${langchain4j.version}</version>
+        </dependency>
+
+        <!-- LangGraph4j -->
+        <dependency>
+            <groupId>org.bsc.langgraph4j</groupId>
+            <artifactId>langgraph4j-core</artifactId>
+        </dependency>
+
+        <!-- LangGraph4j-LangChain4j -->
+        <dependency>
+            <groupId>org.bsc.langgraph4j</groupId>
+            <artifactId>langgraph4j-langchain4j</artifactId>
         </dependency>
 
         <!-- Redis -->
@@ -134,6 +140,37 @@
             <artifactId>pcmall-common</artifactId>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- LangChain4j -->
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-bom</artifactId>
+                <version>${langchain4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- LangChain4j Community -->
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-community-bom</artifactId>
+                <version>${langchain4j.community.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- LangGraph4j -->
+            <dependency>
+                <groupId>org.bsc.langgraph4j</groupId>
+                <artifactId>langgraph4j-bom</artifactId>
+                <version>${langgraph4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

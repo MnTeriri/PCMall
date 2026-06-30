@@ -1,8 +1,8 @@
 package com.example.pcmallai.service.goods;
 
+import com.example.pcmallai.model.PurchaseIntent;
 import com.example.pcmallcommon.client.GoodsClient;
 import com.example.pcmallcommon.model.ai.GoodsAiSearchRequest;
-import com.example.pcmallcommon.model.ai.PurchaseIntent;
 import com.example.pcmallcommon.model.dto.Goods;
 import com.example.pcmallcommon.response.ResponseResult;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,15 @@ public class GoodsQueryService {
         int candidateTopK = normalizeCandidateTopK(topN);
 
         GoodsAiSearchRequest request = new GoodsAiSearchRequest()
-                .setIntent(intent)
-                .setTopK(candidateTopK);
+                .setTopK(candidateTopK)
+                .setCategoryKeyword(intent.getCategoryKeyword())
+                .setGoodsKeyword(intent.getGoodsKeyword())
+                .setBrandKeywords(intent.getBrandKeywords())
+                .setUsageScenarios(intent.getUsageScenarios())
+                .setMinPrice(intent.getMinPrice())
+                .setMaxPrice(intent.getMaxPrice())
+                .setRequiredFeatures(intent.getRequiredFeatures())
+                .setExcludedFeatures(intent.getExcludedFeatures());
 
         ResponseResult<List<Goods>> result = goodsClient.searchGoodsByAiIntent(request);
         List<Goods> candidates = (result == null ? null : result.getData());

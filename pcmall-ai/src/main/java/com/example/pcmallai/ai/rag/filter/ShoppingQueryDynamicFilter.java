@@ -1,6 +1,6 @@
 package com.example.pcmallai.ai.rag.filter;
 
-import com.example.pcmallcommon.model.ai.PurchaseIntent;
+import com.example.pcmallai.model.PurchaseIntent;
 import dev.langchain4j.rag.query.Query;
 import dev.langchain4j.store.embedding.filter.Filter;
 import lombok.extern.slf4j.Slf4j;

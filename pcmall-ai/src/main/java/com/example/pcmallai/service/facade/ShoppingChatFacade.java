@@ -1,12 +1,12 @@
 package com.example.pcmallai.service.facade;
 
 import com.example.pcmallai.ai.service.*;
+import com.example.pcmallai.model.PurchaseIntent;
 import com.example.pcmallai.model.QueryRoute;
 import com.example.pcmallai.service.IChatHistoryService;
 import com.example.pcmallai.service.goods.GoodsQueryService;
 import com.example.pcmallcommon.model.ai.AiChatEvent;
 import com.example.pcmallcommon.model.ai.AiChatRequest;
-import com.example.pcmallcommon.model.ai.PurchaseIntent;
 import com.example.pcmallcommon.model.dto.Goods;
 import dev.langchain4j.invocation.InvocationParameters;
 import dev.langchain4j.service.Result;
@@ -29,7 +29,7 @@ public class ShoppingChatFacade {
     private final QueryRouterAiService queryRouterAiService;
     private final ChatReplyAiService chatReplyAiService;
     private final KnowledgeReplyAiService knowledgeReplyAiService;
-    private final ShoppingIntentAiService shoppingIntentAiService;
+    private final PurchaseIntentAiService purchaseIntentAiService;
     private final ShoppingReplyAiService shoppingReplyAiService;
     private final IChatHistoryService chatHistoryService;
     private final GoodsQueryService goodsQueryService;
@@ -45,7 +45,7 @@ public class ShoppingChatFacade {
         Flux<AiChatEvent> flux;
 
         if (type == SHOPPING) {
-            PurchaseIntent intent = shoppingIntentAiService.parseIntent(userMessage);
+            PurchaseIntent intent = purchaseIntentAiService.parseIntent(userMessage);
             log.debug("AI 分析的购买意图: {}", intent);
 
             List<Goods> goodsList = goodsQueryService.queryCandidateGoods(intent, request.getTopK());
@@ -88,7 +88,7 @@ public class ShoppingChatFacade {
         log.debug("AI 路由结果: {}", route);
 
         if (type == SHOPPING) {
-            PurchaseIntent intent = shoppingIntentAiService.parseIntent(userMessage);
+            PurchaseIntent intent = purchaseIntentAiService.parseIntent(userMessage);
             log.debug("AI 分析的购买意图: {}", intent);
 
             List<Goods> goodsList = goodsQueryService.queryCandidateGoods(intent, request.getTopK());

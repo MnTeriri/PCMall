@@ -1,5 +1,6 @@
 package com.example.pcmallai.controller;
 
+import com.example.pcmallai.service.facade.OrderGraphService;
 import com.example.pcmallai.service.facade.ShoppingChatFacade;
 import com.example.pcmallcommon.model.ai.AiChatEvent;
 import com.example.pcmallcommon.model.ai.AiChatRequest;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 @Tag(name = "AI接口")
 public class ShoppingAiController {
     private final ShoppingChatFacade shoppingChatFacade;
+    private final OrderGraphService orderGraphService;
 
     @Operation(summary = "AI聊天接口")
     @PostMapping(value = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -57,5 +59,11 @@ public class ShoppingAiController {
         map.put("toolExecutions", result.toolExecutions());
         map.put("finishReason", result.finishReason());
         return ResponseResult.ok(map);
+    }
+
+    @PostMapping(value = "/test1")
+    public ResponseResult<String> test1(@RequestBody AiChatRequest request) {
+        orderGraphService.chatFlux();
+        return ResponseResult.ok();
     }
 }

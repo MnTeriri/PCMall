@@ -1,4 +1,4 @@
-package com.example.pcmallcommon.model.ai;
+package com.example.pcmallai.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
