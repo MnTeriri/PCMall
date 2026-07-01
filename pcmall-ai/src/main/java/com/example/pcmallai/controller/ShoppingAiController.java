@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -62,8 +63,7 @@ public class ShoppingAiController {
     }
 
     @PostMapping(value = "/test1")
-    public ResponseResult<String> test1(@RequestBody AiChatRequest request) {
-        orderGraphService.chatFlux();
-        return ResponseResult.ok();
+    public ResponseResult<Map<String, Object>> test1(@RequestBody AiChatRequest request) {
+        return ResponseResult.ok(orderGraphService.chatFlux(request));
     }
 }

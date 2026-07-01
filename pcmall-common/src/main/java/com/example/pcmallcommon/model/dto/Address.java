@@ -6,13 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-public class Address {
+public class Address implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 8163221760980546394L;
+
     private Integer id;//地址编号
     private String uid;//用户编号
     private String province;//省

@@ -10,13 +10,18 @@ import tools.jackson.databind.annotation.JsonSerialize;
 import tools.jackson.databind.ext.javatime.deser.LocalDateTimeDeserializer;
 import tools.jackson.databind.ext.javatime.ser.LocalDateTimeSerializer;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-public class Comment {
+public class Comment implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 7404417881218243317L;
+
     private Integer id;
     private String uid;//用户id
     private Integer gid;//商品id

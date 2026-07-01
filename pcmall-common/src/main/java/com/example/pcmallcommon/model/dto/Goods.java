@@ -11,6 +11,8 @@ import tools.jackson.databind.annotation.JsonSerialize;
 import tools.jackson.databind.ext.javatime.deser.LocalDateTimeDeserializer;
 import tools.jackson.databind.ext.javatime.ser.LocalDateTimeSerializer;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -19,7 +21,10 @@ import java.util.Objects;
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-public class Goods {
+public class Goods implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -5510232363849584415L;
+
     private Integer id;//商品编号
     private Integer cid;//分类编号，参考category的主键
     private Category category;

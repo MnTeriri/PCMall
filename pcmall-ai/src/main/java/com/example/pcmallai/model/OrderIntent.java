@@ -5,14 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class OrderIntent {
+public class OrderIntent implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 2455231864848469799L;
+
     private OrderAction action;
     private String oid;// 用户明确提到的订单号
-    private String searchValue; // 模糊搜索关键词
     private String reason;// LLM 判断理由
     private Double confidence;// 置信度 0-1
 

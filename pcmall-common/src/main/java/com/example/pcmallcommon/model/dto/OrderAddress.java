@@ -5,11 +5,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-public class OrderAddress {
+public class OrderAddress implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 5505319482509286367L;
+
     private String province;//省
     private String city;//市
     private String district;//区

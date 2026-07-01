@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +18,10 @@ import java.util.Objects;
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-public class Order {
+public class Order implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 8099852605476459228L;
+
     private Integer id;
     private String oid;//订单编号
     private String uid;//用户编号

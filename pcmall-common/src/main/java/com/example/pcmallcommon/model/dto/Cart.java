@@ -6,13 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-public class Cart {
+public class Cart implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -7752182493718592706L;
+
     private Integer id;//购物车信息编号
     private String uid;//用户编号
     private Integer gid;//商品编号

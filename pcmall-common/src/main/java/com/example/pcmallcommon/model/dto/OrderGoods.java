@@ -4,13 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Accessors(chain = true)
-public class OrderGoods {
+public class OrderGoods implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -6314866593426624563L;
+
     private Integer id;//商品编号
     private Integer cid;//分类编号，参考category的主键
     private Category category;

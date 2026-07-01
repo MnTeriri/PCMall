@@ -58,6 +58,13 @@ public class AiServiceFactory {
     }
 
     @Bean
+    public OrderReplyAiService orderReplyAiService() {
+        return AiServices.builder(OrderReplyAiService.class)
+                .chatModel(deepseekChatModel)
+                .build();
+    }
+
+    @Bean
     public QueryRouterAiService queryRouterAiService() {
         return AiServices.builder(QueryRouterAiService.class)
                 .chatModel(deepseekChatModel)

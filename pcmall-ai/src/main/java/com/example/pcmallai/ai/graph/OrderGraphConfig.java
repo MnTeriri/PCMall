@@ -1,18 +1,21 @@
 package com.example.pcmallai.ai.graph;
 
-import com.example.pcmallai.ai.graph.action.OrderIntentNode;
 import com.example.pcmallai.ai.graph.state.OrderGraphState;
 import lombok.extern.slf4j.Slf4j;
 import org.bsc.langgraph4j.CompiledGraph;
 import org.bsc.langgraph4j.GraphStateException;
 import org.bsc.langgraph4j.StateGraph;
+import org.bsc.langgraph4j.action.NodeAction;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Map;
+
 import static org.bsc.langgraph4j.GraphDefinition.END;
 import static org.bsc.langgraph4j.GraphDefinition.START;
 import static org.bsc.langgraph4j.GraphRepresentation.Type.PLANTUML;
+import static org.bsc.langgraph4j.action.AsyncEdgeAction.edge_async;
 import static org.bsc.langgraph4j.action.AsyncNodeAction.node_async;
 
 @Slf4j
@@ -21,14 +24,28 @@ public class OrderGraphConfig {
 
     @Bean
     public StateGraph<OrderGraphState> stateGraph(
-            @Qualifier("orderIntentNode") OrderIntentNode orderIntentNode
+            @Qualifier("orderIntentNode") NodeAction<OrderGraphState> orderIntentNode,
+            @Qualifier("orderQueryNode") NodeAction<OrderGraphState> orderQueryNode,
+            @Qualifier("replyNode") NodeAction<OrderGraphState> replyNode
     ) throws GraphStateException {
         StateGraph<OrderGraphState> stateGraph = new StateGraph<>(OrderGraphState::new)
-                .addNode("resolveIntent", node_async(orderIntentNode))
-
+                // ---- 节点 ----
+                .addNode("orderIntent", node_async(orderIntentNode))
+                .addNode("orderQuery", node_async(orderQueryNode))
+                .addNode("generateReply", node_async(replyNode))
                 // ---- 边：定义执行顺序 ----
-                .addEdge(START, "resolveIntent")
-                .addEdge("resolveIntent", END);
+                .addEdge(START, "orderIntent")
+                .addConditionalEdges(
+                        "orderIntent",
+                        edge_async(OrderGraphState::route),
+                        Map.of(
+                                "query", "orderQuery",
+                                "action", END,
+                                "unknown", "generateReply"
+                        )
+                )
+                .addEdge("orderQuery", "generateReply")
+                .addEdge("generateReply", END);
 
         log.debug(stateGraph.getGraph(PLANTUML, "test").content());
 
