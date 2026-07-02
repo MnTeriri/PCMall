@@ -2,12 +2,16 @@ package com.example.pcmallai.ai.graph.state;
 
 import com.example.pcmallai.model.OrderIntent;
 import com.example.pcmallcommon.model.dto.Order;
-import org.bsc.langgraph4j.state.AgentState;
+import dev.langchain4j.data.message.ChatMessage;
+import org.bsc.langgraph4j.prebuilt.MessagesState;
+import org.bsc.langgraph4j.state.Channel;
+import org.bsc.langgraph4j.state.Channels;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class OrderGraphState extends AgentState {
+public class OrderGraphState extends MessagesState<ChatMessage> {
     public static final String KEY_USER_ID = "userId";
     public static final String KEY_SESSION_ID = "sessionId";
     public static final String KEY_MEMORY_ID = "memoryId";
@@ -17,6 +21,7 @@ public class OrderGraphState extends AgentState {
     public static final String KEY_ORDER_INTENT = "orderIntent";
     public static final String KEY_CANDIDATE_ORDERS = "candidateOrders";
     public static final String KEY_FINAL_REPLY = "finalReply";
+    public static final String KEY_STREAMING = "_streaming_messages";
 
     public OrderGraphState(Map<String, Object> initData) {
         super(initData);

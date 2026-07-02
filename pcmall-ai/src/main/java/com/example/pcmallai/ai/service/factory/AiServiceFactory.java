@@ -61,6 +61,7 @@ public class AiServiceFactory {
     public OrderReplyAiService orderReplyAiService() {
         return AiServices.builder(OrderReplyAiService.class)
                 .chatModel(deepseekChatModel)
+                .streamingChatModel(deepSeekStreamingChatModel)
                 .build();
     }
 

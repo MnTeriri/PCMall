@@ -3,15 +3,18 @@ package com.example.pcmallai.ai.graph.action;
 import com.example.pcmallai.ai.graph.state.OrderGraphState;
 import com.example.pcmallai.ai.service.OrderReplyAiService;
 import com.example.pcmallcommon.model.dto.Order;
+import dev.langchain4j.model.chat.response.StreamingChatResponseHandler;
+import dev.langchain4j.service.TokenStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bsc.langgraph4j.action.NodeAction;
+import org.bsc.langgraph4j.langchain4j.generators.StreamingChatGenerator;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.example.pcmallai.ai.graph.state.OrderGraphState.KEY_FINAL_REPLY;
+import static com.example.pcmallai.ai.graph.state.OrderGraphState.*;
 
 @Slf4j
 @Component
@@ -26,9 +29,21 @@ public class ReplyNode implements NodeAction<OrderGraphState> {
         List<Order> orders = state.candidateOrders();
         String prompt = buildPrompt(userMessage, orders);
 
-        String result = orderReplyAiService.chat(prompt);
+        var generator = StreamingChatGenerator.<OrderGraphState>builder()
+                .mapResult(response -> Map.of(MESSAGES_STATE, response.aiMessage()))
+                .startingNode("generateReply")
+                .startingState(state)
+                .build();
 
-        return Map.of(KEY_FINAL_REPLY, result);
+        StreamingChatResponseHandler handler = generator.handler();
+
+        orderReplyAiService.chatStream(prompt)
+                .onPartialResponse(handler::onPartialResponse)
+                .onCompleteResponse(handler::onCompleteResponse)
+                .onError(handler::onError)
+                .start();
+
+        return Map.of(KEY_STREAMING, generator);
     }
 
     private String buildPrompt(String userMessage, List<Order> orders) {

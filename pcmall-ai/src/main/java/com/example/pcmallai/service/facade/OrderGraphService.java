@@ -4,7 +4,11 @@ import com.example.pcmallai.ai.graph.state.OrderGraphState;
 import com.example.pcmallcommon.model.ai.AiChatRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bsc.async.AsyncGenerator;
 import org.bsc.langgraph4j.CompiledGraph;
+import org.bsc.langgraph4j.NodeOutput;
+import org.bsc.langgraph4j.RunnableConfig;
+import org.bsc.langgraph4j.streaming.StreamingOutput;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -23,9 +27,19 @@ public class OrderGraphService {
                 OrderGraphState.KEY_USER_MESSAGE, request.getMessage()
         );
 
-        OrderGraphState result = orderGraph.invoke(initialState)
-                .orElseThrow(() -> new RuntimeException("订单图执行失败"));
+        RunnableConfig config = RunnableConfig.builder()
+                .build();
 
-        return result.data();
+        AsyncGenerator<NodeOutput<OrderGraphState>> stream = orderGraph.stream(initialState);
+
+        for (NodeOutput<OrderGraphState> out : stream) {
+            if (out instanceof StreamingOutput streaming) {
+                log.info("StreamingOutput{node={}, chunk={} }", streaming.node(), streaming.chunk());
+            } else {
+                log.info("{}", out);
+            }
+        }
+
+        return Map.of();
     }
 }

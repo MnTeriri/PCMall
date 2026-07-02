@@ -6,6 +6,7 @@ import org.bsc.langgraph4j.CompiledGraph;
 import org.bsc.langgraph4j.GraphStateException;
 import org.bsc.langgraph4j.StateGraph;
 import org.bsc.langgraph4j.action.NodeAction;
+import org.bsc.langgraph4j.langchain4j.serializer.std.LC4jStateSerializer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,8 @@ public class OrderGraphConfig {
             @Qualifier("orderQueryNode") NodeAction<OrderGraphState> orderQueryNode,
             @Qualifier("replyNode") NodeAction<OrderGraphState> replyNode
     ) throws GraphStateException {
-        StateGraph<OrderGraphState> stateGraph = new StateGraph<>(OrderGraphState::new)
+        var stateSerializer = new LC4jStateSerializer<>(OrderGraphState::new);
+        StateGraph<OrderGraphState> stateGraph = new StateGraph<>(OrderGraphState.SCHEMA, stateSerializer)
                 // ---- 节点 ----
                 .addNode("orderIntent", node_async(orderIntentNode))
                 .addNode("orderQuery", node_async(orderQueryNode))
