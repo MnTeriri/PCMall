@@ -13,5 +13,6 @@ public class AiChatRequest {
     private String userId;//用户ID
     private String sessionId;//会话ID
     private String message;//用户发送的消息内容
+    private Boolean approval;//用户发送的确认信息
     private Integer topK;//候选商品返回数量
 }

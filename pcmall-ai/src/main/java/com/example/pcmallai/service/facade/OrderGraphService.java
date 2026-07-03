@@ -6,12 +6,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bsc.async.AsyncGenerator;
 import org.bsc.langgraph4j.CompiledGraph;
+import org.bsc.langgraph4j.GraphInput;
 import org.bsc.langgraph4j.NodeOutput;
 import org.bsc.langgraph4j.RunnableConfig;
 import org.bsc.langgraph4j.streaming.StreamingOutput;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.Map;
+
+import static com.example.pcmallai.ai.graph.state.OrderGraphState.KEY_APPROVAL;
 
 @Slf4j
 @Service
@@ -20,25 +24,47 @@ public class OrderGraphService {
     private final CompiledGraph<OrderGraphState> orderGraph;
 
     public Map<String, Object> chatFlux(AiChatRequest request) {
+        String memoryId = request.getUserId() + ":" + request.getSessionId();
+        Boolean approval = request.getApproval();
+
         Map<String, Object> initialState = Map.of(
                 OrderGraphState.KEY_USER_ID, request.getUserId(),
-                OrderGraphState.KEY_SESSION_ID, "request.getSessionId()",
-                OrderGraphState.KEY_MEMORY_ID, "memoryId",
+                OrderGraphState.KEY_SESSION_ID, request.getSessionId(),
+                OrderGraphState.KEY_MEMORY_ID, memoryId,
                 OrderGraphState.KEY_USER_MESSAGE, request.getMessage()
         );
 
         RunnableConfig config = RunnableConfig.builder()
+                .threadId(memoryId)
                 .build();
 
-        AsyncGenerator<NodeOutput<OrderGraphState>> stream = orderGraph.stream(initialState);
+        AsyncGenerator<NodeOutput<OrderGraphState>> stream;
 
-        for (NodeOutput<OrderGraphState> out : stream) {
-            if (out instanceof StreamingOutput streaming) {
-                log.info("StreamingOutput{node={}, chunk={} }", streaming.node(), streaming.chunk());
-            } else {
-                log.info("{}", out);
-            }
+        if (approval == null) {
+            stream = orderGraph.stream(initialState, config);
+        } else {
+            stream = orderGraph.stream(GraphInput.resume(Map.of(KEY_APPROVAL, approval)), config);
         }
+
+        Flux<NodeOutput<OrderGraphState>> flux = Flux.push(sink -> {
+            try {
+                for (NodeOutput<OrderGraphState> out : stream) {
+                    sink.next(out);
+                }
+                sink.complete();
+            } catch (Exception e) {
+                sink.error(e);
+            }
+        });
+
+        flux.doOnNext(out -> {
+            if (out instanceof StreamingOutput<OrderGraphState> streaming) {
+                System.out.print(streaming.chunk());
+            } else {
+                System.out.println();
+                log.info("{}", out.node());
+            }
+        }).subscribe();
 
         return Map.of();
     }

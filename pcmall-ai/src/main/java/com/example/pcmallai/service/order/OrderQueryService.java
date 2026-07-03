@@ -19,20 +19,24 @@ public class OrderQueryService {
 
     private final OrderClient orderClient;
 
+    public List<Order> query(String oid, String uid) {
+        return searchByType(oid, uid, TYPE_ALL, DEFAULT_PAGE_SIZE);
+    }
+
     public List<Order> queryRecent(String uid) {
-        return searchByType(uid, TYPE_ALL, RECENT_PAGE_SIZE);
+        return searchByType("", uid, TYPE_ALL, RECENT_PAGE_SIZE);
     }
 
     public List<Order> queryPendingPayment(String uid) {
-        return searchByType(uid, Order.OrderState.PENDING_PAYMENT.getCode(), DEFAULT_PAGE_SIZE);
+        return searchByType("",uid, Order.OrderState.PENDING_PAYMENT.getCode(), DEFAULT_PAGE_SIZE);
     }
 
     public List<Order> queryPendingReceipt(String uid) {
-        return searchByType(uid, Order.OrderState.PENDING_RECEIPT.getCode(), DEFAULT_PAGE_SIZE);
+        return searchByType("", uid, Order.OrderState.PENDING_RECEIPT.getCode(), DEFAULT_PAGE_SIZE);
     }
 
-    private List<Order> searchByType(String uid, int type, int pageSize) {
-        ResponseResult<List<Order>> response = orderClient.searchOrderList("", uid, type, 1, pageSize);
+    private List<Order> searchByType(String oid, String uid, int type, int pageSize) {
+        ResponseResult<List<Order>> response = orderClient.searchOrderList(oid, uid, type, 1, pageSize);
         if (response == null || response.getData() == null) {
             return List.of();
         }

@@ -4,24 +4,25 @@ import com.example.pcmallai.model.OrderIntent;
 import com.example.pcmallcommon.model.dto.Order;
 import dev.langchain4j.data.message.ChatMessage;
 import org.bsc.langgraph4j.prebuilt.MessagesState;
-import org.bsc.langgraph4j.state.Channel;
-import org.bsc.langgraph4j.state.Channels;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class OrderGraphState extends MessagesState<ChatMessage> {
+    public static final String KEY_STREAMING = "streaming_messages";
+
     public static final String KEY_USER_ID = "userId";
     public static final String KEY_SESSION_ID = "sessionId";
     public static final String KEY_MEMORY_ID = "memoryId";
     public static final String KEY_USER_MESSAGE = "userMessage";
+    public static final String KEY_APPROVAL = "approval";
 
-    public static final String KEY_ROUTE = "route";
+    public static final String KEY_INTENT_ROUTE = "intentRoute";
+    public static final String KEY_ACTION_ROUTE = "actionRoute";
     public static final String KEY_ORDER_INTENT = "orderIntent";
     public static final String KEY_CANDIDATE_ORDERS = "candidateOrders";
-    public static final String KEY_FINAL_REPLY = "finalReply";
-    public static final String KEY_STREAMING = "_streaming_messages";
+    public static final String KEY_IS_SUCCESS_EXECUTE = "isSuccessExecute";
+    public static final String KEY_FAILURE_MESSAGE = "failureMessage";
 
     public OrderGraphState(Map<String, Object> initData) {
         super(initData);
@@ -44,9 +45,17 @@ public class OrderGraphState extends MessagesState<ChatMessage> {
         return this.<String>value(KEY_USER_MESSAGE).orElse(null);
     }
 
+    public Boolean approval() {
+        return this.<Boolean>value(KEY_APPROVAL).orElse(false);
+    }
+
     // 节点执行后增加信息
-    public String route() {
-        return this.<String>value(KEY_ROUTE).orElse("unknown");
+    public String intentRoute() {
+        return this.<String>value(KEY_INTENT_ROUTE).orElse("unknown");
+    }
+
+    public String actionRoute() {
+        return this.<String>value(KEY_ACTION_ROUTE).orElse("failed");
     }
 
     public OrderIntent orderIntent() {
@@ -57,7 +66,11 @@ public class OrderGraphState extends MessagesState<ChatMessage> {
         return this.<List<Order>>value(KEY_CANDIDATE_ORDERS).orElse(List.of());
     }
 
-    public String finalReply() {
-        return this.<String>value(KEY_FINAL_REPLY).orElse("");
+    public Boolean isSuccessExecute() {
+        return this.<Boolean>value(KEY_IS_SUCCESS_EXECUTE).orElse(false);
+    }
+
+    public String failureMessage() {
+        return this.<String>value(KEY_FAILURE_MESSAGE).orElse("");
     }
 }
