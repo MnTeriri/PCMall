@@ -18,7 +18,7 @@ public class GoodsSqlProvider {
         List<String> brandKeywords = request.getBrandKeywords();
 
         if (categoryKeyword != null && !categoryKeyword.isEmpty()) {
-            sql.append("AND category.cname LIKE CONCAT('%', #{request.intent.categoryKeyword} '%')");
+            sql.append("AND category.cname LIKE CONCAT('%', #{request.categoryKeyword} '%')");
         }
 
         if (brandKeywords != null && !brandKeywords.isEmpty()) {
@@ -28,18 +28,18 @@ public class GoodsSqlProvider {
                     sql.append(" OR ");
                 }
                 sql.append("brand.bname LIKE CONCAT('%', ")
-                        .append("#{request.intent.brandKeywords[").append(i).append("]}")
+                        .append("#{request.brandKeywords[").append(i).append("]}")
                         .append(", '%')");
             }
             sql.append(") ");
         }
 
         if (request.getMinPrice() != null) {
-            sql.append("AND goods.price >= #{request.intent.minPrice} ");
+            sql.append("AND goods.price >= #{request.minPrice} ");
         }
 
         if (request.getMaxPrice() != null) {
-            sql.append("AND goods.price <= #{request.intent.maxPrice} ");
+            sql.append("AND goods.price <= #{request.maxPrice} ");
         }
 
         sql.append("ORDER BY goods.update_time DESC LIMIT #{request.topK}");
