@@ -11,9 +11,8 @@
 * 购物车管理
 * 地址管理
 * 订单管理
-* 评价以及评论功能（当前任务）
 * 用户基本信息管理
-* AI 助手根据用户需求帮助用户挑选商品
+* AI 智能助手：导购推荐、知识问答、订单操作智能体
 * ...
 
 Android App项目说明：[PCMall-Mobile](https://github.com/MnTeriri/PCMall-Mobile)<br>
@@ -24,6 +23,7 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 * Spring Boot
 * Spring Cloud
 * LangChain4j（LLM 集成 / RAG 检索增强）
+* LangGraph4j（Agent 编排）
 * Milvus（向量数据库）
 * Ollama（本地 Embedding 与推理）
 * DeepSeek API（远程对话模型）
@@ -70,34 +70,90 @@ Vue项目说明：[PCMall-Vue](https://github.com/MnTeriri/PCMall-Vue)
 6. 使用CompletableFuture和ThreadPoolTaskExecutor完成异步远程调用
 7. 使用Knife4j，完成API文档编写
 8. 使用Docker部署相关依赖环境以及项目代码
-9. 新增 pcmall-ai 模块，集成 LangChain4j + DeepSeek/Ollama，实现 AI 购物助手
-10. 搭建 Milvus 向量数据库，构建静态知识库（帮助文档 RAG）与动态知识库（百万级商品语义检索）
-11. 实现商品信息变更的 RocketMQ 通知机制，驱动向量库增量更新
-12. 实现全量商品向量化初始化管线，支持分页拉取、批量 Embedding、Redis 进度持久化与断点续传
-13. 实现对话记忆的持久化存储（Redis、MySQL），保证会话记忆的可靠查询与恢复
+9. 新增 pcmall-ai 模块，集成 LangChain4j + DeepSeek，实现 AI 智能助手
+10. 搭建 Milvus 向量数据库，构建双知识库：
+- 静态知识库：硬件选购原则、参数解释、装机知识、商城规则等帮助文档
+- 商品知识库：商品名称、品牌、分类、价格等语义检索
+11. 实现基于 LanguageModelQueryRouter 的智能 RAG 路由，由 LLM 判断查询应走哪个知识库
+12. 实现商品信息变更的 RocketMQ 通知机制，驱动向量库增量更新
+13. 集成 LangGraph4j，实现订单操作智能体：
+- 意图解析 → 订单查询 → 状态校验 → 人工确认 → 执行动作（付款 / 取消 / 退货 / 确认收货）
+- 基于 interruptBefore 的确认机制，高风险操作需用户二次确认
+14. 实现对话记忆持久化（Redis + MySQL），保证会话记忆可靠查询与恢复
 
-## Ai导购对话流程
+## AI 智能助手对话流程
+
+用户消息进入 pcmall-ai 后，首先由 QueryRouterAiService 进行意图路由，分发至不同分支处理：
+
+### 一级路由（业务分支）
+
 ~~~
-User Message
-      │
-      ▼
-QueryRouterAiService      // 判断请求类型
-      │
-      ├──────────────┐
-      │              │
-      ▼              ▼
-KNOWLEDGE        SHOPPING
-      │              │
-      │       PurchaseIntentAiService
-      │              │
-      │       GoodsQueryService
-      │              │
-      └──────► ShoppingReplyAiService
+用户消息
+   │
+   ▼
+QueryRouterAiService       // 判断请求类型
+   │
+   ├─ SHOPPING ───→ 导购推荐
+   ├─ KNOWLEDGE ──→ 知识问答
+   ├─ ORDER ──────→ 订单操作
+   └─ CHAT ───────→ 闲聊
 ~~~
-* QueryRouterAiService：业务级路由，决定这次请求是 KNOWLEDGE、SHOPPING、ORDER、AFTER_SALE、CHAT
-* PurchaseIntentAiService：负责解析用户的购买意图
-* GoodsQueryService：负责数据库商品查询、过滤和排序。
-* ShoppingReplyAiService：负责基于商品结果生成自然语言回复。
+
+### 导购推荐（SHOPPING）
+
+~~~
+用户原始消息
+   │
+   ▼
+PurchaseIntentAiService    // 提取结构化购物意图
+   │
+   ▼
+GoodsQueryService          // 候选商品召回 + GoodsRanker 二次排序
+   │
+   ▼
+ShoppingReplyAiService     // LLM 流式生成推荐 + RAG 双知识库增强
+~~~
+
+- `PurchaseIntentAiService`：解析品类、品牌、预算、需求特征
+- `GoodsQueryService`：通过 Feign 调用商品微服务，召回后经 `GoodsRanker` 多维度打分排序
+- `ShoppingReplyAiService`：携带 `RetrievalAugmentor`，LLM 自动决策查询静态知识库还是商品知识库，生成导购回答
+
+### 知识问答（KNOWLEDGE）
+
+进入 `KnowledgeReplyAiService`，仅检索静态知识库，回答选购维度、参数含义、装机知识等问题，不推荐具体商品。
+
+### 订单操作（ORDER）
+
+进入 `OrderGraphService`，由 LangGraph4j 状态图编排：
+
+```mermaid
+flowchart TD
+    START([START])
+
+    START --> A["orderIntent<br/>(LLM解析意图+查订单)"]
+
+    A -->|"query"| B["orderQuery<br/>(构建查询回复)"]
+    A -->|"action"| C["orderAction<br/>(校验状态+构建确认文案)"]
+    A -->|"unknown"| G["generateReply"]
+
+    B --> G
+
+    C -->|"confirm<br/>(状态合法)"| D["humanApproval<br/>(INTERRUPT)"]
+    C -->|"failed<br/>(状态不合法)"| G
+
+    D -->|"approved"| E["orderExecute<br/>(执行操作)"]
+    D -->|"rejected"| G
+
+    E --> G
+
+    G["generateReply<br/>(汇聚生成回复)"] --> END([END])
+```
+
+- `orderIntent`：调用 LLM 解析用户意图（查订单 / 付款 / 取消 / 退货 / 确认收货），同时执行订单查询
+- `orderAction`：校验订单状态是否允许目标操作，并构建确认文案
+- `humanApproval`：通过 `interruptBefore` 暂停图执行，等待用户二次确认后才进入 `orderExecute`
+- `orderExecute`：执行真实动作（调用 OrderClient 远程接口）
+- `generateReply`：汇聚所有路径，由 LLM 流式生成最终回复
 
 ### 管理端
 
