@@ -68,7 +68,7 @@ public class OrderController {
 
     @PostMapping("/cancelOrder")
     public ResponseResult<String> cancelOrder(String oid) {
-        if (orderService.cancelOrder(oid, 4) != 1) {
+        if (orderService.cancelOrder(oid, Order.OrderState.CANCELED.getCode()) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
         return ResponseResult.ok("订单取消成功！");
@@ -82,7 +82,7 @@ public class OrderController {
 
     @PostMapping("/refundCommit")
     public ResponseResult<String> refundCommit(String oid) {
-        if (orderService.cancelOrder(oid, 6) != 1) {
+        if (orderService.cancelOrder(oid, Order.OrderState.RETURNED.getCode()) != 1) {
             throw new SystemException(ResponseCode.ERROR);
         }
         return ResponseResult.ok("同意订单退货成功！");

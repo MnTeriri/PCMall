@@ -9,7 +9,6 @@ import org.bsc.langgraph4j.CompiledGraph;
 import org.bsc.langgraph4j.GraphInput;
 import org.bsc.langgraph4j.NodeOutput;
 import org.bsc.langgraph4j.RunnableConfig;
-import org.bsc.langgraph4j.streaming.StreamingOutput;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -23,7 +22,7 @@ import static com.example.pcmallai.ai.graph.state.OrderGraphState.KEY_APPROVAL;
 public class OrderGraphService {
     private final CompiledGraph<OrderGraphState> orderGraph;
 
-    public Map<String, Object> chatFlux(AiChatRequest request) {
+    public Flux<NodeOutput<OrderGraphState>> chatFlux(AiChatRequest request) {
         String memoryId = request.getUserId() + ":" + request.getSessionId();
         Boolean approval = request.getApproval();
 
@@ -46,7 +45,7 @@ public class OrderGraphService {
             stream = orderGraph.stream(GraphInput.resume(Map.of(KEY_APPROVAL, approval)), config);
         }
 
-        Flux<NodeOutput<OrderGraphState>> flux = Flux.push(sink -> {
+        return Flux.push(sink -> {
             try {
                 for (NodeOutput<OrderGraphState> out : stream) {
                     sink.next(out);
@@ -56,16 +55,5 @@ public class OrderGraphService {
                 sink.error(e);
             }
         });
-
-        flux.doOnNext(out -> {
-            if (out instanceof StreamingOutput<OrderGraphState> streaming) {
-                System.out.print(streaming.chunk());
-            } else {
-                System.out.println();
-                log.info("{}", out.node());
-            }
-        }).subscribe();
-
-        return Map.of();
     }
 }

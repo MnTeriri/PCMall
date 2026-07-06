@@ -58,10 +58,14 @@ public class AiServiceFactory {
     }
 
     @Bean
-    public OrderReplyAiService orderReplyAiService() {
+    public OrderReplyAiService orderReplyAiService(
+            @Qualifier("chatMemoryProvider") ChatMemoryProvider chatMemoryProvider
+    ) {
         return AiServices.builder(OrderReplyAiService.class)
                 .chatModel(deepseekChatModel)
                 .streamingChatModel(deepSeekStreamingChatModel)
+                .systemMessageTransformer(systemMessage -> systemMessage + " 今天的日期是 " + LocalDate.now() + "。")
+                .chatMemoryProvider(chatMemoryProvider)
                 .build();
     }
 

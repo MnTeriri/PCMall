@@ -26,6 +26,7 @@ public class OrderReplyNode implements NodeAction<OrderGraphState> {
 
     @Override
     public Map<String, Object> apply(OrderGraphState state) throws Exception {
+        String memoryId = state.memoryId();
         String prompt = buildPrompt(state);
 
         var generator = StreamingChatGenerator.<OrderGraphState>builder()
@@ -36,7 +37,7 @@ public class OrderReplyNode implements NodeAction<OrderGraphState> {
 
         StreamingChatResponseHandler handler = generator.handler();
 
-        orderReplyAiService.chatStream(prompt)
+        orderReplyAiService.chatStream(memoryId, prompt)
                 .onPartialResponse(handler::onPartialResponse)
                 .onCompleteResponse(handler::onCompleteResponse)
                 .onError(handler::onError)

@@ -27,9 +27,9 @@ public class OrderIntent implements Serializable {
         QUERY_PENDING_PAYMENT,//查待付款
         QUERY_PENDING_RECEIPT,//查待收货
         PAY,// 付款
+        CONFIRM_RECEIPT, //确认收货
         CANCEL,// 取消
         REFUND_REQUEST,// 申请退货
-        CONFIRM_RECEIPT,// 确认收货
         UNKNOWN// 无法识别
     }
 }

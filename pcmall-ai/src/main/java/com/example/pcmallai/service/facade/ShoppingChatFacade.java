@@ -1,5 +1,6 @@
 package com.example.pcmallai.service.facade;
 
+import com.example.pcmallai.ai.graph.state.OrderGraphState;
 import com.example.pcmallai.ai.service.*;
 import com.example.pcmallai.model.PurchaseIntent;
 import com.example.pcmallai.model.QueryRoute;
@@ -12,14 +13,14 @@ import dev.langchain4j.invocation.InvocationParameters;
 import dev.langchain4j.service.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bsc.langgraph4j.streaming.StreamingOutput;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.example.pcmallai.model.QueryRoute.QueryType.KNOWLEDGE;
-import static com.example.pcmallai.model.QueryRoute.QueryType.SHOPPING;
+import static com.example.pcmallai.model.QueryRoute.QueryType.*;
 
 @Slf4j
 @Service
@@ -33,6 +34,7 @@ public class ShoppingChatFacade {
     private final ShoppingReplyAiService shoppingReplyAiService;
     private final IChatHistoryService chatHistoryService;
     private final GoodsQueryService goodsQueryService;
+    private final OrderGraphService orderGraphService;
 
     public Flux<AiChatEvent> chatFlux(AiChatRequest request) {
         String memoryId = request.getUserId() + ":" + request.getSessionId();
@@ -66,6 +68,21 @@ public class ShoppingChatFacade {
             );
         } else if (type == KNOWLEDGE) {
             flux = knowledgeReplyAiService.chatFlux(memoryId, userMessage)
+                    .map(text -> new AiChatEvent(AiChatEvent.AiChatEventType.TEXT, text));
+        } else if (type == ORDER) {
+            flux = orderGraphService.chatFlux(request)
+                    .map(nodeOutput -> {
+                        if (nodeOutput instanceof StreamingOutput<OrderGraphState> streaming) {
+                            return streaming.chunk();
+                        } else {
+                            return switch (nodeOutput.node()) {
+                                case "orderIntent" -> "正在解析意图...";
+                                case "orderAction" -> "准备执行操作...";
+                                case "orderQuery" -> "正在查询订单...";
+                                default -> "";
+                            };
+                        }
+                    })
                     .map(text -> new AiChatEvent(AiChatEvent.AiChatEventType.TEXT, text));
         } else {
             flux = chatReplyAiService.chatFlux(memoryId, userMessage)

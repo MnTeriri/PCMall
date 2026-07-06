@@ -28,11 +28,27 @@ public class OrderQueryService {
     }
 
     public List<Order> queryPendingPayment(String uid) {
-        return searchByType("",uid, Order.OrderState.PENDING_PAYMENT.getCode(), DEFAULT_PAGE_SIZE);
+        return searchByType("", uid, Order.OrderState.PENDING_PAYMENT.getCode(), DEFAULT_PAGE_SIZE);
     }
 
     public List<Order> queryPendingReceipt(String uid) {
         return searchByType("", uid, Order.OrderState.PENDING_RECEIPT.getCode(), DEFAULT_PAGE_SIZE);
+    }
+
+    public void payOrder(String oid) {
+        orderClient.payOrder(oid);
+    }
+
+    public void finishOrder(String oid) {
+        orderClient.finishOrder(oid);
+    }
+
+    public void cancelOrder(String oid) {
+        orderClient.cancelOrder(oid);
+    }
+
+    public void refundOrder(String oid) {
+        orderClient.refundOrder(oid);
     }
 
     private List<Order> searchByType(String oid, String uid, int type, int pageSize) {

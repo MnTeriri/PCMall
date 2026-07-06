@@ -48,10 +48,10 @@ public class OrderActionNode implements NodeAction<OrderGraphState> {
 
     private String guideToQuery(OrderIntent.OrderAction action) {
         return switch (action) {
-            case CANCEL -> "请先查询您的订单（例如说'查最近订单'），再告诉我具体要取消哪一个。";
             case PAY -> "请先查询您的订单，再告诉我具体要付款哪一个。";
-            case REFUND_REQUEST -> "请先查询您的订单，再告诉我具体要申请退货哪一个。";
             case CONFIRM_RECEIPT -> "请先查询您的订单，再告诉我具体要确认收货哪一个。";
+            case CANCEL -> "请先查询您的订单（例如说'查最近订单'），再告诉我具体要取消哪一个。";
+            case REFUND_REQUEST -> "请先查询您的订单，再告诉我具体要申请退货哪一个。";
             default -> "请先查询您的订单。";
         };
     }
