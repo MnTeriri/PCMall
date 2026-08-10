@@ -285,70 +285,86 @@ PCMall
      修改后将application.yml复制到Dockerfile文件的目录中。 application.yml修改后代码如下：
    ~~~yaml
    server:
-     port: 7091
-   
+     port: 8091
    spring:
      application:
        name: seata-server
-   
+     main:
+       web-application-type: none
    logging:
      config: classpath:logback-spring.xml
      file:
        path: ${log.home:${user.home}/logs/seata}
      extend:
        logstash-appender:
+         # off by default
+         enabled: false
          destination: 127.0.0.1:4560
        kafka-appender:
+         # off by default
+         enabled: false
          bootstrap-servers: 127.0.0.1:9092
          topic: logback_to_logstash
-   
-   console:
-     user:
-       username: seata
-       password: seata
+         producer:
+           acks: 0
+           linger-ms: 1000
+           max-block-ms: 0
+       metric-appender:
+         # off by default
+         enabled: false
    
    seata:
      config:
-       # support: nacos 、 consul 、 apollo 、 zk  、 etcd3
+       # support: nacos, consul, apollo, zk, etcd3
        type: nacos
        nacos:
          server-addr: pcmall-nacos:8848
          namespace: seata
          group: SEATA_GROUP
+         context-path:
+         username: nacos
+         password: nacos
          data-id: seataServer.properties
-       
+   
      registry:
-       # support: nacos 、 eureka 、 redis 、 zk  、 consul 、 etcd3 、 sofa
+       # support: nacos, eureka, redis, zk, consul, etcd3, sofa, seata
        type: nacos
-       preferred-networks: 30.240.*
        nacos:
          application: seata-server
          server-addr: pcmall-nacos:8848
-         namespace: seata
          group: SEATA_GROUP
+         namespace: seata
          cluster: default
+         context-path:
+         username: nacos
+         password: nacos
+   
+   #  registry:
+   #    type: seata
+   #    seata:
+   #      server-addr: pcmall-seata-naming-server:8081
+   #      cluster: default
+   #      namespace: public
+   #      heartbeat-period: 5000
+   #      username: seata
+   #      password: seata
    
      store:
        # support: file 、 db 、 redis 、 raft
        mode: db
      #  server:
      #    service-port: 8091 #If not configured, the default is '${server.port} + 1000'
-     security:
-       secretKey: SeataSecretKey0c382ef121d778043159209298fd40bf3850a017
-       tokenValidityInMilliseconds: 1800000
-       ignore:
-         urls: /,/**/*.css,/**/*.js,/**/*.html,/**/*.map,/**/*.svg,/**/*.png,/**/*.jpeg,/**/*.ico,/api/v1/auth/login,/metadata/v1/**
-
    ~~~
 
    * 准备好mysql驱动程序，复制到Dockerfile文件的目录中。
 
    * 编写如下Dockerfile，将application.yml和jdbc驱动复制到容器对应文件夹。代码如下：
    ~~~dockerfile
-   FROM apache/seata-server:2.2.0
+   FROM apache/seata-server:2.6.0
    
    COPY ./config/application.yml /seata-server/resources
-   COPY ./lib/jdbc /seata-server/libs
+   COPY ./lib/mysql-connector-java-5.1.42.jar /seata-server/libs
+   COPY ./lib/mysql-connector-java-8.0.27.jar /seata-server/libs
    ~~~
 
    * 在Nacos当中创建命名空间（seata），然后在此命名空间创建seataServer.properties配置，
@@ -362,7 +378,7 @@ PCMall
    store.session.mode=db
    #Used for password encryption
    store.publicKey=
-            
+   
    #These configurations are required if the `store mode` is `db`. If `store.mode,store.lock.mode,store.session.mode` are not equal to `db`, you can remove the configuration block.
    store.db.datasource=druid
    store.db.dbType=mysql

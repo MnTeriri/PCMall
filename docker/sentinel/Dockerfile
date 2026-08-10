@@ -5,7 +5,7 @@ ARG SENTINEL_VERSION=1.8.9
 RUN set -x \
     && curl -SL --output /home/sentinel-dashboard.jar https://github.com/alibaba/Sentinel/releases/download/${SENTINEL_VERSION}/sentinel-dashboard-${SENTINEL_VERSION}.jar
 
-FROM openjdk:8-jre-slim
+FROM eclipse-temurin:8-jre-ubi9-minimal
 
 # copy sentinel jar
 COPY --from=installer ["/home/sentinel-dashboard.jar", "/home/sentinel-dashboard.jar"]
